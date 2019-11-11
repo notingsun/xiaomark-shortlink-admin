@@ -1,0 +1,515 @@
+@import "./variables.less";
+
+// felx布局
+.itv-flex {
+  // 横向
+  &--fs {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  &--sb { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+   &--sa { 
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  // 竖向
+  &-v--fs{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: auto;
+  }
+  &-v--sb{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: auto;
+  }
+}
+
+// 面包屑下的内容可以滚动
+.itv__content--scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+// 文字按钮的样式
+.itv-btn__text{
+  // 蓝色文字.按钮
+  font-size: 12px;
+  // height: 41px;
+  // line-height: 41px;
+  cursor: pointer;
+  user-select: none;
+  color: #6E9AF5;
+  font-weight:500;
+  &:hover {
+    color: #2866E5;
+  }
+
+  // 禁用
+  &--disabled,&--disabled:hover {
+    cursor: not-allowed;
+    color: #A2A2A2;
+  }
+
+  // 红色文字.按钮
+  &--delete {
+    color: #f57d63;
+    &:hover {
+      color: #E9504B;
+    }
+  }
+}
+
+// 文字不换行，显示省略号
+.itv-div__text--nowrap {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 文本
+.itv-text {
+  &--vip { // vip文字样式
+    color: #ffbb5f;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 4px;
+  }
+  &--p { // 一段文字
+    color: @subsidiary-color;
+  }
+  &--warning { // 前面带红色星号的文字
+    color: @subsidiary-color;
+    font-size: 12px;
+    &::before {
+      content: '*';
+      color: @error-color;
+      vertical-align: middle;
+    }
+  }
+}
+
+// 标题
+.itv-title {
+  .itv-title() {
+    font-weight: 500;
+    color: @title-color;
+  }
+  &--16 {
+    // 黑色标题16px .itv-title--16
+    font-size: 16px;
+    .itv-title;
+  }
+  &--14 {
+    // 黑色标题14px .itv-title--14
+    font-size: 14px;
+    .itv-title;
+  }
+  &--12 {
+    // 黑色标题12px .itv-title--12
+    font-size: 12px;
+    .itv-title;
+  }
+}
+
+// 文本
+.itv-text {
+  .itv-text() {
+    color: @title-color;
+  }
+  &--12 {
+    // 黑色文本12px .itv-text--12
+    font-size: 12px;
+    .itv-text;
+  }
+  &--a {
+    // 黑色.有下划线.超链接 itv-text--a
+    .itv-text;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  &--grey {
+    color: @subsidiary-color;
+  }
+}
+
+// 面包屑导航小字
+.itv-breadcrumb-item--small {
+  .ivu-breadcrumb-item-link {
+    font-size: 12px;
+    color: @subsidiary-color;
+  }
+}
+
+// 蒙版组件
+.itv-model {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  // transition: opacity .3s;
+  // 动画
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  
+  // 组件.查看图片大图
+  &__img {
+    width: auto;
+    height: 80%;
+    padding-top: 5%;
+  }
+
+  // 组件.地图
+  &__map {
+    width: 80%;
+    height: 80%;
+    margin-top: 2%;
+  }
+
+  // 关闭按钮
+  .itv-model__btn--close {
+    align-self: flex-end;
+    color: #ffffff;
+    font-size: 18px;
+    position: relative;
+    margin-right: 16px;
+    margin-top: 16px;
+    cursor: pointer;
+    &:hover {
+      color: #ffffffaa;
+    }
+  }
+}
+
+// alert组件
+.itv-alert {
+  width:fit-content;
+  &-link {
+    color: @primary-color;
+    cursor: pointer;
+  }
+}
+
+// icon
+.itv-icon{
+  &--primary{
+    color: @primary-color;
+  }
+  &--gary{
+    color: @subsidiary-color;
+  }
+  &--success{
+    color: @success-color;
+  }
+  &--error{
+    color: @error-color;
+  }
+}
+
+.itv-tabs{
+  display: flex;
+  flex-direction: column;
+  flex:1;
+  .ivu-tabs-content {
+    flex:1;
+    overflow-y: auto;
+    overflow-x: hidden
+  }
+}
+
+// 页面公共样式
+// 各创建/编辑页面
+.itv-edit-template {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .form-wrapper{
+    flex: 1;
+    margin-top: 40px;
+    overflow-y: auto;
+  }
+  // FIXME 这个写死 屏幕比较窄时横向滚动有问题
+  // .form {
+  //   width: 750px;
+  // }
+  .select {
+    width: 200px;
+  }
+  .actions {
+    margin-top: 80px;
+  }
+  .push-obj-tip{
+    position: absolute;
+    right:0;
+    top:0;
+  }
+}
+
+// 兼容layout的padding，显示左边一个宽8px灰色分割区域
+.itv__division {
+  width: 40px;
+  height: calc(~'100vh - 68px');
+  background: @itv-bg;
+  border-left: 16px @itv-white solid;
+  border-right: 16px @itv-white solid;
+  transform: translateY(-24px);
+  flex-shrink: 0;
+}
+
+// 含所有提示气泡的label
+.itv-label-with-tip{
+  display: inline-flex;
+  align-items: inherit;
+  justify-content: flex-start;
+  &__desc,.ivu-icon-md-help-circle{
+    color: @subsidiary-color;
+  }
+  .ivu-tooltip-inner{
+    white-space: pre-wrap;
+  }
+  .ivu-tooltip-rel{
+    display: flex;
+  }
+}
+
+// vip 图片
+.itv-img--vip {
+  display: inline-block;
+  height: 12px;
+  width: 24px;
+  background-color: #ff000022;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-image: url('../assets/icon-vip.png');
+  vertical-align: middle;
+}
+
+// 筛选抽屉内的布局
+.filter {
+  &__wrap {
+    width: 309px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+  }
+
+  &__content {
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  &__btn {
+    width: 138px;
+  }
+
+  &__row {
+    display: flex;
+    margin-bottom: 24px;
+    align-items: center;
+
+    // 定宽
+    &__label {
+      width: 80px;
+      flex-shrink: 0;
+      font-size: 12px;
+      font-weight: 500;
+      color: @title-color;
+      padding-right: 16px;
+    }
+  }
+}
+
+
+// 表格 render 中的样式
+.ivu-table {
+  // 头像
+  .img--user {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    vertical-align: middle;
+  }
+  // 当前关注状态
+  .tag(){
+    padding: 2px 16px;
+    font-size: 12px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .tag--blue {
+    .tag;
+    color: @primary-color;
+    background: @primary-color-10;
+  }
+  .tag-grey {
+    .tag;
+    color: @subsidiary-color;
+    background: @subsidiary-color-10;
+  }
+  // 用户标签
+  .tag-style {
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: @itv-tag-cyan;
+  }
+  .tag-style__text {
+    color: @itv-tag-cyan;
+  }
+}
+
+
+.w88 { width: 88px; } // 表单底部按钮宽度为88px
+.w214 { width: 214px; } // 输入框的宽度为214px
+
+.mb0 { margin-bottom: 0px; }
+.mb4 { margin-bottom: 4px; }
+.mb8 { margin-bottom: 8px; }
+.mb12 { margin-bottom: 12px; }
+.mb16 { margin-bottom: 16px; }
+.mb20 { margin-bottom: 20px; }
+.mb24 { margin-bottom: 24px; }
+.mb32 { margin-bottom: 32px; }
+.mb40 { margin-bottom: 40px; }
+
+.mt8 { margin-top: 8px; }
+.mt16 { margin-top: 16px; }
+.mt24 { margin-top: 24px; }
+.mt32 { margin-top: 32px; }
+.mt40 { margin-top: 40px; }
+
+.ml0 { margin-left: 0px; }
+.ml4 { margin-left: 4px; }
+.ml8 { margin-left: 8px; }
+.ml16 { margin-left: 16px; }
+.ml20 { margin-left: 20px; }
+.ml24 { margin-left: 24px; }
+.ml32 { margin-left: 32px; }
+
+.mr0 { margin-right: 0px; }
+.mr4 { margin-right: 4px; }
+.mr8 { margin-right: 8px; }
+.mr12 { margin-right: 12px; }
+.mr16 { margin-right: 16px; }
+.mr24 { margin-right: 24px; }
+.mr32 { margin-right: 32px; }
+.mr40 { margin-right: 40px; }
+
+.pl16 { padding-left: 16px; }
+.pr16 { padding-right: 16px; }
+
+.pt8 { padding-top: 8px; }
+.pt16 { padding-top: 16px; }
+
+.pb8 { padding-bottom: 8px; }
+.pb16 { padding-bottom: 16px; }
+.pb20 { padding-bottom: 20px; }
+.pb32 { padding-bottom: 32px; }
+.pb64 { padding-bottom: 64px; }
+
+.slideDown-enter-active,
+.slideDown-leave-active {
+  transition: all .3s;
+}
+.slideDown-enter,
+.slideDown-leave-active {
+  opacity: 0;
+  height: 0;
+  transition: all .2s cubic-bezier(0.895, 0.03, 0.685, 0.22);
+}
+
+// 图标会用的到属性
+.h20 { height: 20px; }
+.d-i { display: inline-block; }
+.as-fs { align-self: flex-start; }
+// 行高为20的行内块元素
+.ib20 {
+  display: inline-block;
+  line-height: 20px;
+  min-height: 20px;
+  vertical-align: middle;
+  // background: pink;
+}
+// 行高为16的行内块元素
+.ib16 {
+  display: inline-block;
+  line-height: 16px;
+  min-height: 16px;
+  vertical-align: middle;
+  // background: pink;
+}
+
+
+// 按钮.图标(表格操作里的)
+.itv-btn__icon {
+  color: #6E9AF5;
+  cursor: pointer;
+
+  &--wrap:hover &{
+    color: #2866E5;
+  }
+
+  // 禁用
+  &--disabled, &--disabled:hover &{
+    cursor: not-allowed;
+    color: @btn-disable-color;
+  }
+}
+
+// 按钮里的图标样式
+.itv-button--icon.ivu-btn-default, .itv-button--icon.ivu-btn-primary {
+  // 图标和文字的外层（组件自带的span）
+  &>span {
+    display: inline-block;
+    line-height: 16px;
+    min-height: 16px;
+    vertical-align: middle;
+    font-size: 0px;
+    // background: lavender;
+
+    // 图标和文字之间的间距
+    &>.svg-icon {
+      margin-right: 8px;
+    }
+
+    &>span {
+      font-size: 12px;
+    }
+  }
+}
+// 白色按钮的hover样式
+.itv-button--icon.ivu-btn-default {
+  .svg-icon {
+    color: #787FA9;
+  }
+
+  &:hover {
+    .svg-icon {
+      color: inherit;
+    }
+  }
+}
+
+// input里图标的样式
+.itv-input__icon--wrap {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

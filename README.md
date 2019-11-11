@@ -1,29 +1,7 @@
-# xiaomark-shortlink-admin
+# 小码短链接-后台管理
 
-## Project setup
-```
-yarn install
-```
+## 开发须知
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
-```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[后端接口](http://test.xiaomark.com/apidoc/)
+  > 接口的域名： admin-test.xiaomark.com
+  > 账户密码： admin interval
