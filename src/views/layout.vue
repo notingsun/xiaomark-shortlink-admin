@@ -230,7 +230,7 @@ export default {
     max-height: 100vh;
     height: 100vh;
     overflow: hidden;
-    padding: 16px;
+    padding: 32px 24px;
     background: #fff;
     height: 100vh;
   }

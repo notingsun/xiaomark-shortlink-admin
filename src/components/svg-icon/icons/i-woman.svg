@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <desc>icon/16/性别/女</desc>
+    
+    <g id="icon/16/性别/女" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="椭圆形备份" stroke="#F87D79" stroke-width="1.2" cx="8" cy="5" r="3"></circle>
+        <path d="M8,8.25 L8,13.5" id="直线备份" stroke="#F87D79" stroke-width="1.2" stroke-linecap="square"></path>
+        <path d="M8,8 L8,13" id="直线备份-2" stroke="#F87D79" stroke-width="1.2" stroke-linecap="square" transform="translate(8.000000, 10.500000) rotate(-90.000000) translate(-8.000000, -10.500000) "></path>
+    </g>
+</svg>

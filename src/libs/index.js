@@ -1,11 +1,9 @@
 /* 将libs中的常量和函数统一注册到$global上面 */
 import consts from './consts' // 常量
-import renders from './renders' // Vnode的render
 import utils from './utils' // 工具函数
 
 const ALL_CONTENT = {
   consts,
-  renders,
   utils
 }
 

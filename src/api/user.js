@@ -1,10 +1,11 @@
 import request from './instance'
 
 export default {
-  getAccountList(params) {
+  getUserList(params) {
     return request({
       method: 'get',
-      url: '/api-admin/masters/',
+      name: '列出用户',
+      url: '/api/sl/users/',
       params
     })
   }

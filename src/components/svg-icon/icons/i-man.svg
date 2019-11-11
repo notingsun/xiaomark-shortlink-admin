@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <desc>icon/16/性别/男</desc>
+    
+    <g id="icon/16/性别/男" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组" transform="translate(8.031469, 8.496800) rotate(45.000000) translate(-8.031469, -8.496800) translate(4.531469, 1.996800)" stroke="#4F87FB" stroke-width="1.2">
+            <circle id="椭圆形" cx="3.46853106" cy="9.00319984" r="3"></circle>
+            <polyline id="路径备份-7" transform="translate(3.500000, 1.747421) scale(1, -1) translate(-3.500000, -1.747421) " points="0 -9.76996262e-15 3.5 3.49484128 7 -1.70199549e-15"></polyline>
+            <path d="M3.46853106,1.00319984 L3.46853106,5.50319984" id="直线" stroke-linecap="square"></path>
+        </g>
+    </g>
+</svg>

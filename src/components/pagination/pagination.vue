@@ -29,7 +29,7 @@ export default {
     },
     showTotal: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   data() {
