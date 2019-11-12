@@ -155,10 +155,12 @@ export default {
   },
   watch: {},
   methods: {
+    // 去用户详情
     toUserDetail(row) {
       this.$router.push({
         name: 'UserDetail',
-        params: { user_id: row.user.id }
+        params: { user_id: row.user.id },
+        query: { name: row.user.nickname }
       })
     },
     async doGetData() {

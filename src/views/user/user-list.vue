@@ -156,7 +156,7 @@ export default {
             width: 80,
             fixed: 'right',
             render: (h, { row }) => {
-              return <itv-icon title="查看短链" type="i-detail" size="20" class="itv-btn__icon"/>
+              return <itv-icon title="查看短链" type="i-detail" size="20" class="itv-btn__icon" onClick={this.toUserDetail.bind(null, row)}/>
             }
           }
         ],
@@ -187,6 +187,15 @@ export default {
   },
   watch: {},
   methods: {
+    // 去用户详情
+    toUserDetail(row) {
+      this.$router.push({
+        name: 'UserDetail',
+        params: { user_id: row.id },
+        query: { name: row.nickname }
+      })
+    },
+
     async doGetData() {
       try {
         const params = {

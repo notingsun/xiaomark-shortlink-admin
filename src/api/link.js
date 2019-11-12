@@ -26,5 +26,14 @@ export default {
       url: '/api/sl/websites/',
       params
     })
+  },
+
+  getLinkStatistic(params) {
+    return request({
+      method: 'get',
+      name: '获取总体数据',
+      url: '/api/sl/stats/overview/',
+      params
+    })
   }
 }
