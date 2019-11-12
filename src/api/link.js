@@ -13,8 +13,17 @@ export default {
   getShortLinkStatistic(params) {
     return request({
       method: 'get',
-      name: '获取每日数据',
+      name: '短链数据（获取每日数据）',
       url: '/api/sl/stats/',
+      params
+    })
+  },
+
+  getTargetLinkStatistic(params) {
+    return request({
+      method: 'get',
+      name: '跳转链接数据',
+      url: '/api/sl/websites/',
       params
     })
   }

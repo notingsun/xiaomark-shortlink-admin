@@ -115,9 +115,9 @@ export default {
           {
             title: '是否可用',
             minWidth: 100,
-            key: 'enable',
+            key: 'enabled',
             render: (h, { row }) => {
-              return <span>{row.enable ? '是' : '否'}</span>
+              return <span>{row.enabled ? '是' : '否'}</span>
             }
           },
           {
@@ -156,7 +156,7 @@ export default {
             width: 80,
             fixed: 'right',
             render: (h, { row }) => {
-              return <itv-icon type="i-detail" size="20" class="itv-btn__icon"/>
+              return <itv-icon title="查看短链" type="i-detail" size="20" class="itv-btn__icon"/>
             }
           }
         ],

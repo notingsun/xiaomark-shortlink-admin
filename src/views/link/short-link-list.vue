@@ -55,7 +55,7 @@ export default {
           },
           {
             title: '短链',
-            minWidth: 120,
+            minWidth: 160,
             key: 'url'
           },
           {
