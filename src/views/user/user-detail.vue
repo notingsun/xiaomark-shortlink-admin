@@ -137,7 +137,7 @@ export default {
     async doGetData() {
       try {
         const params = {
-          user_id: this.$route.user_id, // 用户ID
+          user_id: this.$route.params.user_id, // 用户ID
           order_by: this.form.sort
         }
 

@@ -21,7 +21,7 @@ const not_found = {
 const layout = {
   path: '/',
   name: 'Layout',
-  redirect: '/user-statistic',
+  redirect: '/user-list',
   component: () => import('@/views/layout.vue'),
   children: [
     {
