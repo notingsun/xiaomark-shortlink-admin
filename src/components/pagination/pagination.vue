@@ -60,7 +60,7 @@ export default {
     changePageSize(pageSize) {
       // 切换每页条数时，为了不出现奇怪的现象，需要重置到第一页
       this.page_size = pageSize
-      this.pageChange(1)
+      this.current_page = 1 // 直接修改page，会触发pageChange
     },
 
     /**

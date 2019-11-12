@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "production-build": "vue-cli-service build",
+    "stage-build": "vue-cli-service build --mode stage"
   },
   "dependencies": {
     "@vue/babel-preset-jsx": "^1.1.0",
