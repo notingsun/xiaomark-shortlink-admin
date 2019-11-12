@@ -83,7 +83,14 @@ export default {
             key: 'create_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.create_time).split(' ')
-              return <span>{arr[0]}{arr[1] ? <br/> : ''}{arr[1]}</span>
+
+              return (
+                <span>
+                  {arr[0]}
+                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  {arr[1]}
+                </span>
+              )
             }
           },
           {
@@ -118,7 +125,14 @@ export default {
             key: 'last_login_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.last_login_time).split(' ')
-              return <span>{arr[0]}{arr[1] ? <br/> : ''}{arr[1]}</span>
+
+              return (
+                <span>
+                  {arr[0]}
+                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  {arr[1]}
+                </span>
+              )
             }
           },
           {
@@ -196,24 +210,6 @@ export default {
 </script>
 
 <style lang="less">
-.user-list {
-  .header {
-
-  }
-
-  .table-cell__nickname {
-    display: flex;
-    align-items: center;
-  }
-  .img--headimgurl {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .text--nickname {
-    // white-space: nowrap;
-    margin: 6px;
-  }
-}
+// .user-list {
+// }
 </style>

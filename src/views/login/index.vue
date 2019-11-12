@@ -80,7 +80,7 @@ export default {
         this.token_expires // 是否自动登陆
       )
       this.$bus.$emit(this.$bus.EVENTS.LOGIN, res.token)
-      this.$router.push({ name: 'UserStatistic' })
+      this.$router.push({ name: 'UserList' })
     },
 
     /* 切换自动登陆 */

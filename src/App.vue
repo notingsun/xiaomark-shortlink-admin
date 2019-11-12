@@ -47,6 +47,8 @@ export default {
     if (!this.$bus.token && this.$route.name !== 'Login') {
       this.$router.replace({ name: 'Login' })
     }
+
+    this.$bus.view_width = window.innerWidth
   }
 }
 </script>

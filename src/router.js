@@ -37,7 +37,7 @@ const layout = {
       component: () => import('@/views/user/user-list.vue')
     },
     {
-      path: '/user-detail',
+      path: '/user-detail/:user_id',
       meta: { menuIndex: '2', title: '用户创建的短链页' },
       name: 'UserDetail',
       component: () => import('@/views/user/user-detail.vue')

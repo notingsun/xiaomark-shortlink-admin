@@ -1,10 +1,11 @@
 import request from './instance'
 
 export default {
-  getAccountList(params) {
+  getShortLinkList(params) {
     return request({
       method: 'get',
-      url: '/api-admin/masters/',
+      name: `列出${params.user_id ? ` 用户${params.user_id} ` : ''}短链列表`,
+      url: '/api/sl/links/',
       params
     })
   }

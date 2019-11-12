@@ -108,12 +108,12 @@ export default {
         }
       },
       menu: [
-        {
-          name: '1',
-          title: '用户数据',
-          icon: 'i-home',
-          route: { name: 'UserStatistic' }
-        },
+        // {
+        //   name: '1',
+        //   title: '用户数据',
+        //   icon: 'i-home',
+        //   route: { name: 'UserStatistic' }
+        // },
         {
           name: '2',
           title: '用户列表',

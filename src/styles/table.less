@@ -1,0 +1,32 @@
+/* 表格中用到的样式 */
+
+// 用户昵称+头像
+.table-cell__nickname {
+  display: flex;
+  align-items: center;
+
+  &--click {
+    // background: pink;
+    cursor: pointer;
+  }
+}
+
+// 用户头像
+.img--headimgurl {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+// 用户昵称
+.text--nickname {
+  // white-space: nowrap;
+  margin: 6px;
+}
+
+.text--oneRow {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

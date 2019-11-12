@@ -7,6 +7,7 @@ import 'iview/src/styles/index.less'
 import './styles/theme.less'
 import './styles/custom.less'
 import './styles/animate.css'
+import './styles/table.less'
 
 import Api from './api/index'
 import PDo from 'PDo'
