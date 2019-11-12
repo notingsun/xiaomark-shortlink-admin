@@ -82,7 +82,7 @@ export default {
       },
       options: {
         sort: [
-          { value: 'time', label: '按创建时间倒序' },
+          { value: 'time', label: '按域名排序' },
           { value: 'link', label: '按链接数量倒序' },
           { value: 'click', label: '按链接访问次数倒序' }
         ]

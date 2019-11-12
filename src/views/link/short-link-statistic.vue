@@ -161,7 +161,7 @@ export default {
           stats_date
         })
 
-        this.table.data = res.stats || []
+        this.table.data = (res.stats || []).reverse()
       } catch (e) {
         console.log(e)
       }
