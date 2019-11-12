@@ -32,7 +32,7 @@
       :data="table.data"
     />
     <!-- 分页器 -->
-    <itv-pagination :total="total" @on-change="doGetData" />
+    <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
 </template>
 
@@ -46,6 +46,7 @@ export default {
     return {
       table: {
         data: [],
+        total: 0,
         columns: [
           {
             title: '短链名称',
@@ -130,8 +131,6 @@ export default {
         ],
         height: null // 表格的高度
       },
-      table_loading: true,
-      total: 0,
       form: {
         search: '',
         sort: 'time'
@@ -157,10 +156,10 @@ export default {
   watch: {},
   methods: {
     toUserDetail(row) {
-      const user_id = row.user.id
-
-      console.log('toUserDetail', user_id)
-      this.$router.push({ name: 'UserDetail', params: { user_id } })
+      this.$router.push({
+        name: 'UserDetail',
+        params: { user_id: row.user.id }
+      })
     },
     async doGetData() {
       try {
@@ -175,7 +174,7 @@ export default {
           ...this.$global.utils.pagination.params()
         })
 
-        this.total = res.total
+        this.table.total = res.total
         this.table.data = res.links || []
       } catch (e) {
         console.error(e)

@@ -8,5 +8,14 @@ export default {
       url: '/api/sl/links/',
       params
     })
+  },
+
+  getShortLinkStatistic(params) {
+    return request({
+      method: 'get',
+      name: '获取每日数据',
+      url: '/api/sl/stats/',
+      params
+    })
   }
 }
