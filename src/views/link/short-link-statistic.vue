@@ -1,7 +1,14 @@
 /* 短链数据 */
 <template>
   <div class="short-link-statistic itv-flex-v--fs">
-    <!-- TODO 历史总计没有算 -->
+    <!-- 总的数据 -->
+    <div class="overview--wrap mb16">
+      <div class="overview__cell" v-for="(item, i) in overview.list" :key="i">
+        <p class="overview__cell__value">{{ overview.data[item] || '-' }}</p>
+        <p class="overview__cell__name">{{ overview.name_map[item] }}</p>
+      </div>
+    </div>
+    <!-- 时间选择器 -->
     <div class="header mb16 itv-flex--sb">
       <DatePicker
         type="daterange"
@@ -10,7 +17,7 @@
         placeholder="请选择"
         style="width: 200px"
         v-model="form.date"
-        @on-change="doGetData"
+        @on-change="doGetTableData"
         :clearable="false"
         format="yyyy/MM/dd"
       ></DatePicker>
@@ -33,6 +40,15 @@ export default {
   props: {},
   components: {},
   data() {
+    const OVERVIEW_NAME_MAP = {
+      n_users: '用户数',
+      n_groups: '链接分组数',
+      n_links: '链接数',
+      n_urls: '跳转链接数',
+      n_clicks: '链接访问次数',
+      n_visitors: '链接访问人数'
+    }
+
     return {
       // 获取表格数据的参数
       form: {
@@ -109,6 +125,12 @@ export default {
           }
         ],
         height: null // 表格的高度
+      },
+      // 总体数据
+      overview: {
+        list: Object.keys(OVERVIEW_NAME_MAP),
+        name_map: OVERVIEW_NAME_MAP,
+        data: {}
       }
     }
   },
@@ -118,7 +140,8 @@ export default {
     this.$nextTick(() => {
       this.table.height = this.$refs.refTable.$el.clientHeight
     })
-    this.doGetData()
+    this.doGetTableDataAll()
+    this.doGetTableData()
   },
   watch: {},
   methods: {
@@ -128,7 +151,7 @@ export default {
     },
 
     // 获取数据
-    async doGetData() {
+    async doGetTableData() {
       try {
         const stats_date = this.form.date
           .map((v) => this.$PDo.Date.format(v.toJSON(), 'y-m-d'))
@@ -142,12 +165,54 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+
+    // 获取总的数据
+    async doGetTableDataAll() {
+      try {
+        const res = await this.$api.Link.getLinkStatistic({})
+
+        this.overview.data = res
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-//.short-link-statistic {
-//}
+.short-link-statistic {
+  .overview--wrap {
+    display: flex;
+    justify-content: space-around;
+    .overview__cell {
+      display: flex;
+      width: 16.5%;
+      // background: pink;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      &:not(:last-child):after {
+        position: absolute;
+        content: '';
+        right: 0;
+        top: 50%;
+        width: 1px;
+        height: 20px;
+        background: #dcdee2;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+      }
+    }
+    .overview__cell__value {
+      font-size: 14px;
+      font-weight: bold;
+      color: @primary-color;
+    }
+    // .overview__cell__name {
+    // }
+  }
+}
 </style>

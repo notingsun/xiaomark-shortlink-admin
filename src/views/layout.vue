@@ -5,28 +5,34 @@
       <div class="logo">
         <img src="../assets/logo-1.png" alt="" class="logo--img" />
       </div>
-      <template v-for="item in menu">
-        <MenuItem
-          :name="item.name"
-          :key="`menu_${item.name}`"
-          :to="item.route"
-          class="menu-item"
-        >
-          <!-- <itv-icon
+      <div class="flex1 itv-flex-v--fs">
+        <template v-for="item in menu">
+          <MenuItem
+            :name="item.name"
+            :key="`menu_${item.name}`"
+            :to="item.route"
+            class="menu-item"
+          >
+            <!-- <itv-icon
             :type="item.icon"
             width="20px"
             height="20px"
             :color="item.name == sub_menu_active ? 'primary' : 'sub'"
             class="menu-item__icon ib20 mr24"
           /> -->
-          <span class="ib20">{{ item.title }}</span>
-        </MenuItem>
-      </template>
-      <Dropdown class="setting">
-        <a href="javascript:void(0)">
+            <span class="ib20">{{ item.title }}</span>
+          </MenuItem>
+        </template>
+      </div>
+      <Dropdown
+        class="setting layout_setting"
+        placement="bottom-start"
+        transfer
+      >
+        <span class="layout_user_name">
           {{ $bus.admin.username }}
           <Icon type="ios-arrow-down"></Icon>
-        </a>
+        </span>
         <DropdownMenu slot="list">
           <DropdownItem @click.native="handleChangePwd">修改密码</DropdownItem>
           <DropdownItem @click.native="handleSignOut">退出</DropdownItem>
@@ -217,12 +223,14 @@ export default {
       object-fit: contain;
     }
   }
-  &-menu {
-    padding: 32px 0;
+  .layout-menu {
+    padding: 32px 0 0;
     width: 200px !important;
     height: 100vh;
     overflow: auto;
     border: none;
+    display: flex;
+    flex-direction: column;
   }
   &-content {
     flex: 1;
@@ -230,15 +238,27 @@ export default {
     max-height: 100vh;
     height: 100vh;
     overflow: hidden;
-    padding: 32px 24px;
+    padding: 32px 24px 20px 24px;
     background: #fff;
     height: 100vh;
   }
-  .setting {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-  }
+}
+.layout_setting {
+  // position: absolute;
+  // bottom: 20px;
+  // left: 0px;
+  padding-left: 20px;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  background: #fff;
+  height: auto;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0px -2px 9px @border-color-base;
+}
+.layout_user_name {
+  color: @primary-color;
 }
 .ivu-menu-horizontal.ivu-menu-light:after,
 .ivu-menu-vertical.ivu-menu-light:after {
