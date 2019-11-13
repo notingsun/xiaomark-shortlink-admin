@@ -15,6 +15,10 @@ import Bus from './bus'
 import CustomComponents from './components/index' // itv 组件
 import global from './libs/index' // 常量/函数 注册在 this.$global 上
 
+if (process.env.NODE_ENV !== 'development') {
+  console.log = () => {}
+}
+
 Vue.use(iView)
 Vue.use(CustomComponents)
 
