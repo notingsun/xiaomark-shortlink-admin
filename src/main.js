@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 // 第三方库
 import iView from 'iview'
-import 'iview/src/styles/index.less'
+// import 'iview/src/styles/index.less'
 import './styles/theme.less'
 import './styles/custom.less'
 import './styles/animate.css'
