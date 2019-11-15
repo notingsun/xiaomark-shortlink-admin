@@ -4,7 +4,16 @@
     <!-- 总的数据 -->
     <div class="overview--wrap mb16">
       <div class="overview__cell" v-for="(item, i) in overview.list" :key="i">
-        <p class="overview__cell__value">{{ overview.data[item] || '-' }}</p>
+        <p class="overview__cell__value">
+          {{
+            overview.data[item]
+              ? String(overview.data[item]).replace(
+                  /(\d+?)(?=(\d{3})+$)/g,
+                  '$1,'
+                )
+              : '-'
+          }}
+        </p>
         <p class="overview__cell__name">{{ overview.name_map[item] }}</p>
       </div>
     </div>
@@ -207,8 +216,8 @@ export default {
       }
     }
     .overview__cell__value {
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 28px;
+      font-weight: 500;
       color: @primary-color;
     }
     // .overview__cell__name {
