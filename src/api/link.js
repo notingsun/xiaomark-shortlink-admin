@@ -1,6 +1,16 @@
 import request from './instance'
 
 export default {
+  putTargetLinkEnable(params) {
+    console.log(params.id)
+    return request({
+      method: 'put',
+      name: '设置网站是否可用',
+      url: `/api/sl/websites/${params.id}/enabled/`,
+      params
+    })
+  },
+
   getShortLinkList(params) {
     return request({
       method: 'get',

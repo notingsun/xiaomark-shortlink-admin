@@ -43,6 +43,10 @@ export default {
   props: {},
   components: {},
   data() {
+    // const C_GREEN = '#47cb89'
+    const C_BLUE = '#4F87FB'
+    const C_ORANGE = '#e88986'
+
     return {
       table: {
         data: [],
@@ -101,18 +105,43 @@ export default {
           },
           {
             title: '访问次数',
-            minWidth: 80,
+            minWidth: 90,
             key: 'n_clicks'
           },
           {
             title: '访问人数',
-            minWidth: 80,
+            minWidth: 90,
             key: 'n_visitors'
           },
           {
             title: '访问IP数',
-            minWidth: 80,
+            minWidth: 90,
             key: 'n_ips'
+          },
+          // TODO 用图标
+          // 来源：1 - 网站，2 - 小程序
+          {
+            title: '来源',
+            minWidth: 80,
+            key: 'source',
+            render: (h, { row }) => {
+              // return <span>{row.subscribe ? '是' : '否'}</span>
+              //  <Icon title="是否可用" type="md-checkmark-circle" color={row.enabled ? C_GREEN : C_GREY} size="18"/>
+              return (
+                <div>
+                  <span
+                    class="mr8"
+                    title={row.source === 1 ? '是否网页登录' : '是否小程序登录'}
+                  >
+                    <itv-icon
+                      type={row.source === 1 ? 'i-pc' : 'i-wx'}
+                      style={{ color: row.source === 1 ? C_ORANGE : C_BLUE }}
+                      size="24"
+                    />
+                  </span>
+                </div>
+              )
+            }
           },
           {
             title: '创建者',

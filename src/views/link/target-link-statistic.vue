@@ -32,6 +32,9 @@ export default {
   props: {},
   components: {},
   data() {
+    const C_GREEN = '#47cb89'
+    const C_GREY = '#c5c8ce'
+
     return {
       table: {
         data: [],
@@ -71,7 +74,45 @@ export default {
             minWidth: 100,
             key: 'enabled',
             render: (h, { row }) => {
-              return <span>{row.enabled ? '是' : '否'}</span>
+              return (
+                <Icon
+                  title="是否关注服务号"
+                  type="md-checkmark-circle"
+                  color={row.enabled ? C_GREEN : C_GREY}
+                  size="20"
+                />
+              )
+            }
+          },
+          {
+            title: '操作',
+            width: 100,
+            // fixed: 'right',
+            render: (h, { row }) => {
+              return (
+                // <Poptip transfer>
+                //   <div class="api" slot="content">
+                //     <div style="margin-top: 8px;margin-bottom: 8px;">
+                //       确认{row.enabled ? '停用' : '启用'}吗？
+                //     </div>
+                //     <div style="text-align: right;">
+                //       <Button type="text">取消</Button>
+                //       <Button type="primary" size="small">
+                //         确认
+                //       </Button>
+                //     </div>
+                //   </div>
+                //   <span type="itv-btn__text">
+                //     {row.enabled ? '停用' : '启用'}
+                //   </span>
+                // </Poptip>
+                <span
+                  class="itv-btn__text"
+                  onClick={this.handleEnable.bind(null, row)}
+                >
+                  {row.enabled ? '停用' : '启用'}
+                </span>
+              )
             }
           }
         ],
@@ -99,6 +140,37 @@ export default {
   },
   watch: {},
   methods: {
+    handleEnable(row) {
+      this.$Modal.confirm({
+        title: `确认${row.enabled ? '停用' : '启用'}该网站吗？`,
+        okText: '确认',
+        cancelText: '取消',
+        loading: true,
+        onOk: () => {
+          this.doPutEnable(row, () => {
+            this.$Modal.remove()
+            this.doGetData()
+          })
+        }
+      })
+    },
+    // 修改可用
+    async doPutEnable(row, cbFun) {
+      try {
+        const params = {
+          id: row.id,
+          enabled: !row.enabled
+        }
+
+        console.log(params)
+
+        await this.$api.Link.putTargetLinkEnable(params)
+
+        cbFun()
+      } catch (e) {
+        console.error(e)
+      }
+    },
     async doGetData() {
       try {
         const params = {

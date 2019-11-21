@@ -43,6 +43,11 @@ export default {
   props: {},
   components: {},
   data() {
+    const C_GREEN = '#47cb89'
+    const C_ORANGE = '#e88986'
+    const C_BLUE = '#4F87FB'
+    const C_GREY = '#c5c8ce'
+
     return {
       table: {
         data: [],
@@ -58,29 +63,23 @@ export default {
               return (
                 <div class="table-cell__nickname">
                   <img src={row.headimgurl} class="img--headimgurl mr8" />
-                  <span class="text--nickname">{row.nickname}</span>
+                  {/* eslint-disable */
+                    row.sex === 0
+                    ? '-'
+                    : row.sex === 2
+                    ? <itv-icon class="fs0" type="i-woman" size="20" />
+                    : <itv-icon class="fs0" type="i-man" size="20" />
+                  }
+                  <Tooltip content={row.nickname} placement="top" transfer class="df">
+                    <div class="text--nickname">{row.nickname}</div>
+                  </Tooltip>
                 </div>
               )
             }
           },
           {
-            title: '性别',
-            key: 'sex',
-            width: 80,
-            render: (h, { row }) => {
-              /* eslint-disable */
-              return (
-                row.sex === 0
-                ? '-'
-                : row.sex === 2
-                ? <itv-icon type="i-woman" size="20" />
-                : <itv-icon type="i-man" size="20" />
-              )
-            }
-          },
-          {
             title: '注册时间',
-            minWidth: 120,
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 140,
             key: 'create_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.create_time).split(' ')
@@ -95,34 +94,8 @@ export default {
             }
           },
           {
-            title: '是否关注服务号',
-            minWidth: 120,
-            key: 'subscribe',
-            // align: 'center',
-            render: (h, { row }) => {
-              return <span>{row.subscribe ? '是' : '否'}</span>
-            }
-          },
-          {
-            title: '地域',
-            minWidth: 120,
-            key: 'country province city',
-            render: (h, { row }) => {
-              const string = [row.country, row.province, row.city].filter(item => item).join('-')
-              return <span>{string}</span>
-            }
-          },
-          {
-            title: '是否可用',
-            minWidth: 100,
-            key: 'enabled',
-            render: (h, { row }) => {
-              return <span>{row.enabled ? '是' : '否'}</span>
-            }
-          },
-          {
             title: '最近登录时间',
-            minWidth: 120,
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 140,
             key: 'last_login_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.last_login_time).split(' ')
@@ -152,11 +125,51 @@ export default {
             key: 'n_urls'
           },
           {
+            title: '其他',
+            minWidth: 120,
+            key: 'subscribe',
+            // align: 'center',
+            render: (h, { row }) => {
+              // return <span>{row.subscribe ? '是' : '否'}</span>
+              //  <Icon title="是否可用" type="md-checkmark-circle" color={row.enabled ? C_GREEN : C_GREY} size="18"/>
+              return (
+                <div>
+                  <span class="mr8" title="是否关注服务号">
+                    <itv-icon type="i-attention" style={{color: (row.subscribe ? C_GREEN : C_GREY)}} size="24"/>
+                  </span>
+                  <span class="mr8" title="是否网页登录">
+                    <itv-icon type="i-pc" style={{color: (row.sa_openid ? C_ORANGE : C_GREY)}} size="24"/>
+                  </span>
+                  <span title="是否小程序登录">
+                    <itv-icon type="i-wx" style={{color: (row.mp_openid ? C_BLUE : C_GREY)}} size="24"/>
+                  </span>
+                </div>
+              )
+            }
+          },
+          {
+            title: '地域',
+            width: 146,
+            key: 'country province city',
+            render: (h, { row }) => {
+              const string = [row.country, row.province, row.city].filter(item => item).join('-')
+              return (
+                <Tooltip content={string} placement="top-start" transfer class="df">
+                  <div  class="text-area">{string}</div>
+                </Tooltip>
+              )
+            }
+          },
+          {
             title: '操作',
             width: 80,
             fixed: 'right',
             render: (h, { row }) => {
-              return <itv-icon title="查看短链" type="i-detail" size="20" class="itv-btn__icon" onClick={this.toUserDetail.bind(null, row)}/>
+              return (
+                <span title="查看短链">
+                  <itv-icon type="i-detail" size="20" class="itv-btn__icon" onClick={this.toUserDetail.bind(null, row)}/>
+                </span>
+              )
             }
           }
         ],
@@ -170,6 +183,7 @@ export default {
       options: {
         sort: [
           { value: 'time', label: '按创建时间倒序' },
+          { value: 'login', label: '按最近登录时间' },
           { value: 'link', label: '按创建短链数量倒序' },
           { value: 'click', label: '按短链访问次数倒序' },
           { value: 'url', label: '按跳转链接数量倒序' }

@@ -3,6 +3,8 @@
 ## 注意： 如果要新加入svg图标，svg需要进行如下处理
 
 > 1、将fill属性全部去除，有时stroke的值是色值也需要去除。（这样才能使组件的color生效，被svg沿用。）
+> - fill="none"
+> - fill="#45CB87"
 > 2、将svg的title属性的值移入desc。（为了让svg-show-all.vue中能显示相应的中文解释，便于搜索。）
 > 3、要将title属性删除。（为了让鼠标移入图标时，显示使用者自己设置的title。）
 

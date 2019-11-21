@@ -21,8 +21,19 @@
 
 // 用户昵称
 .text--nickname {
-  // white-space: nowrap;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   margin: 6px;
+  width: 74px;
+}
+
+// 地域
+.text-area {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 110px;
 }
 
 // 不换行
@@ -46,4 +57,12 @@
 .img--favicon {
   width: 20px;
   height: 20px;
+}
+
+.fs0 {
+  flex-shrink: 0;
+}
+
+.df {
+  display: flex;
 }
