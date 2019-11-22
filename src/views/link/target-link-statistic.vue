@@ -42,7 +42,7 @@ export default {
         columns: [
           {
             title: '域名',
-            minWidth: 120,
+            minWidth: 240,
             key: 'hostname netloc favicon',
             render: (h, { row }) => {
               // <img src={row.favicon} class="img--headimgurl mr8" />
@@ -54,7 +54,7 @@ export default {
                       class="img--favicon"
                     />
                   </div>
-                  <span class="text--nickname">{row.netloc}</span>
+                  <span>{row.netloc}</span>
                 </div>
               )
             }
