@@ -60,7 +60,8 @@ export default {
     changePageSize(pageSize) {
       // 切换每页条数时，为了不出现奇怪的现象，需要重置到第一页
       this.page_size = pageSize
-      this.current_page = 1 // 直接修改page，会触发pageChange
+      // eslint-disable-next-line no-extra-parens
+      this.current_page === 1 ? this.pageChange(1) : (this.current_page = 1) // 当page为1时，需要手动触发ageChange。当page不为1时，直接修改page，会触发pageChange
     },
 
     /**
