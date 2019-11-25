@@ -126,7 +126,7 @@ export default {
           },
           {
             title: '其他',
-            minWidth: 120,
+            minWidth: 130,
             key: 'subscribe',
             // align: 'center',
             render: (h, { row }) => {

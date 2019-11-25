@@ -82,6 +82,8 @@ export default {
                   max-width={200}
                 >
                   <a
+                    target="_blank"
+                    rel="noreferrer"
                     href={row.origin_url}
                     class="text--oneRow"
                     style="width: 120px;display: inline-block;"
