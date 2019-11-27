@@ -2,7 +2,18 @@
 <template>
   <div class="target-link-statistic itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">
-      <div class="header__search"></div>
+      <div class="header__search">
+        <Input
+          clearable
+          v-model="form.search"
+          placeholder="请输入"
+          style="width: 300px"
+          @on-enter="doGetData"
+          @on-clear="doGetData"
+          class="mr8"
+        />
+        <Button type="primary" @click="doGetData">搜索</Button>
+      </div>
       <Select v-model="form.sort" style="width:150px" @on-change="doGetData">
         <Option
           v-for="(item, index) in options.sort"
@@ -14,6 +25,7 @@
     </div>
     <!-- 表格 -->
     <Table
+      :loading="loading"
       style="flex: 1;"
       ref="refTable"
       :height="table.height"
@@ -36,6 +48,7 @@ export default {
     const C_GREY = '#c5c8ce'
 
     return {
+      loading: true,
       table: {
         data: [],
         total: 0,
@@ -73,6 +86,44 @@ export default {
             title: '是否可用',
             minWidth: 100,
             key: 'enabled',
+            renderHeader: (h) => {
+              console.log(h)
+              const options = [
+                { name: '全部', value: '' },
+                { name: '可用', value: 1 },
+                { name: '不可用', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.enabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.enabled = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div>
+                    <span class="mr8">是否可用</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
             render: (h, { row }) => {
               return (
                 <Icon
@@ -87,25 +138,8 @@ export default {
           {
             title: '操作',
             width: 100,
-            // fixed: 'right',
             render: (h, { row }) => {
               return (
-                // <Poptip transfer>
-                //   <div class="api" slot="content">
-                //     <div style="margin-top: 8px;margin-bottom: 8px;">
-                //       确认{row.enabled ? '停用' : '启用'}吗？
-                //     </div>
-                //     <div style="text-align: right;">
-                //       <Button type="text">取消</Button>
-                //       <Button type="primary" size="small">
-                //         确认
-                //       </Button>
-                //     </div>
-                //   </div>
-                //   <span type="itv-btn__text">
-                //     {row.enabled ? '停用' : '启用'}
-                //   </span>
-                // </Poptip>
                 <span
                   class="itv-btn__text"
                   onClick={this.handleEnable.bind(null, row)}
@@ -119,11 +153,13 @@ export default {
         height: null // 表格的高度
       },
       form: {
+        enabled: '',
+        search: '',
         sort: 'time'
       },
       options: {
         sort: [
-          { value: 'time', label: '按域名排序' },
+          { value: 'time', label: '按创建时间排序' },
           { value: 'link', label: '按链接数量倒序' },
           { value: 'click', label: '按链接访问次数倒序' }
         ]
@@ -171,9 +207,22 @@ export default {
         console.error(e)
       }
     },
-    async doGetData() {
+    doGetData(page = {}) {
+      if (!page.page) {
+        this.$global.utils.pagination.reset()
+        this.$nextTick(() => {
+          this.doGetData2()
+        })
+      } else {
+        this.doGetData2()
+      }
+    },
+    async doGetData2() {
+      this.loading = true
       try {
         const params = {
+          enabled: this.form.enabled,
+          qs: this.form.search,
           order_by: this.form.sort
         }
 
@@ -187,12 +236,23 @@ export default {
       } catch (e) {
         console.error(e)
       }
+      this.loading = false
     }
   }
 }
 </script>
 
-<style scoped lang="less">
-//.target-link-statistic {
-//}
+<style lang="less">
+.target-link-statistic {
+  .enabled_active {
+    color: @primary-color;
+  }
+  .enabled_item {
+    padding: 0 !important;
+  }
+  .enabled_span {
+    padding: 7px 16px;
+    display: inline-block;
+  }
+}
 </style>

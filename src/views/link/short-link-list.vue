@@ -25,6 +25,7 @@
     </div>
     <!-- 表格 -->
     <Table
+      :loading="loading"
       style="flex: 1;"
       ref="refTable"
       :height="table.height"
@@ -48,6 +49,7 @@ export default {
     const C_ORANGE = '#e88986'
 
     return {
+      loading: true,
       table: {
         data: [],
         total: 0,
@@ -194,7 +196,18 @@ export default {
         query: { name: row.user.nickname }
       })
     },
-    async doGetData() {
+    doGetData(page = {}) {
+      if (!page.page) {
+        this.$global.utils.pagination.reset()
+        this.$nextTick(() => {
+          this.doGetData2()
+        })
+      } else {
+        this.doGetData2()
+      }
+    },
+    async doGetData2() {
+      this.loading = true
       try {
         const params = {
           user_id: '', // 用户ID
@@ -212,6 +225,7 @@ export default {
       } catch (e) {
         console.error(e)
       }
+      this.loading = false
     }
   }
 }

@@ -33,6 +33,7 @@
     </div>
     <!-- 表格 -->
     <Table
+      :loading="loading"
       style="flex: 1;"
       ref="refTable"
       :height="table.height"
@@ -59,6 +60,7 @@ export default {
     }
 
     return {
+      loading: true,
       // 获取表格数据的参数
       form: {
         date: [
@@ -161,6 +163,7 @@ export default {
 
     // 获取数据
     async doGetTableData() {
+      this.loading = true
       try {
         const stats_date = this.form.date
           .map((v) => this.$PDo.Date.format(v.toJSON(), 'y-m-d'))
@@ -174,6 +177,7 @@ export default {
       } catch (e) {
         console.log(e)
       }
+      this.loading = false
     },
 
     // 获取总的数据

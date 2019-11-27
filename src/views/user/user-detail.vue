@@ -20,6 +20,7 @@
     </div>
     <!-- 表格 -->
     <Table
+      :loading="loading"
       style="flex: 1;"
       ref="refTable"
       :height="table.height"
@@ -39,6 +40,7 @@ export default {
   components: {},
   data() {
     return {
+      loading: true,
       table: {
         data: [],
         total: 0,
@@ -136,7 +138,18 @@ export default {
   },
   watch: {},
   methods: {
-    async doGetData() {
+    doGetData(page = {}) {
+      if (!page.page) {
+        this.$global.utils.pagination.reset()
+        this.$nextTick(() => {
+          this.doGetData2()
+        })
+      } else {
+        this.doGetData2()
+      }
+    },
+    async doGetData2() {
+      this.loading = true
       try {
         const params = {
           user_id: this.$route.params.user_id, // 用户ID
@@ -153,6 +166,7 @@ export default {
       } catch (e) {
         console.error(e)
       }
+      this.loading = false
     }
   }
 }
