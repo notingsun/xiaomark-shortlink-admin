@@ -19,6 +19,9 @@ if (process.env.NODE_ENV !== 'development') {
   console.log = () => {}
 }
 
+Vue.filter('countShort', global.utils.countFormat.short)
+Vue.filter('countThree', global.utils.countFormat.three)
+
 Vue.use(iView)
 Vue.use(CustomComponents)
 

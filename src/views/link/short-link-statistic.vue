@@ -5,14 +5,16 @@
     <div class="overview--wrap mb16">
       <div class="overview__cell" v-for="(item, i) in overview.list" :key="i">
         <p class="overview__cell__value">
-          {{
-            overview.data[item]
-              ? String(overview.data[item]).replace(
-                  /(\d+?)(?=(\d{3})+$)/g,
-                  '$1,'
-                )
-              : '-'
-          }}
+          <Tooltip
+            :disabled="overview.data[item] < 1000"
+            :content="overview.data[item] | countThree"
+            placement="bottom"
+            theme="light"
+          >
+            <span>
+              {{ overview.data[item] | countShort }}
+            </span>
+          </Tooltip>
         </p>
         <p class="overview__cell__name">{{ overview.name_map[item] }}</p>
       </div>
@@ -64,12 +66,19 @@ export default {
       // 获取表格数据的参数
       form: {
         date: [
-          this.$PDo.Date.getTimeCalculation(-29, 'y/m/d'),
+          this.$PDo.Date.getTimeCalculation(-6, 'y/m/d'),
           this.$PDo.Date.getTimeCalculation(0, 'y/m/d')
         ]
       },
       options: {
         shortcuts: [
+          {
+            text: '最近7天',
+            formart: this.getTimeCalculation,
+            value() {
+              return [this.formart(-6), this.formart(0)]
+            }
+          },
           {
             text: '最近30天',
             formart: this.getTimeCalculation,
@@ -122,12 +131,26 @@ export default {
           {
             title: '短链访问人数',
             minWidth: 120,
-            key: 'n_visitors'
+            // key: 'n_visitors',
+            render: (h, { row }) => {
+              return (
+                <span>
+                  {this.$global.utils.countFormat.three(row.n_visitors)}
+                </span>
+              )
+            }
           },
           {
             title: '短链访问次数',
             minWidth: 120,
-            key: 'n_clicks'
+            // key: 'n_clicks',
+            render: (h, { row }) => {
+              return (
+                <span>
+                  {this.$global.utils.countFormat.three(row.n_clicks)}
+                </span>
+              )
+            }
           },
           {
             title: '新建分组数',

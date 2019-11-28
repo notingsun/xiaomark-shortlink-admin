@@ -78,10 +78,36 @@ const pagination = {
   }
 }
 
+const countFormat = {
+  // 数量，三位逗号分割
+  three: function(value) {
+    return String(value || 0).replace(/(\d+?)(?=(\d{3})+$)/g, '$1,') || '-'
+  },
+  // 数量，缩短
+  short: function(count) {
+    const p = 1 // 精度
+
+    let k = parseInt(count / 1000),
+      w = parseInt(count / 10000)
+
+    // 千
+    if (k > 0 && k < 10) {
+      return parseFloat(count / 1000).toFixed(p) + 'k'
+    }
+
+    // 万
+    if (w > 0) {
+      return parseFloat(count / 10000).toFixed(p) + 'w'
+    }
+    return count
+  }
+}
+
 /**
  * 需要注册的工具函数
  */
 const UTILS = {
+  countFormat,
   verifyForm,
   pagination,
   downloadBase64Img

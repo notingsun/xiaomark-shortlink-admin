@@ -29,9 +29,9 @@
         placement="bottom-start"
         transfer
       >
-        <span class="layout_user_name">
+        <span class="layout_user_name itv-flex--sb">
           {{ $bus.admin.username }}
-          <Icon type="ios-arrow-down"></Icon>
+          <Icon type="md-settings" class="mr16" />
         </span>
         <DropdownMenu slot="list">
           <DropdownItem @click.native="handleChangePwd">修改密码</DropdownItem>
