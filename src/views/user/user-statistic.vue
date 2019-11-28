@@ -2,21 +2,26 @@
 <template>
   <div class="user-statistic">
     <!-- 总的数据 -->
-    <div class="overview--wrap mb16">
-      <div class="overview__cell" v-for="(item, i) in overview.list" :key="i">
-        <p class="overview__cell__value">
-          <Tooltip
-            :disabled="overview.data[item] < 1000"
-            :content="overview.data[item] | countThree"
-            placement="bottom"
-            theme="light"
-          >
-            <span>
-              {{ overview.data[item] | countShort }}
-            </span>
-          </Tooltip>
-        </p>
-        <p class="overview__cell__name">{{ overview.name_map[item] }}</p>
+    <div class="card">
+      <div class="card__title">小码短链接</div>
+      <div class="overview--wrap mb16">
+        <div class="overview__cell" v-for="(item, i) in overview.list" :key="i">
+          <p class="overview__cell__value">
+            <Tooltip
+              :disabled="overview.data[item] < 1000"
+              placement="top"
+              theme="light"
+            >
+              <div slot="content" style="font-size: 16px;">
+                {{ overview.data[item] | countThree }}
+              </div>
+              <span>
+                {{ overview.data[item] | countShort }}
+              </span>
+            </Tooltip>
+          </p>
+          <p class="overview__cell__name">{{ overview.name_map[item] }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -70,6 +75,18 @@ export default {
 
 <style scoped lang="less">
 .user-statistic {
+  .card {
+    padding: 24px 0 32px;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    &__title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-left: 32px;
+      margin-bottom: 32px;
+    }
+  }
   .overview--wrap {
     display: flex;
     justify-content: space-around;
@@ -94,12 +111,14 @@ export default {
       }
     }
     .overview__cell__value {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 500;
+      margin-bottom: 4px;
       color: @primary-color;
     }
-    // .overview__cell__name {
-    // }
+    .overview__cell__name {
+      font-size: 14px;
+    }
   }
 }
 </style>

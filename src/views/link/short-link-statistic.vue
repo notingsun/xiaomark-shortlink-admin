@@ -6,7 +6,7 @@
       <DatePicker
         type="daterange"
         :options="options"
-        placement="bottom-end"
+        placement="bottom-start"
         placeholder="请选择"
         style="width: 200px"
         v-model="form.date"

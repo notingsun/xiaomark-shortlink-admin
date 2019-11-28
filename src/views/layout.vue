@@ -71,7 +71,12 @@
         </DropdownMenu>
       </Dropdown>
     </Menu>
-    <div class="layout-content-wrap">
+    <div
+      :class="[
+        'layout-content-wrap',
+        $route.meta.menuIndex === '1' ? 'bg-none' : ''
+      ]"
+    >
       <transition name="fade" mode="out-in">
         <router-view class="layout-content" v-if="show_view" />
       </transition>
@@ -291,6 +296,9 @@ export default {
     padding: 0;
     background: #fff;
     height: 100vh;
+    &.bg-none {
+      background: transparent;
+    }
   }
   &-content {
     flex: 1;
@@ -299,7 +307,6 @@ export default {
     height: 100vh;
     overflow: hidden;
     padding: 32px 24px 20px 24px;
-    background: #fff;
     height: 100vh;
   }
 }
