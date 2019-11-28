@@ -137,15 +137,23 @@ export default {
           },
           {
             title: '操作',
-            width: 100,
+            width: 150,
             render: (h, { row }) => {
               return (
-                <span
-                  class="itv-btn__text"
-                  onClick={this.handleEnable.bind(null, row)}
-                >
-                  {row.enabled ? '停用' : '启用'}
-                </span>
+                <div>
+                  <span
+                    class="itv-btn__text mr16"
+                    onClick={this.handleEnable.bind(null, row)}
+                  >
+                    {row.enabled ? '停用' : '启用'}
+                  </span>
+                  <span
+                    class="itv-btn__text"
+                    onClick={this.handleFavicon.bind(null, row)}
+                  >
+                    更新图标
+                  </span>
+                </div>
               )
             }
           }
@@ -176,6 +184,30 @@ export default {
   },
   watch: {},
   methods: {
+    handleFavicon(row) {
+      this.$Modal.confirm({
+        title: '确认更新图标吗？',
+        okText: '确认',
+        cancelText: '取消',
+        loading: true,
+        onOk: () => {
+          this.doUpdateFavicon(row, (favicon) => {
+            this.$Modal.remove()
+            favicon && (this.table[row['_index']].favicon = favicon)
+          })
+        }
+      })
+    },
+    // 更新图标
+    async doUpdateFavicon(row, cbFun) {
+      try {
+        await this.$api.Link.putTargetLinkFavicon(row.id) // 最慢要30s
+
+        cbFun()
+      } catch (e) {
+        console.error(e)
+      }
+    },
     handleEnable(row) {
       this.$Modal.confirm({
         title: `确认${row.enabled ? '停用' : '启用'}该网站吗？`,
@@ -198,8 +230,6 @@ export default {
           enabled: !row.enabled
         }
 
-        console.log(params)
-
         await this.$api.Link.putTargetLinkEnable(params)
 
         cbFun()
@@ -207,6 +237,8 @@ export default {
         console.error(e)
       }
     },
+
+    // 获取表格的数据
     doGetData(page = {}) {
       if (!page.page) {
         this.$global.utils.pagination.reset()

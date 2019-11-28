@@ -1,6 +1,15 @@
 import request from './instance'
 
 export default {
+  putTargetLinkFavicon(id, params = {}) {
+    return request({
+      method: 'put',
+      name: '更新网站图标',
+      url: `/api/sl/websites/${id}/favicon/`,
+      params
+    })
+  },
+
   putTargetLinkEnable(params) {
     console.log(params.id)
     return request({
