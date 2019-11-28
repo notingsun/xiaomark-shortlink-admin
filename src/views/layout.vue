@@ -299,6 +299,9 @@ export default {
     &.bg-none {
       background: transparent;
     }
+    &.bg-none .layout-content {
+      padding: 16px 16px 0 0;
+    }
   }
   &-content {
     flex: 1;
