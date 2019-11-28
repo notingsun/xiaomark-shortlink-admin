@@ -24,12 +24,12 @@ const layout = {
   redirect: '/user-list',
   component: () => import('@/views/layout.vue'),
   children: [
-    // {
-    //   path: '/user-statistic',
-    //   meta: { menuIndex: '1', title: '用户数据' },
-    //   name: 'UserStatistic',
-    //   component: () => import('@/views/user/user-statistic.vue')
-    // },
+    {
+      path: '/user-statistic',
+      meta: { menuIndex: '1', title: '用户数据' },
+      name: 'UserStatistic',
+      component: () => import('@/views/user/user-statistic.vue')
+    },
     {
       path: '/user-list',
       meta: { menuIndex: '2', title: '用户列表' },

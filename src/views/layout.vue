@@ -1,24 +1,50 @@
 <template>
   <div class="layout">
-    <Menu class="layout-menu" :active-name="$route.meta.menuIndex">
+    <Menu
+      class="layout-menu"
+      :active-name="$route.meta.menuIndex"
+      :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']"
+    >
       <!-- logo -->
-      <div class="logo">
-        <img src="../assets/logo-xm.png" alt="" class="logo--img" />
+      <div class="logo cp" @click="$router.push({ name: 'UserStatistic' })">
+        <img src="../assets/logo-xm.png" alt="" class="img-logo" />
       </div>
-
       <!-- 菜单 -->
-      <Submenu class="flex1 itv-flex-v--fs">
-        <div slot="title">
-          <img
-            src="../assets/logo-link.png"
-            class="img-logo-link"
-            alt="小码短链接"
-          />
-        </div>
-        <!-- 菜单 -->
-        <div class="flex1 itv-flex-v--fs">
+      <div class="flex1 itv-flex-v--fs">
+        <!-- 小码短链接 -->
+        <Submenu name="01">
+          <div slot="title" class="img-logo-sub">
+            <img
+              src="../assets/logo-link.png"
+              class="img-logo-link"
+              alt="小码短链接"
+            />
+          </div>
+          <!-- 菜单 -->
+          <div class="flex1 itv-flex-v--fs">
+            <MenuItem
+              v-for="item in menu_link"
+              :name="item.name"
+              :key="`menu_${item.name}`"
+              :to="item.route"
+              class="menu-item"
+            >
+              <span class="ib20">{{ item.title }}</span>
+            </MenuItem>
+          </div>
+        </Submenu>
+
+        <!-- 小码渠道码 -->
+        <Submenu name="02">
+          <div slot="title" class="img-logo-sub">
+            <img
+              src="../assets/logo-qr.png"
+              class="img-logo-link"
+              alt="小码渠道码"
+            />
+          </div>
           <MenuItem
-            v-for="item in menu"
+            v-for="item in menu_qr"
             :name="item.name"
             :key="`menu_${item.name}`"
             :to="item.route"
@@ -26,22 +52,8 @@
           >
             <span class="ib20">{{ item.title }}</span>
           </MenuItem>
-        </div>
-      </Submenu>
-
-      <!-- 菜单 -->
-      <!-- <div class="flex1 itv-flex-v--fs">
-        <template v-for="item in menu">
-          <MenuItem
-            :name="item.name"
-            :key="`menu_${item.name}`"
-            :to="item.route"
-            class="menu-item"
-          >
-            <span class="ib20">{{ item.title }}</span>
-          </MenuItem>
-        </template>
-      </div> -->
+        </Submenu>
+      </div>
 
       <!-- 用户名称 -->
       <Dropdown
@@ -59,9 +71,11 @@
         </DropdownMenu>
       </Dropdown>
     </Menu>
-    <transition name="fade" mode="out-in">
-      <router-view class="layout-content" />
-    </transition>
+    <div class="layout-content-wrap">
+      <transition name="fade" mode="out-in">
+        <router-view class="layout-content" v-if="show_view" />
+      </transition>
+    </div>
     <Modal
       :mask-closable="false"
       v-model="modal.show"
@@ -105,6 +119,7 @@ export default {
   name: 'Layout',
   data() {
     return {
+      show_view: false,
       modal: {
         show: false,
         isSubmiting: false,
@@ -133,13 +148,7 @@ export default {
           ]
         }
       },
-      menu: [
-        // {
-        //   name: '1',
-        //   title: '用户数据',
-        //   icon: 'i-home',
-        //   route: { name: 'UserStatistic' }
-        // },
+      menu_link: [
         {
           name: '2',
           title: '用户列表',
@@ -164,7 +173,8 @@ export default {
           icon: 'i-email',
           route: { name: 'TargetLinkStatistic' }
         }
-      ]
+      ],
+      menu_qr: []
     }
   },
   computed: {
@@ -179,6 +189,9 @@ export default {
   created() {},
   mounted() {
     this.getAdminDetail()
+    setTimeout(() => {
+      this.show_view = true
+    }, 300)
   },
   methods: {
     // 获取当前管理员详情
@@ -233,18 +246,31 @@ export default {
     margin-bottom: 24px;
     text-align: center;
   }
+  .img-logo {
+    height: 40px;
+  }
+  .img-logo-sub {
+    width: 50px;
+    text-align: right;
+  }
   .img-logo-link {
-    height: 28px;
+    height: 24px;
   }
   .logo {
     width: 100%;
     text-align: center;
     margin-bottom: 28px;
-    &--img {
-      // width: 120px;
-      height: 55px;
-      object-fit: contain;
-    }
+    position: relative;
+    // &::after {
+    //   content: '';
+    //   height: 1px;
+    //   width: 98%;
+    //   display: block;
+    //   left: 1%;
+    //   bottom: -18px;
+    //   position: absolute;
+    //   background: @border-color-split;
+    // }
   }
   .layout-menu {
     padding: 32px 0 0;
@@ -254,6 +280,17 @@ export default {
     border: none;
     display: flex;
     flex-direction: column;
+  }
+  &-content-wrap {
+    display: flex;
+    flex: 1;
+    margin-left: 8px;
+    max-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    padding: 0;
+    background: #fff;
+    height: 100vh;
   }
   &-content {
     flex: 1;
