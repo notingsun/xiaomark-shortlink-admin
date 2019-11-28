@@ -1,11 +1,36 @@
 <template>
   <div class="layout">
     <Menu class="layout-menu" :active-name="$route.meta.menuIndex">
-      <!-- <h2>SCRM 管理后台</h2> -->
+      <!-- logo -->
       <div class="logo">
-        <img src="../assets/logo-1.png" alt="" class="logo--img" />
+        <img src="../assets/logo-xm.png" alt="" class="logo--img" />
       </div>
-      <div class="flex1 itv-flex-v--fs">
+
+      <!-- 菜单 -->
+      <Submenu class="flex1 itv-flex-v--fs">
+        <div slot="title">
+          <img
+            src="../assets/logo-link.png"
+            class="img-logo-link"
+            alt="小码短链接"
+          />
+        </div>
+        <!-- 菜单 -->
+        <div class="flex1 itv-flex-v--fs">
+          <MenuItem
+            v-for="item in menu"
+            :name="item.name"
+            :key="`menu_${item.name}`"
+            :to="item.route"
+            class="menu-item"
+          >
+            <span class="ib20">{{ item.title }}</span>
+          </MenuItem>
+        </div>
+      </Submenu>
+
+      <!-- 菜单 -->
+      <!-- <div class="flex1 itv-flex-v--fs">
         <template v-for="item in menu">
           <MenuItem
             :name="item.name"
@@ -13,17 +38,12 @@
             :to="item.route"
             class="menu-item"
           >
-            <!-- <itv-icon
-            :type="item.icon"
-            width="20px"
-            height="20px"
-            :color="item.name == sub_menu_active ? 'primary' : 'sub'"
-            class="menu-item__icon ib20 mr24"
-          /> -->
             <span class="ib20">{{ item.title }}</span>
           </MenuItem>
         </template>
-      </div>
+      </div> -->
+
+      <!-- 用户名称 -->
       <Dropdown
         class="setting layout_setting"
         placement="bottom-start"
@@ -213,12 +233,15 @@ export default {
     margin-bottom: 24px;
     text-align: center;
   }
+  .img-logo-link {
+    height: 28px;
+  }
   .logo {
     width: 100%;
     text-align: center;
     margin-bottom: 28px;
     &--img {
-      width: 120px;
+      // width: 120px;
       height: 55px;
       object-fit: contain;
     }
@@ -270,6 +293,10 @@ export default {
   .menu-item__icon {
     color: @primary-color;
   }
+}
+
+.menu-item {
+  font-size: 14px !important;
 }
 
 // bugfix：侧边导航有子目录时， hover 位置缩小
