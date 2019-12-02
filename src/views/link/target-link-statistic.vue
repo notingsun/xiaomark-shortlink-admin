@@ -73,6 +73,22 @@ export default {
             }
           },
           {
+            title: '创建时间',
+            minWidth: 120,
+            key: 'create_time',
+            render: (h, { row }) => {
+              const arr = this.$PDo.Date.format(row.create_time).split(' ')
+
+              return (
+                <span>
+                  {arr[0]}
+                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  {arr[1]}
+                </span>
+              )
+            }
+          },
+          {
             title: '对应短链数量',
             minWidth: 120,
             key: 'n_links'
@@ -84,10 +100,10 @@ export default {
           },
           {
             title: '是否可用',
-            minWidth: 100,
+            minWidth: 120,
             key: 'enabled',
+            // eslint-disable-next-line no-unused-vars
             renderHeader: (h) => {
-              console.log(h)
               const options = [
                 { name: '全部', value: '' },
                 { name: '可用', value: 1 },
