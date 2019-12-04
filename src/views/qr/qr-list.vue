@@ -125,7 +125,10 @@ export default {
           {
             title: '当前留存率',
             minWidth: 120,
-            key: 'stay_ratio'
+            key: 'stay_ratio',
+            render: (h, { row }) => {
+              return <span>{((row.stay_ratio || 0) * 100).toFixed(1)}%</span>
+            }
           },
           {
             title: '所属公众号',
