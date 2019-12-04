@@ -212,21 +212,28 @@ export default {
         cancelText: '取消',
         loading: true,
         onOk: () => {
-          this.doUpdateFavicon(row, (favicon) => {
-            this.$Modal.remove()
-            favicon && (this.table[row['_index']].favicon = favicon)
-          })
+          this.doUpdateFavicon(
+            row,
+            (favicon) => {
+              this.$Modal.remove()
+              favicon && (this.table[row['_index']].favicon = favicon)
+            },
+            () => {
+              this.$Modal.remove()
+            }
+          )
         }
       })
     },
     // 更新图标
-    async doUpdateFavicon(row, cbFun) {
+    async doUpdateFavicon(row, cbSuccess, cbError) {
       try {
         await this.$api.Link.putTargetLinkFavicon(row.id) // 最慢要30s
 
-        cbFun()
+        cbSuccess()
       } catch (e) {
-        console.error(e)
+        // console.error(e)
+        cbError()
       }
     },
     handleEnable(row) {
@@ -236,15 +243,21 @@ export default {
         cancelText: '取消',
         loading: true,
         onOk: () => {
-          this.doPutEnable(row, () => {
-            this.$Modal.remove()
-            this.doGetData()
-          })
+          this.doPutEnable(
+            row,
+            () => {
+              this.$Modal.remove()
+              this.doGetData()
+            },
+            () => {
+              this.$Modal.remove()
+            }
+          )
         }
       })
     },
     // 修改可用
-    async doPutEnable(row, cbFun) {
+    async doPutEnable(row, cbSuccess, cbError) {
       try {
         const params = {
           id: row.id,
@@ -253,9 +266,10 @@ export default {
 
         await this.$api.Link.putTargetLinkEnable(params)
 
-        cbFun()
+        cbSuccess()
       } catch (e) {
-        console.error(e)
+        // console.error(e)
+        cbError()
       }
     },
 
