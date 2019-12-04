@@ -14,7 +14,12 @@
         />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
-      <Select v-model="form.sort" style="width:150px" @on-change="doGetData">
+      <Select
+        v-model="form.sort"
+        style="width:150px"
+        @on-change="doGetData"
+        placement="bottom-end"
+      >
         <Option
           v-for="(item, index) in options.sort"
           :value="item.value"

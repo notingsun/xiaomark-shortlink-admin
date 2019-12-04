@@ -1,13 +1,13 @@
 /* 用户创建的短链页 */
 <template>
-  <div class="user-detail itv-flex-v--fs">
+  <div class="account-qr-list itv-flex-v--fs">
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <Breadcrumb>
         <BreadcrumbItem class="cp" @click.native="$router.go(-1)"
-          >用户列表</BreadcrumbItem
+          >公众号列表</BreadcrumbItem
         >
-        <BreadcrumbItem>{{ $route.query.name }} 创建的短链</BreadcrumbItem>
+        <BreadcrumbItem>{{ $route.query.name }} 创建的二维码</BreadcrumbItem>
       </Breadcrumb>
       <Select
         v-model="form.sort"
@@ -39,11 +39,14 @@
 
 <script>
 export default {
-  name: 'UserDetail',
+  name: 'AccountQrList',
   mixins: [],
   props: {},
   components: {},
   data() {
+    const arr_reply = ['无', '文本消息', '图片消息', '图文消息']
+    const arr_reply_status = ['未开始', '进行中', '进行中']
+
     return {
       loading: true,
       table: {
@@ -51,18 +54,15 @@ export default {
         total: 0,
         columns: [
           {
-            title: '短链名称',
+            title: '二维码名称',
             minWidth: 120,
-            key: 'name'
-          },
-          {
-            title: '短链',
-            minWidth: 160,
-            key: 'url'
+            fixed: 'left',
+            key: 'name',
+            tooltip: true
           },
           {
             title: '创建时间',
-            minWidth: 120,
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 140,
             key: 'create_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.create_time).split(' ')
@@ -77,44 +77,45 @@ export default {
             }
           },
           {
-            title: '跳转链接',
-            minWidth: 120,
-            tooltip: true,
-            key: 'origin_url',
+            title: '回复类型',
+            minWidth: 160,
+            // key: 'reply',
             render: (h, { row }) => {
               return (
-                <Tooltip
-                  content={row.origin_url}
-                  placement="bottom"
-                  max-width={200}
-                >
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href={row.origin_url}
-                    class="text--oneRow"
-                    style="width: 120px;display: inline-block;"
-                  >
-                    {row.origin_url}
-                  </a>
-                </Tooltip>
+                <div>
+                  <span>{arr_reply[row.reply] || '-'}</span>（
+                  <span title="自动回复状态">
+                    {arr_reply_status[row.reply_status] || '-'}
+                  </span>
+                  ）
+                </div>
               )
             }
           },
           {
-            title: '访问次数',
-            minWidth: 80,
-            key: 'n_clicks'
-          },
-          {
-            title: '访问人数',
-            minWidth: 80,
+            title: '扫码人数',
+            minWidth: 120,
             key: 'n_visitors'
           },
           {
-            title: '访问IP数',
-            minWidth: 80,
-            key: 'n_ips'
+            title: '扫码新增关注',
+            minWidth: 120,
+            key: 'n_sub'
+          },
+          {
+            title: '当前留存人数',
+            minWidth: 120,
+            key: 'n_stay'
+          },
+          {
+            title: '当前取关人数',
+            minWidth: 120,
+            key: 'n_leave'
+          },
+          {
+            title: '当前留存率',
+            minWidth: 120,
+            key: 'stay_ratio'
           }
         ],
         height: null // 表格的高度
@@ -126,9 +127,10 @@ export default {
       options: {
         sort: [
           { value: 'time', label: '按创建时间倒序' },
-          { value: 'click', label: '按点击次数倒序' },
-          { value: 'visitor', label: '按点击人数倒序' },
-          { value: 'ip', label: '按点击IP数倒序' }
+          { value: 'visitor', label: '按扫码人数倒序' },
+          { value: 'sub', label: '按扫码新增关注人数倒序' },
+          { value: 'stay', label: '按当前留存人数倒序' },
+          { value: 'leave', label: '按当前取关人数倒序' }
         ]
       }
     }
@@ -157,17 +159,17 @@ export default {
       this.loading = true
       try {
         const params = {
-          user_id: this.$route.params.user_id, // 用户ID
+          platform_id: this.$route.params.account_id,
           order_by: this.form.sort
         }
 
-        const res = await this.$api.Link.getShortLinkList({
+        const res = await this.$api.Link.getQrList({
           ...params,
           ...this.$global.utils.pagination.params()
         })
 
         this.table.total = res.total
-        this.table.data = res.links || []
+        this.table.data = res.qrcodes || []
       } catch (e) {
         console.error(e)
       }
@@ -178,7 +180,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.user-detail {
+.account-qr-list {
   .cp {
     cursor: pointer;
   }

@@ -3,8 +3,10 @@
     <Menu
       class="layout-menu"
       :active-name="$route.meta.menuIndex"
-      :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']"
+      :open-names="['01', '02']"
     >
+      <!-- 只打开一个 -->
+      <!-- :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']" -->
       <!-- logo -->
       <div class="logo cp" @click="$router.push({ name: 'UserStatistic' })">
         <img src="../assets/logo-xm.png" alt="" class="img-logo" />
@@ -157,40 +159,44 @@ export default {
         {
           name: '2',
           title: '用户列表',
-          icon: 'i-email',
           route: { name: 'UserList' }
         },
         {
           name: '3',
           title: '短链数据',
-          icon: 'i-email',
           route: { name: 'ShortLinkStatistic' }
         },
         {
           name: '4',
           title: '短链列表',
-          icon: 'i-email',
           route: { name: 'ShortLinkList' }
         },
         {
           name: '5',
           title: '跳转链接数据',
-          icon: 'i-email',
           route: { name: 'TargetLinkStatistic' }
         }
       ],
-      menu_qr: []
+      menu_qr: [
+        {
+          name: '101',
+          title: '用户列表',
+          route: { name: 'UserListQr' }
+        },
+        {
+          name: '103',
+          title: '二维码列表',
+          route: { name: 'QrList' }
+        },
+        {
+          name: '104',
+          title: '公众号列表',
+          route: { name: 'AccountList' }
+        }
+      ]
     }
   },
-  computed: {
-    // 选中的侧边菜单
-    sub_menu_active() {
-      const sub_menu_active = this.$route.meta.menuIndex
-
-      // console.log('------选中的侧边菜单 ', sub_menu_active)
-      return sub_menu_active
-    }
-  },
+  computed: {},
   created() {},
   mounted() {
     this.getAdminDetail()

@@ -59,6 +59,31 @@ const layout = {
       meta: { menuIndex: '5', title: '跳转链接数据' },
       name: 'TargetLinkStatistic',
       component: () => import('@/views/link/target-link-statistic.vue')
+    },
+    // 渠道码
+    {
+      path: '/user-list-qr',
+      meta: { menuIndex: '101', title: '用户列表-渠道码' },
+      name: 'UserListQr',
+      component: () => import('@/views/qr/user-list-qr.vue')
+    },
+    {
+      path: '/account-qr-list/:account_id',
+      meta: { menuIndex: '104', title: '公众号列表-二维码' },
+      name: 'AccountQrList',
+      component: () => import('@/views/qr/account-qr-list.vue')
+    },
+    {
+      path: '/qr-list',
+      meta: { menuIndex: '103', title: '二维码列表' },
+      name: 'QrList',
+      component: () => import('@/views/qr/qr-list.vue')
+    },
+    {
+      path: '/account-list',
+      meta: { menuIndex: '104', title: '公众号列表' },
+      name: 'AccountList',
+      component: () => import('@/views/qr/account-list.vue')
     }
   ]
 }

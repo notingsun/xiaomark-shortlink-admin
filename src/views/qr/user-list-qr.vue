@@ -1,6 +1,6 @@
-/* 用户列表 */
+/* 用户列表-渠道码 */
 <template>
-  <div class="user-list itv-flex-v--fs">
+  <div class="user-list-qr itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">
       <div class="header__search">
         <Input
@@ -14,19 +14,35 @@
         />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
-      <Select
-        v-model="form.sort"
-        style="width:150px"
-        @on-change="doGetData"
-        placement="bottom-end"
-      >
-        <Option
-          v-for="(item, index) in options.sort"
-          :value="item.value"
-          :key="index"
-          >{{ item.label }}</Option
+      <div class="itv-flex--fs">
+        <Select
+          v-model="form.bound"
+          style="width:150px"
+          @on-change="doGetData"
+          class="mr8"
+          placement="bottom-end"
         >
-      </Select>
+          <Option
+            v-for="(item, index) in options.bound"
+            :value="item.value"
+            :key="index"
+            >{{ item.label }}</Option
+          >
+        </Select>
+        <Select
+          v-model="form.authorized"
+          style="width:150px"
+          @on-change="doGetData"
+          placement="bottom-end"
+        >
+          <Option
+            v-for="(item, index) in options.authorized"
+            :value="item.value"
+            :key="index"
+            >{{ item.label }}</Option
+          >
+        </Select>
+      </div>
     </div>
     <!-- 表格 -->
     <Table
@@ -44,14 +60,14 @@
 
 <script>
 export default {
-  name: 'UserList',
+  name: 'UserListQr',
   mixins: [],
   props: {},
   components: {},
   data() {
     const C_GREEN = '#47cb89'
-    const C_ORANGE = '#e88986'
-    const C_BLUE = '#4F87FB'
+    // const C_ORANGE = '#e88986'
+    // const C_BLUE = '#4F87FB'
     const C_GREY = '#c5c8ce'
 
     return {
@@ -63,8 +79,8 @@ export default {
           {
             title: '微信昵称',
             key: 'nickname headimgurl',
-            width: 160,
-            fixed: 'left',
+            width: 200,
+            // fixed: 'left',
             // minWidth: 160,
             render: (h, { row }) => {
               return (
@@ -78,10 +94,45 @@ export default {
                     : <itv-icon class="fs0" type="i-man" size="20" />
                   }
                   <Tooltip content={row.nickname} placement="top" transfer class="df">
-                    <div class="text--nickname">{row.nickname}</div>
+                    <div class="text--oneRow ml8" style={{width: '120px'}}>{row.nickname}</div>
                   </Tooltip>
                 </div>
               )
+            }
+          },
+          {
+            title: '地域',
+            minWidth: 150,
+            key: 'country province city',
+            render: (h, { row }) => {
+              const string = [row.country, row.province, row.city].filter(item => item).join('-')
+              return (
+                <Tooltip content={string} placement="top-start" transfer class="df">
+                  <div  class="text-area">{string}</div>
+                </Tooltip>
+              )
+            }
+          },
+          {
+            title: '绑定公众号',
+            minWidth: 280,
+            key: 'platform',
+            render: (h, { row }) => {
+              return row.platform ? (
+                  <div class="itv-flex--fs">
+                    <img src={row.platform.head_img} class="img--headimgurl mr8" />
+                    <div class='text--table--name' style={{width: '180px'}} title={row.platform.nick_name}>{row.platform.nick_name}</div>
+                    <span class="mr8" title="是否已授权">
+                      <itv-icon type="i-user" style={{color: (row.platform.authorized ? C_GREEN : C_GREY)}} size="24"/>
+                    </span>
+                    <span class="mr8" title="是否已授权必要的权限集">
+                      <itv-icon type="i-key" style={{color: (row.platform.fully_authorized ? C_GREEN : C_GREY)}} size="24"/>
+                    </span>
+                    <span title="是否为已认证的服务号">
+                      <itv-icon type="sub-FansManagement" style={{color: (row.platform.verified ? C_GREEN : C_GREY)}} size="24"/>
+                    </span>
+                  </div>
+                ) : <span>未绑定</span>
             }
           },
           {
@@ -117,65 +168,18 @@ export default {
             }
           },
           {
-            title: '创建短链数量',
-            minWidth: 120,
-            key: 'n_links'
-          },
-          {
-            title: '短链访问次数',
-            minWidth: 120,
-            key: 'n_clicks'
-          },
-          {
-            title: '跳转链接数量',
-            minWidth: 120,
-            key: 'n_urls'
-          },
-          {
-            title: '其他',
-            minWidth: 130,
-            key: 'subscribe',
-            // align: 'center',
-            render: (h, { row }) => {
-              // return <span>{row.subscribe ? '是' : '否'}</span>
-              //  <Icon title="是否可用" type="md-checkmark-circle" color={row.enabled ? C_GREEN : C_GREY} size="18"/>
-              return (
-                <div>
-                  <span class="mr8" title="是否关注服务号">
-                    <itv-icon type="i-attention" style={{color: (row.subscribe ? C_GREEN : C_GREY)}} size="24"/>
-                  </span>
-                  <span class="mr8" title="是否网页登录">
-                    <itv-icon type="i-pc" style={{color: (row.sa_openid ? C_ORANGE : C_GREY)}} size="24"/>
-                  </span>
-                  <span title="是否小程序登录">
-                    <itv-icon type="i-wx" style={{color: (row.mp_openid ? C_BLUE : C_GREY)}} size="24"/>
-                  </span>
-                </div>
-              )
-            }
-          },
-          {
-            title: '地域',
-            width: 146,
-            key: 'country province city',
-            render: (h, { row }) => {
-              const string = [row.country, row.province, row.city].filter(item => item).join('-')
-              return (
-                <Tooltip content={string} placement="top-start" transfer class="df">
-                  <div  class="text-area">{string}</div>
-                </Tooltip>
-              )
-            }
-          },
-          {
-            title: '操作',
-            width: 80,
-            fixed: 'right',
+            title: '是否关注服务号',
+            width: 150,
+            align: 'center',
+            // key: '',
             render: (h, { row }) => {
               return (
-                <span title="查看短链">
-                  <itv-icon type="i-detail" size="20" class="itv-btn__icon" onClick={this.toUserDetail.bind(null, row)}/>
-                </span>
+                <Icon
+                  title="是否关注服务号"
+                  type="md-checkmark-circle"
+                  color={row.subscribe ? C_GREEN : C_GREY}
+                  size="20"
+                />
               )
             }
           }
@@ -185,15 +189,20 @@ export default {
       // 获取表格数据的参数
       form: {
         search: '',
-        sort: 'time'
+        bound: '*', // 公众号绑定状态：0 - 未绑定，1 - 已绑定
+        authorized: '*' // 公众号授权状态：0 - 取消授权，1 - 授权中
+        // sort: 'time'
       },
       options: {
-        sort: [
-          { value: 'time', label: '按创建时间倒序' },
-          { value: 'login', label: '按最近登录时间' },
-          { value: 'link', label: '按创建短链数量倒序' },
-          { value: 'click', label: '按短链访问次数倒序' },
-          { value: 'url', label: '按跳转链接数量倒序' }
+        bound: [
+          { value: '*', label: '不限绑定' },
+          { value: '0', label: '未绑定' },
+          { value: '1', label: '已绑定' }
+        ],
+        authorized: [
+          { value: '*', label: '不限授权' },
+          { value: '0', label: '未授权' },
+          { value: '1', label: '已授权' }
         ]
       }
     }
@@ -233,10 +242,12 @@ export default {
       try {
         const params = {
           nickname: this.form.search,
-          order_by: this.form.sort
+          bound: this.form.bound, // 公众号绑定状态：0 - 未绑定，1 - 已绑定
+          authorized: this.form.authorized, // 公众号授权状态：0 - 取消授权，1 - 授权中
+          // order_by: this.form.sort
         }
         
-        const res = await this.$api.User.getUserList({
+        const res = await this.$api.Qr.getUserListQr({
           ...params,
           ...this.$global.utils.pagination.params()
         })
@@ -253,6 +264,6 @@ export default {
 </script>
 
 <style lang="less">
-// .user-list {
+// .user-list-qr {
 // }
 </style>
