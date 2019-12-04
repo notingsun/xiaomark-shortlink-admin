@@ -32,11 +32,25 @@
         <Select
           v-model="form.authorized"
           style="width:150px"
+          class="mr8"
           @on-change="doGetData"
           placement="bottom-end"
         >
           <Option
             v-for="(item, index) in options.authorized"
+            :value="item.value"
+            :key="index"
+            >{{ item.label }}</Option
+          >
+        </Select>
+        <Select
+          v-model="form.sort"
+          style="width:150px"
+          @on-change="doGetData"
+          placement="bottom-end"
+        >
+          <Option
+            v-for="(item, index) in options.sort"
             :value="item.value"
             :key="index"
             >{{ item.label }}</Option
@@ -190,10 +204,14 @@ export default {
       form: {
         search: '',
         bound: '*', // 公众号绑定状态：0 - 未绑定，1 - 已绑定
-        authorized: '*' // 公众号授权状态：0 - 取消授权，1 - 授权中
-        // sort: 'time'
+        authorized: '*', // 公众号授权状态：0 - 取消授权，1 - 授权中
+        sort: 'time'
       },
       options: {
+        sort: [
+          { value: 'time', label: '按创建时间倒序' },
+          { value: 'login', label: '按最近登录时间倒序' }
+        ],
         bound: [
           { value: '*', label: '不限绑定' },
           { value: '0', label: '未绑定' },
@@ -244,7 +262,7 @@ export default {
           nickname: this.form.search,
           bound: this.form.bound, // 公众号绑定状态：0 - 未绑定，1 - 已绑定
           authorized: this.form.authorized, // 公众号授权状态：0 - 取消授权，1 - 授权中
-          // order_by: this.form.sort
+          order_by: this.form.sort
         }
         
         const res = await this.$api.Qr.getUserListQr({
