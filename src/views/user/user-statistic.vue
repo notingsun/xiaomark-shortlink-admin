@@ -188,7 +188,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-@row-margin: 28px;
+@row-margin: 24px;
 
 .pr {
   position: relative;
@@ -206,7 +206,7 @@ export default {
     min-height: 38px;
   }
   .card {
-    padding: 24px 0 24px;
+    padding: 16px 0 16px;
     background: #fff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;

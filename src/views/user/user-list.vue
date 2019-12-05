@@ -14,19 +14,71 @@
         />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
-      <Select
-        v-model="form.sort"
-        style="width:150px"
-        @on-change="doGetData"
-        placement="bottom-end"
-      >
-        <Option
-          v-for="(item, index) in options.sort"
-          :value="item.value"
-          :key="index"
-          >{{ item.label }}</Option
+      <div>
+        <!-- 筛选 -->
+        <Dropdown
+          trigger="custom"
+          :visible="show_drawer"
+          placement="bottom-end"
+          @on-clickoutside="show_drawer = false"
         >
-      </Select>
+          <Button
+            class="mr16"
+            @click="show_drawer = true"
+            style="width: 90px;"
+            :loading="loading"
+            >筛选</Button
+          >
+          <DropdownMenu slot="list">
+            <div class="form-filter">
+              <div
+                class="itv-flex--fs mb8"
+                v-for="(item, i) in form_filter"
+                :key="i"
+              >
+                <div class="label">{{ item.name }}</div>
+                <i-input
+                  v-model="item.value"
+                  type="number"
+                  style="width: 150px;"
+                >
+                  <Select v-model="item.type" style="width:60px" slot="prepend">
+                    <Option
+                      v-for="item in options.filter"
+                      :value="item.value"
+                      :key="item.value"
+                      >{{ item.label }}</Option
+                    >
+                  </Select>
+                </i-input>
+              </div>
+              <div class="itv-flex--sb mt24">
+                <Button class="mr16" @click="handleFilterReset">清空</Button>
+                <div>
+                  <Button class="mr16" @click="show_drawer = false"
+                    >取消</Button
+                  >
+                  <Button type="primary" @click="handleFilter">确认</Button>
+                </div>
+              </div>
+            </div>
+          </DropdownMenu>
+        </Dropdown>
+        <!-- 排序 -->
+        <Select
+          v-model="form.sort"
+          style="width:150px"
+          @on-change="doGetData"
+          placement="bottom-end"
+        >
+          <Option
+            v-for="(item, index) in options.sort"
+            :value="item.value"
+            :key="index"
+            >{{ item.label }}</Option
+          >
+        </Select>
+      </div>
     </div>
     <!-- 表格 -->
     <Table
@@ -56,6 +108,48 @@ export default {
 
     return {
       // img_default: require('../../assets/earth.png'),
+      show_drawer: false, // 显示抽屉
+      value: '',
+      type: '',
+      form_filter: [
+        {
+          name: '最近登录时间距今的天数',
+          key: 'last_login',
+          value: '',
+          type: '*'
+        },
+        {
+          name: '过去30天登录天数',
+          key: 'login_30',
+          value: '',
+          type: '*'
+        },
+        {
+          name: '过去30天创建链接数',
+          key: 'link_30',
+          value: '',
+          type: '*'
+        },
+        {
+          name: '过去30天链接访问数',
+          key: 'click_30',
+          value: '',
+          type: '*'
+        },
+        {
+          name: '过去30天导出图片数',
+          key: 'share1_30',
+          value: '',
+          type: '*'
+        },
+        {
+          name: '过去30天小程序内分享数',
+          key: 'share2_30',
+          value: '',
+          type: '*'
+        }
+      ],
+      filter: {},
       loading: true,
       table: {
         data: [],
@@ -193,6 +287,12 @@ export default {
         sort: 'time'
       },
       options: {
+        filter: [
+          { value: '*', label: '不限' },
+          { value: 'eq', label: '等于' },
+          { value: 'lt', label: '小于' },
+          { value: 'gt', label: '大于' }
+        ],
         sort: [
           { value: 'time', label: '按创建时间倒序' },
           { value: 'login', label: '按最近登录时间' },
@@ -216,6 +316,24 @@ export default {
     handleImgError(row, index) {
       // console.log(row, index)
       // this.table.data[index].headimgurl = this.img_default
+    },
+    // 重置筛选
+    handleFilterReset() {
+      this.form_filter.forEach((item, i) => {
+        this.form_filter[i].value = ''
+        this.form_filter[i].type = '*'
+      })
+      console.log(this.form_filter)
+    },
+    // 筛选
+    handleFilter() {
+      this.show_drawer = false
+      let filter = {}
+      this.form_filter.forEach((item) => {
+        filter[item.key] = item.type === '*' ? null : `${item.type}${item.value}`
+      })
+      this.filter = filter
+      this.doGetData()
     },
     // 去用户详情
     toUserDetail(row) {
@@ -241,6 +359,7 @@ export default {
       this.loading = true
       try {
         const params = {
+          ...this.filter,
           nickname: this.form.search,
           order_by: this.form.sort
         }
@@ -262,6 +381,13 @@ export default {
 </script>
 
 <style lang="less">
-// .user-list {
-// }
+.form-filter {
+  width: 3364x;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  .label {
+    width: 150px;
+    padding-right: 16px;
+  }
+}
 </style>
