@@ -55,6 +55,7 @@ export default {
     const C_GREY = '#c5c8ce'
 
     return {
+      // img_default: require('../../assets/earth.png'),
       loading: true,
       table: {
         data: [],
@@ -66,10 +67,14 @@ export default {
             width: 160,
             fixed: 'left',
             // minWidth: 160,
-            render: (h, { row }) => {
+            render: (h, { row, index }) => {
               return (
                 <div class="table-cell__nickname">
-                  <img src={row.headimgurl} class="img--headimgurl mr8" />
+                  <img
+                    src={row.headimgurl}
+                    class="img--headimgurl mr8"
+                    onError={this.handleImgError.bind(null, row, index)}
+                  />
                   {/* eslint-disable */
                     row.sex === 0
                     ? '-'
@@ -208,6 +213,10 @@ export default {
   },
   watch: {},
   methods: {
+    handleImgError(row, index) {
+      // console.log(row, index)
+      // this.table.data[index].headimgurl = this.img_default
+    },
     // 去用户详情
     toUserDetail(row) {
       this.$router.push({

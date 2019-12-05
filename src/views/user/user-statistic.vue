@@ -1,53 +1,57 @@
 /* 用户数据 */
 <template>
   <div class="user-statistic">
-    <!-- 总的数据 -->
-    <div class="card">
-      <div class="card__title">小码短链接</div>
-      <div class="overview--wrap mb16">
-        <div class="overview__cell" v-for="(item, i) in overview.list" :key="i">
-          <p class="overview__cell__value">
-            <Tooltip
-              :disabled="overview.data[item] < 1000"
-              placement="top"
-              theme="light"
-            >
-              <div slot="content" style="font-size: 16px;">
-                {{ overview.data[item] | countThree }}
-              </div>
-              <span>
-                {{ overview.data[item] | countShort }}
-              </span>
-            </Tooltip>
-          </p>
-          <p class="overview__cell__name">{{ overview.name_map[item] }}</p>
-        </div>
-      </div>
-    </div>
-    <!-- 总的数据-渠道码 -->
-    <div class="card mt16">
-      <div class="card__title">小码渠道码</div>
-      <div class="overview--wrap mb16">
+    <div class="card" v-for="(overview, i0) in list" :key="`overview-${i0}`">
+      <div class="card__title">{{ overview.name }}</div>
+      <!-- 一行数据 -->
+      <div>
         <div
-          class="overview__cell"
-          v-for="(item, i) in overview_qr.list"
-          :key="i"
+          v-for="(row, index) in overview.map"
+          :key="`row-${index}`"
+          class="overview--wrap mb16"
         >
-          <p class="overview__cell__value">
-            <Tooltip
-              :disabled="overview_qr.data[item] < 1000"
-              placement="top"
-              theme="light"
+          <div
+            class="overview__cell"
+            v-for="(item, i) in row"
+            :key="`item-${i}`"
+          >
+            <!-- 历史总的数据 -->
+            <div class="overview__cell__value">
+              <Tooltip
+                :disabled="config[overview.key].data[item.key] < 1000"
+                placement="top"
+                theme="light"
+              >
+                <div slot="content" style="font-size: 16px;">
+                  {{ config[overview.key].data[item.key] | countThree }}
+                </div>
+                <div class="pr minh38">
+                  <Spin fix v-if="config[overview.key].loading"></Spin>
+                  <span>{{
+                    config[overview.key].data[item.key] | countShort
+                  }}</span>
+                </div>
+              </Tooltip>
+            </div>
+            <!-- 数据名称 -->
+            <p class="overview__cell__name mb4">
+              {{ config[overview.key].name_map[item.key] }}
+            </p>
+            <!-- 今日数据 -->
+            <div
+              class="text-today pr"
+              v-if="item.today"
+              :title="config[overview.key].name_map[item.today]"
             >
-              <div slot="content" style="font-size: 16px;">
-                {{ overview_qr.data[item] | countThree }}
+              <div v-show="!config[overview.key].loading" class="itv-flex--fs">
+                <!-- <span style="font-size: 12px;">今日</span> -->
+                <itv-icon type="i-increase" size="14" color="" />
+                <span class="ml4">{{
+                  config[overview.key].data[item.today] | countThree
+                }}</span>
               </div>
-              <span>
-                {{ overview_qr.data[item] | countShort }}
-              </span>
-            </Tooltip>
-          </p>
-          <p class="overview__cell__name">{{ overview_qr.name_map[item] }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -63,11 +67,20 @@ export default {
   data() {
     const OVERVIEW_NAME_MAP = {
       n_users: '用户数',
+      n_users_new_today: '今天注册的用户数',
+      n_users_active_today: '今天的活跃用户数',
       n_groups: '链接分组数',
+      n_groups_today: '今天创建的链接分组数',
       n_links: '链接数',
+      n_links_today: '今天创建的链接数',
       n_urls: '跳转链接数',
+      n_urls_today: '今天创建的跳转链接数',
       n_clicks: '链接访问次数',
-      n_visitors: '链接访问人数'
+      n_clicks_today: '今天的链接访问次数',
+      n_visitors: '链接访问人数',
+      n_visitors_today: '今天的链接访问人数',
+      n_ips: '链接访问IP数',
+      n_ips_today: '今天的链接访问IP数'
     }
 
     const OVERVIEW_NAME_QR_MAP = {
@@ -83,17 +96,58 @@ export default {
     }
 
     return {
-      // 总体数据
-      overview: {
-        list: Object.keys(OVERVIEW_NAME_MAP),
-        name_map: OVERVIEW_NAME_MAP,
-        data: {}
-      },
-      // 总体数据-渠道码
-      overview_qr: {
-        list: Object.keys(OVERVIEW_NAME_QR_MAP),
-        name_map: OVERVIEW_NAME_QR_MAP,
-        data: {}
+      list: [
+        // 总体数据
+        {
+          name: '小码短链接',
+          key: 'overview',
+          map: [
+            [
+              { key: 'n_users' },
+              { key: 'n_users_new_today' },
+              { key: 'n_users_active_today' }
+            ],
+            [
+              { key: 'n_groups', today: 'n_groups_today' },
+              { key: 'n_links', today: 'n_links_today' },
+              { key: 'n_urls', today: 'n_urls_today' },
+              { key: 'n_clicks', today: 'n_clicks_today' },
+              { key: 'n_visitors', today: 'n_visitors_today' },
+              { key: 'n_ips', today: 'n_ips_today' }
+            ]
+          ]
+        },
+        // 总体数据-渠道码
+        {
+          name: '小码渠道码',
+          key: 'overview_qr',
+          map: [
+            [
+              { key: 'n_users' },
+              { key: 'n_users_new_today' },
+              { key: 'n_users_active_today' }
+            ],
+            [
+              { key: 'n_platforms', today: 'n_platforms_today' },
+              { key: 'n_qrcodes', today: 'n_qrcodes_today' },
+              { key: 'n_records', today: 'n_records_today' }
+            ]
+          ]
+        }
+      ],
+      config: {
+        // 总体数据
+        overview: {
+          loading: true,
+          name_map: OVERVIEW_NAME_MAP,
+          data: {}
+        },
+        // 总体数据-渠道码
+        overview_qr: {
+          loading: true,
+          name_map: OVERVIEW_NAME_QR_MAP,
+          data: {}
+        }
       }
     }
   },
@@ -107,40 +161,64 @@ export default {
   methods: {
     // 获取总的数据
     async doGetTableDataAll() {
+      this.config.overview.loading = true
       try {
         const res = await this.$api.Link.getLinkStatistic({})
 
-        this.overview.data = res
+        this.config.overview.data = res
       } catch (e) {
         console.log(e)
       }
+      this.config.overview.loading = false
     },
     // 获取总的数据-渠道码
     async doGetTableDataAllQr() {
+      this.config.overview_qr.loading = true
       try {
         const res = await this.$api.Qr.getStatisticsInfo({})
 
-        this.overview_qr.data = res
+        this.config.overview_qr.data = res
       } catch (e) {
         console.log(e)
       }
+      this.config.overview_qr.loading = false
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+@row-margin: 28px;
+
+.pr {
+  position: relative;
+}
+
 .user-statistic {
+  overflow-y: auto;
+  .text-today {
+    color: #07c160;
+    font-size: 24px;
+    cursor: default;
+    min-height: 36px;
+  }
+  .minh38 {
+    min-height: 38px;
+  }
   .card {
-    padding: 24px 0 32px;
+    padding: 24px 0 24px;
     background: #fff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
+    position: relative;
+    &:not(:first-child) {
+      margin-top: 16px;
+    }
     &__title {
       font-size: 18px;
       font-weight: bold;
       margin-left: 32px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
   }
   .overview--wrap {
@@ -148,6 +226,11 @@ export default {
     justify-content: flex-start;
     // justify-content: space-around;
     flex-wrap: wrap;
+
+    &:not(:last-child) {
+      margin-bottom: @row-margin;
+    }
+
     .overview__cell {
       display: flex;
       width: 16.66%;
@@ -161,7 +244,7 @@ export default {
         width: 0px !important;
       }
       &:nth-child(n + 7) {
-        margin-top: 56px;
+        margin-top: @row-margin;
       }
       &:not(:nth-child(6n + 6)):after {
         position: absolute;
