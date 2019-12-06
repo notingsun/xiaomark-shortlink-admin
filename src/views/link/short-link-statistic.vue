@@ -87,9 +87,14 @@ export default {
             }
           },
           {
+            title: '注册用户数',
+            minWidth: 120,
+            key: 'n_users_new'
+          },
+          {
             title: '登录用户数',
             minWidth: 120,
-            key: 'n_users'
+            key: 'n_users_active'
           },
           {
             title: '新建短链数',
@@ -122,6 +127,16 @@ export default {
                 <span>
                   {this.$global.utils.countFormat.three(row.n_clicks)}
                 </span>
+              )
+            }
+          },
+          {
+            title: '短链访问IP数',
+            minWidth: 120,
+            // key: 'n_clicks',
+            render: (h, { row }) => {
+              return (
+                <span>{this.$global.utils.countFormat.three(row.n_ips)}</span>
               )
             }
           },
