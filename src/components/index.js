@@ -8,8 +8,10 @@ import itvIcon from './svg-icon/svg-icon'
 import './svg-icon/icons' // 引入全部的svg图标
 import ItvPagination from './pagination/pagination.vue'
 import ItvBreadcrumb from './breadcrumb/breadcrumb.vue'
+import ItvChartLine from './chart/chart-line'
 
 const COMPONENTS = {
+  ItvChartLine,
   ItvBreadcrumb,
   itvIcon,
   ItvPagination

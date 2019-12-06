@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 // 第三方库
 import iView from 'iview'
+import VeLine from 'v-charts/lib/line.common'
 // import 'iview/src/styles/index.less'
 import './styles/theme.less'
 import './styles/custom.less'
@@ -19,11 +20,20 @@ if (process.env.NODE_ENV !== 'development') {
   console.log = () => {}
 }
 
+// console.log 调试
+console.test = () => {}
+if (process.env.NODE_ENV === 'development') {
+  console.test = (v) => {
+    console.log('%c 🚀🚀🚀 --- %s', 'color: red', JSON.stringify(v))
+  }
+}
+
 Vue.filter('countShort', global.utils.countFormat.short)
 Vue.filter('countThree', global.utils.countFormat.three)
 
 Vue.use(iView)
 Vue.use(CustomComponents)
+Vue.component(VeLine.name, VeLine)
 
 Vue.prototype.$api = Api
 Vue.prototype.$PDo = PDo

@@ -1,6 +1,7 @@
 /* 短链数据 */
 <template>
-  <div class="short-link-statistic itv-flex-v--fs">
+  <div class="short-link-statistic itv-flex-v--fs pr">
+    <Spin fix v-if="loading"></Spin>
     <!-- 时间选择器 -->
     <div class="header mb16 itv-flex--sb">
       <DatePicker
@@ -15,9 +16,18 @@
         format="yyyy/MM/dd"
       ></DatePicker>
     </div>
+    <!-- 图表的 -->
+    <div>
+      <itv-chart-line
+        :width="chartWidth"
+        :legendOptions="legendOptions"
+        :chartData="chartData"
+        :settings="chartSettings"
+        :unSelectedArr="chartData.unSelectedArr"
+      />
+    </div>
     <!-- 表格 -->
     <Table
-      :loading="loading"
       style="flex: 1;"
       ref="refTable"
       :height="table.height"
@@ -34,7 +44,105 @@ export default {
   props: {},
   components: {},
   data() {
+    // 这个需要和chartExtend同步
+    this.legendOptions = [
+      {
+        isGroup: true,
+        data: [
+          {
+            name: '访问次数',
+            color: '#5b89dd',
+            bg: '#EEF3FF'
+          },
+          {
+            name: '访问人数',
+            color: '#862FB7',
+            bg: '#F6EEFF'
+          },
+          {
+            name: '访问IP数',
+            color: '#F676A8',
+            bg: '#FFEEEE'
+          }
+        ]
+      },
+      {
+        isGroup: true,
+        data: [
+          {
+            name: '新建短链数',
+            color: '#a64d7f',
+            bg: '#ffecfc'
+          },
+          {
+            name: '新建跳转链接数',
+            color: '#4d8ba6',
+            bg: '#edfaff'
+          }
+        ]
+      },
+      {
+        isGroup: true,
+        data: [
+          {
+            name: '登录用户数',
+            color: '#a66d4d',
+            bg: '#fff3ec'
+          },
+          {
+            name: '注册用户数',
+            color: '#96a64d',
+            bg: '#f7ffec'
+          },
+          {
+            name: '新建分组数',
+            color: '#086ca2',
+            bg: '#EEF3FF'
+          }
+        ]
+      }
+    ]
+
+    this.chartSettings = {
+      labelMap: {
+        n_clicks: '访问次数',
+        n_ips: '访问IP数',
+        n_visitors: '访问人数',
+        n_users_active: '登录用户数',
+        n_users_new: '注册用户数',
+        n_links: '新建短链数',
+        n_urls: '新建跳转链接数',
+        n_groups: '新建分组数'
+      }
+    }
+
+    this.chartWidth = this.$bus.view_width - 260 - 460 + 'px'
+
     return {
+      // legendOptions: legendOptions,
+      chartData: {
+        // 注意：这个顺序需要和legendOptions顺序保持一致
+        columns: [
+          'date',
+          'n_clicks',
+          'n_ips',
+          'n_visitors',
+          'n_links',
+          'n_urls',
+          'n_users_active',
+          'n_users_new',
+          'n_groups'
+        ],
+        rows: [],
+        unSelectedArr: [
+          '注册用户数',
+          '登录用户数',
+          '新建短链数',
+          '新建跳转链接数',
+          '新建分组数'
+        ]
+      },
+
       loading: true,
       // 获取表格数据的参数
       form: {
@@ -102,7 +210,7 @@ export default {
             key: 'n_links'
           },
           {
-            title: '新建跳转短链数',
+            title: '新建跳转链接数',
             minWidth: 120,
             key: 'n_urls'
           },
@@ -177,7 +285,12 @@ export default {
           stats_date
         })
 
-        this.table.data = (res.stats || []).reverse()
+        this.chartData.rows = []
+        this.$nextTick(() => {
+          this.chartData.rows = res.stats || []
+        })
+
+        this.table.data = JSON.parse(JSON.stringify(res.stats || [])).reverse()
       } catch (e) {
         console.log(e)
       }

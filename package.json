@@ -16,6 +16,8 @@
     "core-js": "^3.3.2",
     "iview": "^3.4.2",
     "vue-router": "^3.0.3",
+    "echarts": "^4.4.0",
+    "v-charts": "^1.19.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
