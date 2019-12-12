@@ -43,9 +43,11 @@
 </template>
 
 <script>
+import tableMixins from '../table-mixins'
+
 export default {
   name: 'TargetLinkStatistic',
-  mixins: [],
+  mixins: [tableMixins],
   props: {},
   components: {},
   data() {
@@ -198,9 +200,6 @@ export default {
   computed: {},
   created() {},
   mounted() {
-    this.$nextTick(() => {
-      this.table.height = this.$refs.refTable.$el.clientHeight
-    })
     this.doGetData()
   },
   watch: {},
@@ -286,6 +285,7 @@ export default {
     },
     async doGetData2() {
       this.loading = true
+      this.domTableScrollTop()
       try {
         const params = {
           enabled: this.form.enabled,
