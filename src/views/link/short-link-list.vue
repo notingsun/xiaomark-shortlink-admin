@@ -199,7 +199,10 @@ export default {
   computed: {},
   created() {},
   mounted() {
-    this.doGetData()
+    const { page, per_page } = this.$route.query
+    const params = page && per_page ? { page, per_page } : ''
+
+    this.doGetData(params)
   },
   watch: {},
   methods: {

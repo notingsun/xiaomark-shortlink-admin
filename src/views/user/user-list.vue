@@ -163,22 +163,25 @@ export default {
             width: 160,
             fixed: 'left',
             // minWidth: 160,
-            render: (h, { row, index }) => {
+            render: (h, { row }) => {
               return (
                 <div class="table-cell__nickname">
-                  <img
-                    src={row.headimgurl}
-                    class="img--headimgurl mr8"
-                    onError={this.handleImgError.bind(null, row, index)}
-                  />
+                  <img src={row.headimgurl} class="img--headimgurl mr8" />
+                  {/* onError={this.handleImgError.bind(null, row, index)} */}
                   {/* eslint-disable */
                     row.sex === 0
                     ? '-'
                     : row.sex === 2
                     ? <itv-icon class="fs0" type="i-woman" size="20" />
                     : <itv-icon class="fs0" type="i-man" size="20" />
+                    /* eslint-enable*/
                   }
-                  <Tooltip content={row.nickname} placement="top" transfer class="df">
+                  <Tooltip
+                    content={row.nickname}
+                    placement="top"
+                    transfer
+                    class="df"
+                  >
                     <div class="text--nickname">{row.nickname}</div>
                   </Tooltip>
                 </div>
@@ -243,13 +246,25 @@ export default {
               return (
                 <div>
                   <span class="mr8" title="是否关注服务号">
-                    <itv-icon type="i-attention" style={{color: (row.subscribe ? C_GREEN : C_GREY)}} size="24"/>
+                    <itv-icon
+                      type="i-attention"
+                      style={{ color: row.subscribe ? C_GREEN : C_GREY }}
+                      size="24"
+                    />
                   </span>
                   <span class="mr8" title="是否网页登录">
-                    <itv-icon type="i-pc" style={{color: (row.sa_openid ? C_ORANGE : C_GREY)}} size="24"/>
+                    <itv-icon
+                      type="i-pc"
+                      style={{ color: row.sa_openid ? C_ORANGE : C_GREY }}
+                      size="24"
+                    />
                   </span>
                   <span title="是否小程序登录">
-                    <itv-icon type="i-wx" style={{color: (row.mp_openid ? C_BLUE : C_GREY)}} size="24"/>
+                    <itv-icon
+                      type="i-wx"
+                      style={{ color: row.mp_openid ? C_BLUE : C_GREY }}
+                      size="24"
+                    />
                   </span>
                 </div>
               )
@@ -260,10 +275,18 @@ export default {
             width: 146,
             key: 'country province city',
             render: (h, { row }) => {
-              const string = [row.country, row.province, row.city].filter(item => item).join('-')
+              const string = [row.country, row.province, row.city]
+                .filter((item) => item)
+                .join('-')
+
               return (
-                <Tooltip content={string} placement="top-start" transfer class="df">
-                  <div  class="text-area">{string}</div>
+                <Tooltip
+                  content={string}
+                  placement="top-start"
+                  transfer
+                  class="df"
+                >
+                  <div class="text-area">{string}</div>
                 </Tooltip>
               )
             }
@@ -275,7 +298,12 @@ export default {
             render: (h, { row }) => {
               return (
                 <span title="查看短链">
-                  <itv-icon type="i-detail" size="20" class="itv-btn__icon" onClick={this.toUserDetail.bind(null, row)}/>
+                  <itv-icon
+                    type="i-detail"
+                    size="20"
+                    class="itv-btn__icon"
+                    onClick={this.toUserDetail.bind(null, row)}
+                  />
                 </span>
               )
             }
@@ -308,14 +336,17 @@ export default {
   computed: {},
   created() {},
   mounted() {
-    this.doGetData()
+    const { page, per_page } = this.$route.query
+    const params = page && per_page ? { page, per_page } : ''
+
+    this.doGetData(params)
   },
   watch: {},
   methods: {
-    handleImgError(row, index) {
-      // console.log(row, index)
-      // this.table.data[index].headimgurl = this.img_default
-    },
+    // handleImgError(row, index) {
+    // console.log(row, index)
+    // this.table.data[index].headimgurl = this.img_default
+    // },
     // 重置筛选
     handleFilterReset() {
       this.form_filter.forEach((item, i) => {
@@ -328,8 +359,10 @@ export default {
     handleFilter() {
       this.show_drawer = false
       let filter = {}
+
       this.form_filter.forEach((item) => {
-        filter[item.key] = item.type === '*' ? null : `${item.type}${item.value}`
+        filter[item.key] =
+          item.type === '*' ? null : `${item.type}${item.value}`
       })
       this.filter = filter
       this.doGetData()
@@ -363,7 +396,7 @@ export default {
           nickname: this.form.search,
           order_by: this.form.sort
         }
-        
+
         const res = await this.$api.User.getUserList({
           ...params,
           ...this.$global.utils.pagination.params()
