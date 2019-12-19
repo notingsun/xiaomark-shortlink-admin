@@ -125,8 +125,8 @@ export default {
         columns: [
           'date',
           'n_clicks',
-          'n_ips',
           'n_visitors',
+          'n_ips',
           'n_links',
           'n_urls',
           'n_users_active',
