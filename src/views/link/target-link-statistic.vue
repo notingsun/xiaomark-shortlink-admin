@@ -98,7 +98,45 @@ export default {
           {
             title: '对应短链数量',
             minWidth: 120,
-            key: 'n_links'
+            key: 'n_links',
+            // eslint-disable-next-line
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '大于0', value: 1 },
+                { name: '等于0', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.has_link === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.has_link = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div>
+                    <span class="mr8">对应短链数量</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            }
           },
           {
             title: '访问次数',
@@ -150,7 +188,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <Icon
-                  title="是否关注服务号"
+                  title={row.enabled ? '可用' : '不可用'}
                   type="md-checkmark-circle"
                   color={row.enabled ? C_GREEN : C_GREY}
                   size="20"
@@ -184,6 +222,7 @@ export default {
         height: null // 表格的高度
       },
       form: {
+        has_link: '',
         enabled: '',
         search: '',
         sort: 'time'
@@ -288,6 +327,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          has_link: this.form.has_link,
           enabled: this.form.enabled,
           qs: this.form.search,
           order_by: this.form.sort
@@ -310,16 +350,6 @@ export default {
 </script>
 
 <style lang="less">
-.target-link-statistic {
-  .enabled_active {
-    color: @primary-color;
-  }
-  .enabled_item {
-    padding: 0 !important;
-  }
-  .enabled_span {
-    padding: 7px 16px;
-    display: inline-block;
-  }
-}
+// .target-link-statistic {
+// }
 </style>

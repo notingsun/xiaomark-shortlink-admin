@@ -54,6 +54,7 @@ export default {
     const C_GREEN = '#47cb89'
     const C_BLUE = '#4F87FB'
     const C_ORANGE = '#e88986'
+    const C_GREY = '#c5c8ce'
     const SOURCE_MAP = [
       {},
       {
@@ -81,12 +82,12 @@ export default {
         columns: [
           {
             title: '短链名称',
-            minWidth: 120,
+            minWidth: 150,
             key: 'name'
           },
           {
             title: '短链',
-            minWidth: 160,
+            minWidth: 180,
             key: 'url'
           },
           {
@@ -107,27 +108,55 @@ export default {
           },
           {
             title: '跳转链接',
-            minWidth: 120,
+            minWidth: 130,
             tooltip: true,
             key: 'origin_url',
             render: (h, { row }) => {
-              return (
-                <Tooltip
-                  content={row.origin_url}
-                  placement="bottom"
-                  max-width={200}
-                >
+              /* eslint-disable */
+              const arr_a = row.mode === 0 ? [] : (row.origin_url_list || []).map((item, index) => (
+                <p>
+                  <span>【{index + 1}】</span>
                   <a
                     target="_blank"
-                    href={row.origin_url}
+                    href={item.url}
                     rel="noreferrer"
-                    class="text--oneRow"
-                    style="width: 120px;display: inline-block;"
-                  >
-                    {row.origin_url}
+                    >
+                    {item.url}
                   </a>
+                </p>
+              ))
+
+              return (
+                <Tooltip placement="bottom" max-width={500} theme="light">
+                  {
+                    row.mode === 0 
+                    ? <a
+                      target="_blank"
+                      href={row.origin_url}
+                      rel="noreferrer"
+                      class="text--oneRow"
+                      style="width: 120px;display: inline-block;"
+                      >
+                        {row.origin_url}
+                      </a>
+                    : <span class="cp" style="color: #2D8cF0;">随机_{row.mode === 1 ? '' : '非'}记忆</span>
+                  }
+                  <div slot="content">
+                    {
+                      row.mode === 0 
+                      ? <a
+                        target="_blank"
+                        href={row.origin_url}
+                        rel="noreferrer"
+                        >
+                          {row.origin_url}
+                        </a>
+                      : arr_a
+                    }
+                  </div>
                 </Tooltip>
               )
+              /* eslint-enable */
             }
           },
           {
@@ -178,11 +207,65 @@ export default {
                 </div>
               )
             }
+          },
+          {
+            title: '是否可用',
+            minWidth: 120,
+            key: 'enabled',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '可用', value: 1 },
+                { name: '不可用', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.enabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.enabled = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div>
+                    <span class="mr8">是否可用</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            render: (h, { row }) => {
+              return (
+                <Icon
+                  title={row.enabled ? '可用' : '不可用'}
+                  type="md-checkmark-circle"
+                  color={row.enabled ? C_GREEN : C_GREY}
+                  size="20"
+                />
+              )
+            }
           }
         ],
         height: null // 表格的高度
       },
       form: {
+        enabled: '',
         search: '',
         sort: 'time'
       },
@@ -229,6 +312,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          enabled: this.form.enabled,
           user_id: '', // 用户ID
           qs: this.form.search, // 查询字符串（名称/原始URL/短链接URL）
           order_by: this.form.sort

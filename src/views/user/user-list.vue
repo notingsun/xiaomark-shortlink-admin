@@ -221,19 +221,24 @@ export default {
             }
           },
           {
-            title: '创建短链数量',
-            minWidth: 120,
-            key: 'n_links'
-          },
-          {
             title: '短链访问次数',
             minWidth: 120,
             key: 'n_clicks'
           },
           {
-            title: '跳转链接数量',
+            title: '创建短链数量',
             minWidth: 120,
-            key: 'n_urls'
+            key: 'n_links'
+          },
+          {
+            title: '普通跳转链接数量',
+            minWidth: 140,
+            key: 'n_normal_links'
+          },
+          {
+            title: '随机跳转链接数量',
+            minWidth: 140,
+            key: 'n_random_links'
           },
           {
             title: '其他',
@@ -327,8 +332,9 @@ export default {
           { value: 'time', label: '按创建时间倒序' },
           { value: 'login', label: '按最近登录时间' },
           { value: 'link', label: '按创建短链数量倒序' },
-          { value: 'click', label: '按短链访问次数倒序' },
-          { value: 'url', label: '按跳转链接数量倒序' }
+          { value: 'normal_link', label: '按普通跳转链接数量倒序' },
+          { value: 'random_link', label: '按随机跳转链接数量倒序' },
+          { value: 'click', label: '按短链访问次数倒序' }
         ]
       }
     }
