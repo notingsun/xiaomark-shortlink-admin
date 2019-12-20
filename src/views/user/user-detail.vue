@@ -103,7 +103,7 @@ export default {
           },
           {
             title: '跳转链接',
-            minWidth: 120,
+            width: 156,
             tooltip: true,
             key: 'origin_url',
             render: (h, { row }) => {
