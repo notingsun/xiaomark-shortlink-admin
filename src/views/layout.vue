@@ -8,7 +8,7 @@
       <!-- 只打开一个 -->
       <!-- :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']" -->
       <!-- logo -->
-      <div class="logo cp" @click="$router.push({ name: 'UserStatistic' })">
+      <div class="logo cp" @click="handleToRoute({ name: 'UserStatistic' })">
         <img src="../assets/logo-xm.png" alt="" class="img-logo" />
       </div>
       <!-- 菜单 -->
@@ -28,7 +28,7 @@
               v-for="item in menu_link"
               :name="item.name"
               :key="`menu_${item.name}`"
-              :to="item.route"
+              @click.native="handleToRoute(item.route)"
               class="menu-item"
             >
               <span class="ib20">{{ item.title }}</span>
@@ -243,6 +243,11 @@ export default {
       console.log('退出登陆')
       this.$PDo.Cookies.remove(process.env.VUE_APP_COOKIE)
       location.reload()
+    },
+    handleToRoute(route) {
+      if (this.$route.name !== route.name) {
+        this.$router.push(route)
+      }
     }
   }
 }
