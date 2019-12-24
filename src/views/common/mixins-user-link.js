@@ -137,6 +137,59 @@ export default {
             }
           },
           {
+            title: '是否归档',
+            minWidth: 120,
+            key: '',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '已归档', value: 1 },
+                { name: '未归档', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.archived === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.archived = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div>
+                    <span class="mr8">是否归档</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            render: (h, { row }) => {
+              return (
+                <Icon
+                  title={row.archived ? '已归档' : '未归档'}
+                  type="md-checkmark-circle"
+                  color={row.archived ? C_GREEN : C_GREY}
+                  size="20"
+                />
+              )
+            }
+          },
+          {
             title: '来源',
             minWidth: 80,
             key: 'source',
@@ -216,59 +269,6 @@ export default {
                 </Dropdown>
               )
             },
-            render: (h, { row }) => {
-              return (
-                <Icon
-                  title={row.enabled ? '可用' : '不可用'}
-                  type="md-checkmark-circle"
-                  color={row.enabled ? C_GREEN : C_GREY}
-                  size="20"
-                />
-              )
-            }
-          },
-          {
-            title: '是否归档',
-            minWidth: 120,
-            key: '',
-            // eslint-disable-next-line no-unused-vars
-            // renderHeader: (h) => {
-            //   const options = [
-            //     { name: '全部', value: '' },
-            //     { name: '可用', value: 1 },
-            //     { name: '不可用', value: 0 }
-            //   ]
-            //   const optionsList = options.map((item) => {
-            //     return (
-            //       <DropdownItem
-            //         class={
-            //           // eslint-disable-next-line prettier/prettier
-            //           this.form.enabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-            //         }
-            //       >
-            //         <span
-            //           class="enabled_span"
-            //           onClick={() => {
-            //             this.form.enabled = item.value
-            //             this.doGetData()
-            //           }}
-            //         >
-            //           {item.name}
-            //         </span>
-            //       </DropdownItem>
-            //     )
-            //   })
-
-            //   return (
-            //     <Dropdown>
-            //       <div>
-            //         <span class="mr8">是否归档</span>
-            //         <Icon type="ios-funnel" title="筛选" />
-            //       </div>
-            //       <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-            //     </Dropdown>
-            //   )
-            // },
             render: (h, { row }) => {
               return (
                 <Icon

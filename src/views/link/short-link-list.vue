@@ -54,6 +54,7 @@ export default {
   data() {
     return {
       form: {
+        archived: '',
         enabled: '',
         search: '',
         sort: 'time'
@@ -93,6 +94,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          archived: this.form.archived,
           enabled: this.form.enabled,
           user_id: '', // 用户ID
           qs: this.form.search, // 查询字符串（名称/原始URL/短链接URL）
