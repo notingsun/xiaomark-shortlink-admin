@@ -1,19 +1,22 @@
-/* 短链列表 */
+/* 某个用户创建的协作空间列表 */
 <template>
-  <div class="short-link-list itv-flex-v--fs">
+  <div class="space-list itv-flex-v--fs">
+    <!-- 头部 -->
     <div class="header mb16 itv-flex--sb">
-      <div class="header__search">
-        <Input
-          clearable
-          v-model="form.search"
-          placeholder="请输入"
-          style="width: 300px"
-          @on-enter="doGetData"
-          @on-clear="doGetData"
-          class="mr8"
+      <div class="itv-flex--fs">
+        <itv-icon
+          type="i-back"
+          title="返回"
+          size="20"
+          class="itv-btn__icon mr16"
+          @click="$router.go(-1)"
         />
-        <Button type="primary" @click="doGetData">搜索</Button>
+        <Breadcrumb>
+          <BreadcrumbItem>协作空间列表</BreadcrumbItem>
+          <BreadcrumbItem>创建者：{{ $route.query.name }}</BreadcrumbItem>
+        </Breadcrumb>
       </div>
+      <!-- 排序 -->
       <Select
         v-model="form.sort"
         style="width:150px"
@@ -44,19 +47,17 @@
 
 <script>
 import tableMixins from '../table-mixins'
-import shortLinkMixins from '../common/mixins-short-link'
+import spaceMixins from '../common/mixins-space-list'
 
 export default {
-  name: 'ShortLinkList',
-  mixins: [tableMixins, shortLinkMixins],
+  name: 'SpaceList',
+  mixins: [tableMixins, spaceMixins],
   props: {},
   components: {},
   data() {
     return {
+      // 获取表格数据的参数
       form: {
-        archived: '',
-        enabled: '',
-        search: '',
         sort: 'time'
       }
     }
@@ -71,14 +72,6 @@ export default {
   },
   watch: {},
   methods: {
-    // 去用户详情
-    toUserDetail(row) {
-      this.$router.push({
-        name: 'ShortLinkListUser',
-        params: { user_id: row.user.id },
-        query: { name: row.user.nickname }
-      })
-    },
     doGetData(page = {}) {
       if (!page.page) {
         this.$global.utils.pagination.reset()
@@ -89,25 +82,24 @@ export default {
         this.doGetData2()
       }
     },
+
     async doGetData2() {
       this.loading = true
       this.domTableScrollTop()
       try {
         const params = {
-          archived: this.form.archived,
-          enabled: this.form.enabled,
-          user_id: '', // 用户ID
-          qs: this.form.search, // 查询字符串（名称/原始URL/短链接URL）
+          ...this.filter,
+          user_id: this.$route.params.user_id,
           order_by: this.form.sort
         }
 
-        const res = await this.$api.Link.getShortLinkList({
+        const res = await this.$api.Space.getSpaceList({
           ...params,
           ...this.$global.utils.pagination.params()
         })
 
         this.table.total = res.total
-        this.table.data = res.links || []
+        this.table.data = res.workspaces || []
       } catch (e) {
         console.error(e)
       }
@@ -117,11 +109,7 @@ export default {
 }
 </script>
 
-<style lang="less">
-.short-link-list {
-  .text-visit {
-    white-space: nowrap;
-    display: inline-block;
-  }
-}
+<style scoped lang="less">
+//.space-list {
+//}
 </style>

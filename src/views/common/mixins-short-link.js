@@ -26,6 +26,7 @@ export default {
     return {
       loading: true,
       tableColumns: [
+        // 0 基本
         [
           {
             title: '短链名称',
@@ -208,6 +209,7 @@ export default {
             }
           }
         ],
+        // 1 创建者
         [
           {
             title: '创建者',
@@ -216,7 +218,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <div
-                  class="table-cell__nickname table-cell__nickname--click"
+                  class="table-cell__nickname table-cell__nickname--click cp"
                   onClick={this.toUserDetail.bind(null, row)}
                 >
                   <img src={row.user.headimgurl} class="img--headimgurl mr8" />
@@ -226,6 +228,7 @@ export default {
             }
           }
         ],
+        // 2 是否可用
         [
           {
             title: '是否可用',
@@ -280,6 +283,17 @@ export default {
               )
             }
           }
+        ],
+        // 3 协作空间
+        [
+          {
+            title: '协作空间',
+            minWidth: 140,
+            key: 'workspace',
+            render: (h, { row }) => {
+              return <span>{(row.workspace || {}).name || '-'}</span>
+            }
+          }
         ]
       ],
       table: {
@@ -305,22 +319,24 @@ export default {
       this.table.height = this.$refs.refTable.$el.clientHeight
     })
     console.log(this.$route.name)
+    if (this.$route.name === 'ShortLinkListSpace') {
+      this.table.columns = [
+        ...this.tableColumns[0],
+        ...this.tableColumns[1],
+        ...this.tableColumns[2]
+      ]
+      return
+    }
     /* eslint-disable */
-    this.table.columns = this.$route.name === 'UserDetail'
-      ? [...this.tableColumns[0], ...this.tableColumns[2]]
+    this.table.columns = this.$route.name === 'ShortLinkListUser'
+      ? [...this.tableColumns[0], ...this.tableColumns[2], ...this.tableColumns[3]]
       : [ ...this.tableColumns[0],
           ...this.tableColumns[1],
-          ...this.tableColumns[2]
+          ...this.tableColumns[2],
+          ...this.tableColumns[3]
         ]
     /* eslint-enable */
   },
   watch: {},
-  methods: {
-    domTableScrollTop() {
-      // 表格回滚到顶部
-      this.$refs.refTable &&
-        this.$refs.refTable.$refs.body &&
-        (this.$refs.refTable.$refs.body.scrollTop = 0)
-    }
-  }
+  methods: {}
 }

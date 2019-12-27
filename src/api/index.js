@@ -7,8 +7,10 @@ import Admin from './modules/admin'
 import User from './modules/user'
 import Link from './modules/link'
 import Qr from './modules/qr'
+import Space from './modules/space'
 
 export default {
+  Space,
   Qr,
   User,
   Admin,

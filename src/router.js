@@ -30,24 +30,22 @@ const layout = {
       name: 'UserStatistic',
       component: () => import('@/views/user/user-statistic.vue')
     },
+
     {
       path: '/user-list',
       meta: { menuIndex: '2', title: '用户列表' },
       name: 'UserList',
       component: () => import('@/views/user/user-list.vue')
     },
-    {
-      path: '/user-detail/:user_id',
-      meta: { menuIndex: '2', title: '用户创建的短链页' },
-      name: 'UserDetail',
-      component: () => import('@/views/user/user-detail.vue')
-    },
+
     {
       path: '/short-link-statistic',
       meta: { menuIndex: '3', title: '短链数据' },
       name: 'ShortLinkStatistic',
       component: () => import('@/views/link/short-link-statistic.vue')
     },
+
+    /* 短链列表 */
     {
       path: '/short-link-list',
       meta: { menuIndex: '4', title: '短链列表' },
@@ -55,11 +53,45 @@ const layout = {
       component: () => import('@/views/link/short-link-list.vue')
     },
     {
+      path: '/short-link-list-user/:user_id',
+      meta: { menuIndex: '4', title: '短链列表.用户' },
+      name: 'ShortLinkListUser',
+      component: () => import('@/views/link/short-link-list-user.vue')
+    },
+    {
+      path: '/short-link-list-space/:space_id',
+      meta: { menuIndex: '4', title: '短链列表.协作空间' },
+      name: 'ShortLinkListSpace',
+      component: () => import('@/views/link/short-link-list-space.vue')
+    },
+
+    {
       path: '/target-link-statistic',
       meta: { menuIndex: '5', title: '跳转链接数据' },
       name: 'TargetLinkStatistic',
       component: () => import('@/views/link/target-link-statistic.vue')
     },
+
+    /* 协作空间列表 */
+    {
+      path: '/space-list',
+      meta: { menuIndex: '6', title: '协作空间列表' },
+      name: 'SpaceList',
+      component: () => import('@/views/space/space-list.vue')
+    },
+    {
+      path: '/space-list-user/:user_id',
+      meta: { menuIndex: '6', title: '协作空间列表.用户' },
+      name: 'SpaceListUser',
+      component: () => import('@/views/space/space-list-user.vue')
+    },
+    {
+      path: '/space-detail/:space_id',
+      meta: { menuIndex: '6', title: '某个协作空间的详细信息' },
+      name: 'SpaceDetail',
+      component: () => import('@/views/space/space-detail.vue')
+    },
+
     // 渠道码
     {
       path: '/user-list-qr',

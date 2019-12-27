@@ -101,11 +101,16 @@
       @on-cancel="modal.show = false"
     >
       <p>
-        {{
-          `确认${(modal.obj || {}).ws_creator ? '关闭' : '开启'} ${(
-            modal.obj || {}
-          ).nickname || '-'} 的协作空间权限？`
-        }}
+        <span>确认 </span>
+        <span
+          :style="{
+            color: (modal.obj || {}).ws_creator ? 'red' : 'green',
+            'font-weight': 'bold'
+          }"
+          >{{ (modal.obj || {}).ws_creator ? '关闭' : '开启' }}
+        </span>
+        <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
+        <span>的协作空间权限？</span>
       </p>
     </Modal>
   </div>
@@ -403,18 +408,28 @@ export default {
           },
           {
             title: '操作',
-            width: 80,
+            width: 100,
             fixed: 'right',
             render: (h, { row }) => {
               return (
-                <span title="查看短链">
-                  <itv-icon
-                    type="i-detail"
-                    size="20"
-                    class="itv-btn__icon"
-                    onClick={this.toUserDetail.bind(null, row)}
-                  />
-                </span>
+                <div>
+                  <span title="查看短链">
+                    <itv-icon
+                      type="i-detail"
+                      size="20"
+                      class="itv-btn__icon mr16"
+                      onClick={this.toUserDetail.bind(null, row)}
+                    />
+                  </span>
+                  <span title="查看协作空间">
+                    <itv-icon
+                      type="i-member"
+                      size="20"
+                      class="itv-btn__icon"
+                      onClick={this.toUserSpaceList.bind(null, row)}
+                    />
+                  </span>
+                </div>
               )
             }
           }
@@ -501,7 +516,15 @@ export default {
     // 去用户详情
     toUserDetail(row) {
       this.$router.push({
-        name: 'UserDetail',
+        name: 'ShortLinkListUser',
+        params: { user_id: row.id },
+        query: { name: row.nickname }
+      })
+    },
+    // 去用户创建的协作空间列表
+    toUserSpaceList(row) {
+      this.$router.push({
+        name: 'SpaceListUser',
         params: { user_id: row.id },
         query: { name: row.nickname }
       })

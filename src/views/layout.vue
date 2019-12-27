@@ -175,6 +175,11 @@ export default {
           name: '5',
           title: '跳转链接数据',
           route: { name: 'TargetLinkStatistic' }
+        },
+        {
+          name: '6',
+          title: '协作空间列表',
+          route: { name: 'SpaceList' }
         }
       ],
       menu_qr: [

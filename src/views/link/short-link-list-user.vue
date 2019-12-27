@@ -1,14 +1,21 @@
 /* 用户创建的短链页 */
 <template>
-  <div class="user-detail itv-flex-v--fs">
+  <div class="short-link-list-space itv-flex-v--fs">
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
-      <Breadcrumb>
-        <BreadcrumbItem class="cp" @click.native="$router.go(-1)"
-          >用户列表</BreadcrumbItem
-        >
-        <BreadcrumbItem>{{ $route.query.name }} 创建的短链</BreadcrumbItem>
-      </Breadcrumb>
+      <div class="itv-flex--fs">
+        <itv-icon
+          type="i-back"
+          title="返回"
+          size="20"
+          class="itv-btn__icon mr16"
+          @click="$router.go(-1)"
+        />
+        <Breadcrumb>
+          <BreadcrumbItem>短链列表</BreadcrumbItem>
+          <BreadcrumbItem>创建者：{{ $route.query.name }}</BreadcrumbItem>
+        </Breadcrumb>
+      </div>
       <Select
         v-model="form.sort"
         style="width:150px"
@@ -39,11 +46,11 @@
 
 <script>
 import tableMixins from '../table-mixins'
-import userMixins from '../common/mixins-user-link'
+import shortLinkMixins from '../common/mixins-short-link'
 
 export default {
-  name: 'UserDetail',
-  mixins: [tableMixins, userMixins],
+  name: 'ShortLinkListUser',
+  mixins: [tableMixins, shortLinkMixins],
   props: {},
   components: {},
   data() {
@@ -101,7 +108,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.user-detail {
+.short-link-list-space {
   .cp {
     cursor: pointer;
   }

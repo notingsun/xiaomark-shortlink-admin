@@ -1,18 +1,20 @@
 /* 短链列表 */
 <template>
   <div class="short-link-list itv-flex-v--fs">
+    <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
-      <div class="header__search">
-        <Input
-          clearable
-          v-model="form.search"
-          placeholder="请输入"
-          style="width: 300px"
-          @on-enter="doGetData"
-          @on-clear="doGetData"
-          class="mr8"
+      <div class="itv-flex--fs">
+        <itv-icon
+          type="i-back"
+          title="返回"
+          size="20"
+          class="itv-btn__icon mr16"
+          @click="$router.go(-1)"
         />
-        <Button type="primary" @click="doGetData">搜索</Button>
+        <Breadcrumb>
+          <BreadcrumbItem>短链列表</BreadcrumbItem>
+          <BreadcrumbItem>空间：{{ $route.query.name }}</BreadcrumbItem>
+        </Breadcrumb>
       </div>
       <Select
         v-model="form.sort"
@@ -47,7 +49,7 @@ import tableMixins from '../table-mixins'
 import shortLinkMixins from '../common/mixins-short-link'
 
 export default {
-  name: 'ShortLinkList',
+  name: 'ShortLinkListSpace',
   mixins: [tableMixins, shortLinkMixins],
   props: {},
   components: {},
@@ -96,8 +98,7 @@ export default {
         const params = {
           archived: this.form.archived,
           enabled: this.form.enabled,
-          user_id: '', // 用户ID
-          qs: this.form.search, // 查询字符串（名称/原始URL/短链接URL）
+          workspace_id: this.$route.params.space_id, // 用户ID
           order_by: this.form.sort
         }
 
