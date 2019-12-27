@@ -1,6 +1,15 @@
 import request from '../instance'
 
 export default {
+  putSpaceCreate(id, params) {
+    return request({
+      method: 'put',
+      name: '设置用户是否可以创建协作空间',
+      url: `/api/sl/users/${id}/ws_creator/`,
+      params
+    })
+  },
+
   getUserList(params) {
     return request({
       method: 'get',

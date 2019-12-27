@@ -91,6 +91,23 @@
     />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
+
+    <!-- 对话框 -->
+    <Modal
+      v-model="modal.show"
+      title="协作空间权限"
+      :mask-closable="false"
+      @on-ok="handleSpace"
+      @on-cancel="modal.show = false"
+    >
+      <p>
+        {{
+          `确认${(modal.obj || {}).ws_creator ? '关闭' : '开启'} ${(
+            modal.obj || {}
+          ).nickname || '-'} 的协作空间权限？`
+        }}
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -110,6 +127,10 @@ export default {
 
     return {
       // img_default: require('../../assets/earth.png'),
+      modal: {
+        show: false, // 显示对话框
+        obj: null // 操作对象
+      },
       show_drawer: false, // 显示抽屉
       value: '',
       type: '',
@@ -246,8 +267,6 @@ export default {
             key: 'subscribe',
             // align: 'center',
             render: (h, { row }) => {
-              // return <span>{row.subscribe ? '是' : '否'}</span>
-              //  <Icon title="是否可用" type="md-checkmark-circle" color={row.enabled ? C_GREEN : C_GREY} size="18"/>
               return (
                 <div>
                   <span class="mr8" title="是否关注服务号">
@@ -270,6 +289,92 @@ export default {
                       style={{ color: row.mp_openid ? C_BLUE : C_GREY }}
                       size="24"
                     />
+                  </span>
+                </div>
+              )
+            }
+          },
+          {
+            title: '协作空间',
+            minWidth: 110,
+            key: 'ws_creator',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '可以', value: 1 },
+                { name: '不可以', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.ws_creator === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.ws_creator = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div>
+                    <span class="mr8">协作空间</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <itv-icon
+                    class="cp"
+                    title={
+                      row.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'
+                    }
+                    type={row.ws_creator ? 'i-stop' : 'i-start'}
+                    size="20"
+                    style={`color: ${row.ws_creator ? C_GREEN : C_GREY}`}
+                    onClick={() => {
+                      this.modal.show = true
+                      this.modal.obj = row
+                    }}
+                  />
+                </div>
+              )
+            }
+          },
+          {
+            title: '协作空间数量',
+            minWidth: 120,
+            // key: 'n_ws_joined',
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <span
+                    class="ml8 cp"
+                    title={`已创建 ${row.n_ws_created} 个协作空间`}
+                  >
+                    {row.n_ws_created}
+                  </span>
+                  <span class="ml8">/</span>
+                  <span
+                    class="ml8 cp"
+                    title={`已加入 ${row.n_ws_joined} 个协作空间`}
+                  >
+                    {row.n_ws_joined}
                   </span>
                 </div>
               )
@@ -318,6 +423,7 @@ export default {
       },
       // 获取表格数据的参数
       form: {
+        ws_creator: '',
         search: '',
         sort: 'time'
       },
@@ -334,7 +440,9 @@ export default {
           { value: 'link', label: '按创建短链数量倒序' },
           { value: 'normal_link', label: '按普通跳转链接数量倒序' },
           { value: 'random_link', label: '按随机跳转链接数量倒序' },
-          { value: 'click', label: '按短链访问次数倒序' }
+          { value: 'click', label: '按短链访问次数倒序' },
+          { value: 'ws_created', label: '按创建的协作空间数量倒序' },
+          { value: 'ws_joined ', label: '按加入的协作空间数量倒序' }
         ]
       }
     }
@@ -349,6 +457,23 @@ export default {
   },
   watch: {},
   methods: {
+    // 是否可以创协作空间
+    async handleSpace() {
+      try {
+        await this.$api.User.putSpaceCreate(this.modal.obj.id, {
+          ws_creator: !this.modal.obj.ws_creator
+        })
+        this.modal.show = false
+        this.doGetData({ page: 'now' })
+        setTimeout(() => {
+          this.$Message.success(
+            (this.modal.obj || {}).ws_creator ? '关闭成功' : '开启成功'
+          )
+        }, 300)
+      } catch (e) {
+        console.error(e)
+      }
+    },
     // handleImgError(row, index) {
     // console.log(row, index)
     // this.table.data[index].headimgurl = this.img_default
@@ -399,6 +524,7 @@ export default {
       try {
         const params = {
           ...this.filter,
+          ws_creator: this.form.ws_creator,
           nickname: this.form.search,
           order_by: this.form.sort
         }
