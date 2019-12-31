@@ -360,6 +360,7 @@ export default {
                       this.$bus.modal.type = 'ws_creator'
                       this.$bus.modal.show = true
                       this.$bus.modal.obj = row
+                      this.$bus.modal.success_cb = this.doGetData
                     }}
                   />
                   <div
@@ -464,6 +465,7 @@ export default {
                       this.$bus.modal.type = 'enabled'
                       this.$bus.modal.show = true
                       this.$bus.modal.obj = row
+                      this.$bus.modal.success_cb = this.doGetData
                     }}
                   />
                 </div>

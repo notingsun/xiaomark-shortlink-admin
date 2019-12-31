@@ -274,11 +274,18 @@ export default {
             },
             render: (h, { row }) => {
               return (
-                <Icon
+                <itv-icon
+                  class="cp"
                   title={row.enabled ? '可用' : '不可用'}
-                  type="md-checkmark-circle"
-                  color={row.enabled ? C_GREEN : C_GREY}
+                  type={row.enabled ? 'i-stop' : 'i-start'}
                   size="20"
+                  style={`color: ${row.enabled ? C_GREEN : C_GREY}`}
+                  onClick={() => {
+                    this.$bus.modal.type = 'enabled_short_link'
+                    this.$bus.modal.show = true
+                    this.$bus.modal.obj = row
+                    this.$bus.modal.success_cb = this.doGetData
+                  }}
                 />
               )
             }

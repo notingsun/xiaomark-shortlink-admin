@@ -1,6 +1,15 @@
 import request from '../instance'
 
 export default {
+  putLinkEnabled(id, params = {}) {
+    return request({
+      method: 'put',
+      name: '设置链接是否可用',
+      url: `/api/sl/links/${id}/enabled/`,
+      params
+    })
+  },
+
   putTargetLinkFavicon(id, params = {}) {
     return request({
       method: 'put',
