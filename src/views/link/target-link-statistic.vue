@@ -187,27 +187,28 @@ export default {
             },
             render: (h, { row }) => {
               return (
-                <Icon
+                <itv-icon
+                  class="cp"
                   title={row.enabled ? '可用' : '不可用'}
-                  type="md-checkmark-circle"
-                  color={row.enabled ? C_GREEN : C_GREY}
+                  type={row.enabled ? 'i-stop' : 'i-start'}
                   size="20"
+                  style={`color: ${row.enabled ? C_GREEN : C_GREY}`}
+                  onClick={() => {
+                    this.$bus.modal.type = 'enabled_target_link'
+                    this.$bus.modal.show = true
+                    this.$bus.modal.obj = row
+                    this.$bus.modal.success_cb = this.doGetData
+                  }}
                 />
               )
             }
           },
           {
             title: '操作',
-            width: 150,
+            width: 100,
             render: (h, { row }) => {
               return (
                 <div>
-                  <span
-                    class="itv-btn__text mr16"
-                    onClick={this.handleEnable.bind(null, row)}
-                  >
-                    {row.enabled ? '停用' : '启用'}
-                  </span>
                   <span
                     class="itv-btn__text"
                     onClick={this.handleFavicon.bind(null, row)}
@@ -267,42 +268,6 @@ export default {
     async doUpdateFavicon(row, cbSuccess, cbError) {
       try {
         await this.$api.Link.putTargetLinkFavicon(row.id) // 最慢要30s
-
-        cbSuccess()
-      } catch (e) {
-        // console.error(e)
-        cbError()
-      }
-    },
-    handleEnable(row) {
-      this.$Modal.confirm({
-        title: `确认${row.enabled ? '停用' : '启用'}该网站吗？`,
-        okText: '确认',
-        cancelText: '取消',
-        loading: true,
-        onOk: () => {
-          this.doPutEnable(
-            row,
-            () => {
-              this.$Modal.remove()
-              this.doGetData()
-            },
-            () => {
-              this.$Modal.remove()
-            }
-          )
-        }
-      })
-    },
-    // 修改可用
-    async doPutEnable(row, cbSuccess, cbError) {
-      try {
-        const params = {
-          id: row.id,
-          enabled: !row.enabled
-        }
-
-        await this.$api.Link.putTargetLinkEnable(params)
 
         cbSuccess()
       } catch (e) {

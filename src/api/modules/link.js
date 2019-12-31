@@ -1,6 +1,15 @@
 import request from '../instance'
 
 export default {
+  putWebsiteEnabled(id, params) {
+    return request({
+      method: 'put',
+      name: '设置网站是否可用',
+      url: `/api/sl/websites/${id}/enabled/`,
+      params
+    })
+  },
+
   putLinkEnabled(id, params = {}) {
     return request({
       method: 'put',
@@ -15,16 +24,6 @@ export default {
       method: 'put',
       name: '更新网站图标',
       url: `/api/sl/websites/${id}/favicon/`,
-      params
-    })
-  },
-
-  putTargetLinkEnable(params) {
-    console.log(params.id)
-    return request({
-      method: 'put',
-      name: '设置网站是否可用',
-      url: `/api/sl/websites/${params.id}/enabled/`,
       params
     })
   },
