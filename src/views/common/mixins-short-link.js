@@ -171,7 +171,7 @@ export default {
 
               return (
                 <Dropdown>
-                  <div>
+                  <div class="cp">
                     <span class="mr8">是否归档</span>
                     <Icon type="ios-funnel" title="筛选" />
                   </div>
@@ -264,7 +264,7 @@ export default {
 
               return (
                 <Dropdown>
-                  <div>
+                  <div class="cp">
                     <span class="mr8">是否可用</span>
                     <Icon type="ios-funnel" title="筛选" />
                   </div>

@@ -153,7 +153,7 @@ export default {
           },
           {
             title: '注册时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 140,
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
             key: 'create_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.create_time).split(' ')
@@ -169,7 +169,7 @@ export default {
           },
           {
             title: '最近登录时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 140,
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
             key: 'last_login_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.last_login_time).split(' ')

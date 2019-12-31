@@ -1,12 +1,17 @@
 <template>
   <div id="app">
     <router-view />
+    <!-- 对话框 -->
+    <sure-modal />
   </div>
 </template>
 
 <script>
+import SureModal from './views/common/sure-modal'
+
 export default {
   name: 'app',
+  components: { SureModal },
   created() {
     console.log(process.env.NODE_ENV)
     if (process.env.NODE_ENV === 'development') {

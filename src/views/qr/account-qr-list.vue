@@ -64,7 +64,7 @@ export default {
           },
           {
             title: '创建时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 140,
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
             key: 'create_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.create_time).split(' ')

@@ -9,3 +9,8 @@
 [后端接口](http://test.xiaomark.com/apidoc/)
   > 接口的域名： admin-test.xiaomark.com
   > 账户密码： admin interval
+
+
+  1、用户拉黑（展示、筛选、操作）
+  2、短链拉黑
+  3、网站拉黑（是否全量）
