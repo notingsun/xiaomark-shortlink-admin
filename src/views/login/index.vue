@@ -61,14 +61,15 @@ export default {
       this.loading = true
 
       try {
-        this.loading = false
         const res = await this.$api.Admin.login(this.form)
 
         this.handleLoginSuccess(res)
       } catch (e) {
-        this.loading = false
         console.error(e)
       }
+      setTimeout(() => {
+        this.loading = false
+      }, 500)
     },
 
     /* 登陆成功的处理 */

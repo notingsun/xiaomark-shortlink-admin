@@ -39,8 +39,8 @@ export default {
   components: {},
   data() {
     const C_GREEN = '#47cb89'
-    // const C_ORANGE = '#e88986'
-    // const C_BLUE = '#4F87FB'
+    const C_ORANGE = '#e88986'
+    const C_BLUE = '#4F87FB'
     const C_GREY = '#c5c8ce'
 
     return {
@@ -104,7 +104,7 @@ export default {
           },
           {
             title: '创建/加入的时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 160,
+            minWidth: this.$bus.view_width <= 1300 ? 140 : 160,
             key: 'join_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.join_time).split(' ')
@@ -214,18 +214,18 @@ export default {
               )
             }
           },
-          {
-            title: '服务号openid',
-            minWidth: 120,
-            key: 'sa_openid',
-            tooltip: true
-          },
-          {
-            title: '小程序openid',
-            minWidth: 120,
-            key: 'mp_openid',
-            tooltip: true
-          },
+          // {
+          //   title: '服务号openid',
+          //   minWidth: 120,
+          //   key: 'sa_openid',
+          //   tooltip: true
+          // },
+          // {
+          //   title: '小程序openid',
+          //   minWidth: 120,
+          //   key: 'mp_openid',
+          //   tooltip: true
+          // },
           {
             title: '其他',
             minWidth: 130,
@@ -238,6 +238,20 @@ export default {
                     <itv-icon
                       type="i-attention"
                       style={{ color: row.subscribe ? C_GREEN : C_GREY }}
+                      size="24"
+                    />
+                  </span>
+                  <span class="mr8" title="是否网页登录">
+                    <itv-icon
+                      type="i-pc"
+                      style={{ color: row.sa_openid ? C_ORANGE : C_GREY }}
+                      size="24"
+                    />
+                  </span>
+                  <span title="是否小程序登录">
+                    <itv-icon
+                      type="i-wx"
+                      style={{ color: row.mp_openid ? C_BLUE : C_GREY }}
                       size="24"
                     />
                   </span>
