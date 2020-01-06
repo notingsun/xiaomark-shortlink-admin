@@ -92,6 +92,20 @@ const layout = {
       component: () => import('@/views/space/space-detail.vue')
     },
 
+    /* api域名 */
+    {
+      path: '/apI-domain-list',
+      meta: { menuIndex: '7', title: 'API域名列表' },
+      name: 'ApiDomainList',
+      component: () => import('@/views/api-domain/api-domain-list.vue')
+    },
+    {
+      path: '/apI-domain-check',
+      meta: { menuIndex: '8', title: 'API待审核域名' },
+      name: 'ApiDomainCheck',
+      component: () => import('@/views/api-domain/api-domain-check.vue')
+    },
+
     // 渠道码
     {
       path: '/user-list-qr',

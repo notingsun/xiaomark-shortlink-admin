@@ -180,6 +180,16 @@ export default {
           name: '6',
           title: '协作空间列表',
           route: { name: 'SpaceList' }
+        },
+        {
+          name: '7',
+          title: 'API域名列表',
+          route: { name: 'ApiDomainList' }
+        },
+        {
+          name: '8',
+          title: 'API待审核域名',
+          route: { name: 'ApiDomainCheck' }
         }
       ],
       menu_qr: [

@@ -1,0 +1,145 @@
+/* 待审核域名 */
+<template>
+  <div class="api-domain-check itv-flex-v--fs">
+    <!-- 表格 -->
+    <Table
+      :loading="loading"
+      style="flex: 1;"
+      ref="refTable"
+      :height="table.height"
+      :columns="table.columns"
+      :data="table.data"
+    />
+    <!-- 分页器 -->
+    <itv-pagination :total="table.total" @on-change="doGetData" />
+  </div>
+</template>
+
+<script>
+import tableMixins from '../table-mixins'
+
+export default {
+  name: 'ApiDomainCheck',
+  mixins: [tableMixins],
+  props: {},
+  components: {},
+  data() {
+    return {
+      loading: true,
+      table: {
+        data: [],
+        total: 0,
+        columns: [
+          {
+            title: '所属用户',
+            minWidth: 160,
+            key: 'user.nickname user.headimgurl',
+            render: (h, { row }) => {
+              return (
+                <div
+                  class="table-cell__nickname table-cell__nickname--click cp"
+                  onClick={this.toUserDetail.bind(null, row)}
+                >
+                  <img src={row.favicon} class="img--headimgurl mr8" />
+                  <span class="text--nickname">{row.netloc}</span>
+                </div>
+              )
+            }
+          },
+          {
+            title: '提交时间',
+            minWidth: 120,
+            key: 'create_time',
+            render: (h, { row }) => {
+              return <span>{this.$PDo.Date.format(row.create_time)}</span>
+            }
+          },
+          {
+            title: '操作',
+            width: 100,
+            render: (h, { row }) => {
+              return (
+                <div>
+                  <span
+                    class="itv-btn__text"
+                    onClick={this.handleCheck.bind(null, row)}
+                  >
+                    审核
+                  </span>
+                  <span class="itv-text--grey">已审核</span>
+                </div>
+              )
+            }
+          }
+        ],
+        height: null // 表格的高度
+      }
+    }
+  },
+  computed: {},
+  created() {},
+  mounted() {
+    const { page, per_page } = this.$route.query
+    const params = page && per_page ? { page, per_page } : ''
+
+    this.doGetData(params)
+  },
+  watch: {},
+  methods: {
+    // 去用户详情
+    toUserDetail(row) {
+      this.$router.push({
+        name: 'ShortLinkListUser',
+        params: { user_id: row.user.id },
+        query: { name: row.user.nickname }
+      })
+    },
+
+    // 审核
+    handleCheck(row) {
+      // 屏蔽后该域名从当前列表消失
+      this.$bus.modal.type = 'check_api_domain'
+      this.$bus.modal.show = true
+      // TODO 假的
+      this.$bus.modal.obj = {
+        ...row,
+        domain_list: [row.netloc]
+      }
+      this.$bus.modal.success_cb = this.doGetData
+    },
+
+    // 获取表格的数据
+    doGetData(page = {}) {
+      if (!page.page) {
+        this.$global.utils.pagination.reset()
+        this.$nextTick(() => {
+          this.doGetData2()
+        })
+      } else {
+        this.doGetData2()
+      }
+    },
+    async doGetData2() {
+      this.loading = true
+      this.domTableScrollTop()
+      try {
+        // TODO
+        const res = await this.$api.Link.getTargetLinkStatistic({
+          ...this.$global.utils.pagination.params()
+        })
+
+        this.table.total = res.total
+        this.table.data = res.websites || []
+      } catch (e) {
+        console.error(e)
+      }
+      this.loading = false
+    }
+  }
+}
+</script>
+
+<style scoped lang="less">
+//.api-domain-check {
+//}
+</style>

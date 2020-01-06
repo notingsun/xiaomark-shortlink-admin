@@ -1,12 +1,11 @@
 /* 确认对话框 */
 <template>
-  <div class="sure-modal">
+  <div>
     <Modal
+      class="sure-modal"
       v-model="modal.show"
       :title="titleMap[modal.type]"
       :mask-closable="false"
-      @on-ok="handleModal"
-      @on-cancel="modal.show = false"
     >
       <!-- 1、设置创建协作空间权限 -->
       <p v-show="modal.type === 'ws_creator'">
@@ -68,6 +67,103 @@
           >设置相关联的链接</Checkbox
         >
       </div>
+
+      <!-- 5、屏蔽API域名 -->
+      <p v-show="modal.type === 'stop_api_domain'">
+        <span
+          >屏蔽后该域名会从当前列表消失，确认屏蔽【{{
+            (modal.obj || {}).netloc || '-'
+          }}】吗？
+        </span>
+      </p>
+
+      <!-- 6、设置API权限 -->
+      <div v-show="modal.type === 'open_api_domain'">
+        <!-- 用户 -->
+        <div class="table-cell__nickname mb24">
+          <img
+            :src="(modal.obj || {}).headimgurl"
+            class="img--headimgurl mr8"
+          />
+          <div class="itv-div__text--nowrap text_one_line">
+            {{ (modal.obj || {}).nickname }}
+          </div>
+        </div>
+        <!-- 开关 -->
+        <div class="itv-flex--fs mb24">
+          <p class="mr16 itv-title--16">API 权限</p>
+          <i-switch
+            :loading="is_change.open_api_domain"
+            v-model="form.open_api_domain._switch"
+            :before-change="handleOpenApi"
+          >
+            <span slot="open">开</span>
+            <span slot="close">关</span>
+          </i-switch>
+        </div>
+        <!-- 域名列表 -->
+        <div class="mb24">
+          <p class="mr16 itv-title--16 mb8">域名列表</p>
+          <p v-for="(item, index) in form.open_api_domain._list" :key="index">
+            {{ item }}
+          </p>
+          <p v-show="form.open_api_domain._list.length === 0">无</p>
+        </div>
+        <!-- 每日创建短链接上限 -->
+        <div class="itv-flex--fs">
+          <p class="mr16 itv-title--16 mb8">每日创建短链接上限：</p>
+          <Input
+            type="number"
+            v-model="form.open_api_domain._count"
+            style="width: 100px"
+          />
+        </div>
+      </div>
+
+      <!-- 7、审核API域名 -->
+      <div v-show="modal.type === 'check_api_domain'">
+        <!-- 用户 -->
+        <div class="table-cell__nickname mb24">
+          <img :src="(modal.obj || {}).favicon" class="img--headimgurl mr8" />
+          <div class="itv-div__text--nowrap text_one_line">
+            {{ (modal.obj || {}).netloc }}
+          </div>
+        </div>
+        <!-- 域名列表 -->
+        <div class="mb24">
+          <p class="mr16 itv-title--16 mb8">域名列表</p>
+          <div
+            class="itv-flex--sb mb8"
+            v-for="(item, index) in (modal.obj || {}).domain_list || []"
+            :key="index"
+          >
+            <p
+              class="itv-div__text--nowrap itv-text--a2 text_one_line"
+              @click="handleOpenNewTag(item)"
+            >
+              {{ item }}
+            </p>
+            <i-switch
+              v-model="form.check_api_domain._switch[index]"
+              class="mr16"
+            >
+              <span slot="open">开</span>
+              <span slot="close">关</span>
+            </i-switch>
+          </div>
+          <p v-show="((modal.obj || {}).domain_list || []).length === 0">无</p>
+        </div>
+      </div>
+
+      <!-- 按钮.取消/确认 -->
+      <template slot="footer">
+        <div class="itv-flex--fe" v-show="show_footer">
+          <Button type="text" class="mr16" @click="modal.show = false"
+            >取消</Button
+          >
+          <Button type="primary" @click="handleModal">确认</Button>
+        </div>
+      </template>
     </Modal>
   </div>
 </template>
@@ -80,7 +176,13 @@ export default {
   components: {},
   data() {
     return {
+      is_change: {
+        open_api_domain: false
+      },
       titleMap: {
+        check_api_domain: '审核API域名',
+        open_api_domain: '设置API权限',
+        stop_api_domain: '屏蔽API域名',
         enabled_target_link: '设置网站是否可用',
         enabled_short_link: '设置短链是否可用',
         ws_creator: '设置创建协作空间权限',
@@ -89,6 +191,14 @@ export default {
       form: {
         enabled_target_link: {
           recursive: true // 是否设置相关联的链接
+        },
+        open_api_domain: {
+          _switch: false,
+          _list: [],
+          _count: 0
+        },
+        check_api_domain: {
+          _switch: []
         }
       }
     }
@@ -96,6 +206,11 @@ export default {
   computed: {
     modal() {
       return this.$bus.modal
+    },
+    show_footer() {
+      const arr_no_show = ['open_api_domain']
+
+      return !arr_no_show.includes(this.modal.type)
     }
   },
   created() {},
@@ -107,10 +222,23 @@ export default {
         setTimeout(() => {
           this.form = this.$options.data().form
         }, 300)
+      } else if (v && this.modal.type === 'open_api_domain') {
+        // 初始化.设置API权限
+        // TODO
+      } else if (v && this.modal.type === 'check_api_domain') {
+        // 初始化.审核API域名
+        // TODO
+        // form.check_api_domain._switch[index]
       }
     }
   },
   methods: {
+    // 打开一个新标签页
+    handleOpenNewTag(url) {
+      // TODO
+      window.open(`http://${url}`, '_blank')
+    },
+
     // 确认对话框
     handleModal() {
       const type = this.modal.type
@@ -119,6 +247,7 @@ export default {
       type === 'enabled' && this.handleUserEnabled()
       type === 'enabled_short_link' && this.handleLinkEnabled()
       type === 'enabled_target_link' && this.handleWebsiteEnabled()
+      type === 'stop_api_domain' && this.handleStopApi()
     },
 
     // 是否可以创协作空间
@@ -195,12 +324,40 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    },
+
+    // API域名.屏蔽
+    async handleStopApi() {
+      // TODO
+    },
+
+    // API域名.开启权限
+    async handleOpenApi() {
+      // TODO
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve()
+        }, 300)
+        console.log(reject)
+      })
+      // this.is_change.open_api_domain = true
+      // const res = await this.doPutReportShare({ share: !this.report_share })
+
+      // return new Promise((resolve, reject) => {
+      //   this.is_change.open_api_domain = false
+      //   res && this.$Message.success(`数据分享已${this.report_share ? '开启' : '关闭'}`)
+      //   reject()
+      // })
     }
   }
 }
 </script>
 
-<style scoped lang="less">
-//.sure-modal {
-//}
+<style lang="less">
+.sure-modal {
+  .text_one_line {
+    width: 360px;
+    font-size: 14px;
+  }
+}
 </style>

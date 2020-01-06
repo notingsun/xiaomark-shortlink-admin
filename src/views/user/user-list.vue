@@ -386,30 +386,68 @@ export default {
               )
             }
           },
-          // {
-          //   title: '协作空间数量',
-          //   minWidth: 150,
-          //   // key: 'n_ws_joined',
-          //   render: (h, { row }) => {
-          //     return (
-          //       <div class="itv-flex--fs">
-          //         <span
-          //           class="ml8 cp"
-          //           title={`已创建 ${row.n_ws_created} 个协作空间`}
-          //         >
-          //           {row.n_ws_created}
-          //         </span>
-          //         <span class="ml8">/</span>
-          //         <span
-          //           class="ml8 cp"
-          //           title={`已加入 ${row.n_ws_joined} 个协作空间`}
-          //         >
-          //           {row.n_ws_joined}
-          //         </span>
-          //       </div>
-          //     )
-          //   }
-          // },
+          {
+            // title: 'API权限',
+            minWidth: 120,
+            // key: 'enabled',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '有API权限', value: 1 },
+                { name: '没有API权限', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.apienabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.apienabled = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">API权限</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <itv-icon
+                    class="cp"
+                    title={row.enabled ? '有API权限' : '没有API权限'}
+                    type={row.enabled ? 'i-stop' : 'i-start'}
+                    size="20"
+                    style={`color: ${row.enabled ? C_GREEN : C_GREY}`}
+                    onClick={() => {
+                      this.$bus.modal.type = 'open_api_domain'
+                      this.$bus.modal.show = true
+                      this.$bus.modal.obj = row
+                      this.$bus.modal.success_cb = this.doGetData
+                    }}
+                  />
+                </div>
+              )
+            }
+          },
           {
             // title: '是否可登录',
             minWidth: 120,
@@ -504,6 +542,7 @@ export default {
       },
       // 获取表格数据的参数
       form: {
+        apienabled: '',
         enabled: '',
         ws_creator: '',
         search: '',

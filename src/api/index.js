@@ -8,8 +8,10 @@ import User from './modules/user'
 import Link from './modules/link'
 import Qr from './modules/qr'
 import Space from './modules/space'
+import ApiDomain from './modules/api-domain'
 
 export default {
+  ApiDomain,
   Space,
   Qr,
   User,
