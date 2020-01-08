@@ -1,6 +1,15 @@
 import request from '../instance'
 
 export default {
+  getQnToken(params) {
+    return request({
+      name: '获取七牛上传凭证',
+      method: 'get',
+      url: 'https://xiaomark.com/ext/qn/upload_token/',
+      params,
+      noCode: true
+    })
+  },
   /**
    * 登录
    */
