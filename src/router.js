@@ -135,16 +135,23 @@ const layout = {
 }
 
 // dev 开发路由
-const dev = {
-  path: '/dev/svg-icon',
-  name: 'SvgIcon',
-  component: () => import('./components/svg-icon/svg-show-all.vue')
-}
+const dev = [
+  {
+    path: '/dev/svg-icon',
+    name: 'SvgIcon',
+    component: () => import('./components/svg-icon/svg-show-all.vue')
+  },
+  {
+    path: '/dev/upload-imgs',
+    name: 'UploadImgs',
+    component: () => import('@/views/dev/upload-imgs.vue')
+  }
+]
 
 const router = new Router({
   mode: 'history',
   routes: [
-    dev,
+    ...dev,
     login,
     layout,
     not_found,
