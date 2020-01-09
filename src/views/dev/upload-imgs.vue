@@ -1,14 +1,17 @@
 /* 上传图片 */
 <template>
   <div class="upload-imgs">
-    <div class="mb16 itv-flex--sb">
+    <div class="mb16 itv-flex--sb top">
       <div class="itv-flex--fs--fs">
         <p class="itv-title--14 mr16">请选择要上传的图片：</p>
         <itv-upload-image
           v-model="image"
           :accept="'image/png, image/jpeg'"
           limitText=""
+          :multiple="true"
+          :max="30"
           clearable
+          :multipleOneReturn="true"
           @on-change="handleImg"
         />
       </div>
@@ -16,7 +19,7 @@
         <Button type="error" @click="deleteAll">删除全部</Button>
       </div>
     </div>
-    <Table :height="500" :columns="columns" :data="data" />
+    <Table :height="560" :columns="columns" :data="data" />
     <itv-model-img v-model="img_model.show" :imgModelUrl="img_model.url" />
   </div>
 </template>
@@ -87,7 +90,7 @@ export default {
         }
       ],
       data: [],
-      image: '',
+      image: [],
       img_model: {
         show: false,
         url: ''
@@ -123,15 +126,18 @@ export default {
       return reverse ? data.reverse() : data
     },
     handleImg(v) {
-      if (v) {
+      if (v && v.length > 0) {
         let data = this.getData(false)
 
         this.image = v
         setTimeout(() => {
-          this.image = ''
+          this.image = []
         }, 300)
-
-        data.push(v)
+        v.forEach((item) => {
+          if (!data.includes(item)) {
+            data.push(item)
+          }
+        })
         window.localStorage.setItem('UploadImgs', data)
         this.data = this.getData().map((item) => {
           return {
@@ -173,5 +179,9 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   padding: 32px;
+  .top {
+    height: 40px;
+    overflow: hidden;
+  }
 }
 </style>

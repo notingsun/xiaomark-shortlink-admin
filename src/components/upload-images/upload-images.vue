@@ -108,6 +108,11 @@ export default {
       type: Boolean,
       default: true
     },
+    // 多选时一次性返回结果
+    multipleOneReturn: {
+      type: Boolean,
+      default: false
+    },
     multiple: {
       // 是否支持多选
       type: Boolean,
@@ -129,6 +134,11 @@ export default {
       url_arr_temp_length: 0,
       count: 0, // 同步完成的图片数
       url_arr_deafult: null, // 防止初始化时，触发on-change
+      configMutiple: {
+        url_arr: [],
+        isMutiple: false, // 上传了多个
+        time: 0
+      },
       img_model: {
         show: false,
         url: 'http://n.sinaimg.cn/transform/20150825/rsTR-fxhcvsc4370080.jpg'
@@ -196,6 +206,20 @@ export default {
         !this.url_arr_temp_length &&
           (this.url_arr_temp_length = this.url_arr.length)
         this.url_arr_temp_length += 1
+
+        // 上传了多个
+        if (this.multipleOneReturn && !this.configMutiple.isMutiple) {
+          if (this.configMutiple.time) {
+            const timeDiff = Date.now() - this.configMutiple.time
+
+            if (timeDiff < 100) {
+              this.configMutiple.isMutiple = true
+              this.configMutiple.time = 0
+            }
+          } else {
+            this.configMutiple.time = Date.now()
+          }
+        }
       }
 
       try {
@@ -223,7 +247,23 @@ export default {
             const url = 'https://static.interval.im/' + val.key
 
             this.preLoadImg(url, () => {
-              this.url_arr.push(url)
+              if (this.multipleOneReturn && this.configMutiple.isMutiple) {
+                // 一次性返回
+                this.configMutiple.url_arr.push(url)
+                if (
+                  this.configMutiple.url_arr.length === this.url_arr_temp_length
+                ) {
+                  this.url_arr = [
+                    ...this.url_arr,
+                    ...this.configMutiple.url_arr
+                  ]
+                  this.configMutiple.isMutiple = false
+                  this.configMutiple.url_arr = []
+                }
+              } else {
+                // 一个个返回
+                this.url_arr.push(url)
+              }
               this.loading = false
             })
           }
@@ -240,6 +280,7 @@ export default {
     /* 清除 */
     handleClear(index) {
       this.url_arr.splice(index, 1)
+      this.url_arr_temp_length -= 1
     },
 
     /* 查看大图 */
