@@ -57,6 +57,7 @@ export default {
     return {
       // 获取表格数据的参数
       form: {
+        has_params: '',
         archived: '',
         enabled: '',
         sort: 'time'
@@ -86,6 +87,7 @@ export default {
       try {
         const params = {
           user_id: this.$route.params.user_id, // 用户ID
+          has_params: this.form.has_params,
           archived: this.form.archived,
           enabled: this.form.enabled,
           order_by: this.form.sort

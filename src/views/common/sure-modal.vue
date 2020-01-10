@@ -155,6 +155,52 @@
         </div>
       </div>
 
+      <!-- 8、微信分享 -->
+      <div v-show="modal.type === 'wx_share'">
+        <!-- 封面图 -->
+        <div class="row">
+          <div class="label">封面图</div>
+          <div class="value">
+            <img
+              :src="
+                calImgUrl(((modal.obj || {}).wx_share_params || {}).image_url)
+              "
+              style="width: 80px;height: 80px;"
+              alt="fmt"
+            />
+          </div>
+        </div>
+        <!-- 标题 -->
+        <div class="row">
+          <div class="label">标题</div>
+          <div class="value">
+            {{ ((modal.obj || {}).wx_share_params || {}).title }}
+          </div>
+        </div>
+        <!-- 描述 -->
+        <div class="row">
+          <div class="label">描述</div>
+          <div class="value">
+            {{ ((modal.obj || {}).wx_share_params || {}).desc }}
+          </div>
+        </div>
+        <!-- 审核 -->
+        <div class="row">
+          <div class="label">审核</div>
+          <div class="value">
+            <i-switch
+              :before-change="handleWxShare"
+              :loading="form.wx_share.loading"
+              v-model="form.wx_share._switch"
+              class="mr16"
+            >
+              <span slot="open">开</span>
+              <span slot="close">关</span>
+            </i-switch>
+          </div>
+        </div>
+      </div>
+
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
@@ -180,6 +226,7 @@ export default {
         open_api_domain: false
       },
       titleMap: {
+        wx_share: '微信分享',
         check_api_domain: '审核API域名',
         open_api_domain: '设置API权限',
         stop_api_domain: '屏蔽API域名',
@@ -199,6 +246,10 @@ export default {
         },
         check_api_domain: {
           _switch: []
+        },
+        wx_share: {
+          loading: false,
+          _switch: false
         }
       }
     }
@@ -208,7 +259,7 @@ export default {
       return this.$bus.modal
     },
     show_footer() {
-      const arr_no_show = ['open_api_domain']
+      const arr_no_show = ['open_api_domain', 'wx_share']
 
       return !arr_no_show.includes(this.modal.type)
     }
@@ -229,10 +280,20 @@ export default {
         // 初始化.审核API域名
         // TODO
         // form.check_api_domain._switch[index]
+      } else if (v && this.modal.type === 'wx_share') {
+        // 初始化.微信分享是否开启
+        this.form.wx_share['_switch'] = this.modal.obj.wx_share
       }
     }
   },
   methods: {
+    // 处理图片
+    calImgUrl(url) {
+      if (url && !url.includes('https://static.interval.im/')) {
+        return `http://open.interval.im/extensions/bridge/?url=${url}`
+      }
+      return url
+    },
     // 打开一个新标签页
     handleOpenNewTag(url) {
       // TODO
@@ -326,6 +387,26 @@ export default {
       }
     },
 
+    // 微信分享
+    async handleWxShare() {
+      try {
+        let v = !this.form.wx_share['_switch']
+
+        await this.$api.Link.putWxShareEnabled(this.modal.obj.id, {
+          wx_share: v
+        })
+        this.modal.show = false
+        this.modal.success_cb({ page: 'now' })
+        setTimeout(() => {
+          this.$Message.success(v ? '启用成功' : '禁用成功')
+        }, 300)
+        return Promise.resolve()
+      } catch (e) {
+        console.error(e)
+        return Promise.reject()
+      }
+    },
+
     // API域名.屏蔽
     async handleStopApi() {
       // TODO
@@ -358,6 +439,18 @@ export default {
   .text_one_line {
     width: 360px;
     font-size: 14px;
+  }
+  .row {
+    display: flex;
+    font-size: 14px;
+    margin-bottom: 20px;
+    .label {
+      font-weight: bold;
+      width: 100px;
+      padding-right: 10px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
   }
 }
 </style>

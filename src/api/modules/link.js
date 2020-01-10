@@ -10,6 +10,15 @@ export default {
     })
   },
 
+  putWxShareEnabled(id, params = {}) {
+    return request({
+      method: 'put',
+      name: '设置是否可以微信分享',
+      url: `/api/sl/links/${id}/wx_share/`,
+      params
+    })
+  },
+
   putLinkEnabled(id, params = {}) {
     return request({
       method: 'put',

@@ -54,6 +54,7 @@ export default {
   data() {
     return {
       form: {
+        has_params: '',
         archived: '',
         enabled: '',
         search: '',
@@ -94,6 +95,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          has_params: this.form.has_params,
           archived: this.form.archived,
           enabled: this.form.enabled,
           user_id: '', // 用户ID

@@ -39,6 +39,68 @@ export default {
             key: 'url'
           },
           {
+            title: ' ',
+            minWidth: 120,
+            key: 'wx_share',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '已设置分享参数', value: 1 },
+                { name: '未设置分享参数', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.has_params === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.has_params = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">微信分享</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            // eslint-disable-next-line no-unused-vars
+            render: (h, { row }) => {
+              if (row.wx_share_params) {
+                return (
+                  <img
+                    style="width: 20px;"
+                    class={row.wx_share ? 'cp' : 'cp img--grey'}
+                    src={require('../../assets/report/b_wechat.png')}
+                    onClick={() => {
+                      this.$bus.modal.type = 'wx_share'
+                      this.$bus.modal.show = true
+                      this.$bus.modal.obj = row
+                      this.$bus.modal.success_cb = this.doGetData
+                    }}
+                  />
+                )
+              }
+              return null
+            }
+          },
+          {
             title: '创建时间',
             minWidth: 120,
             key: 'create_time',
