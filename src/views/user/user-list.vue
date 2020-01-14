@@ -402,13 +402,13 @@ export default {
                   <DropdownItem
                     class={
                       // eslint-disable-next-line prettier/prettier
-                      this.form.apienabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                      this.form.api_auth === item.value ? 'enabled_active enabled_item' : 'enabled_item'
                     }
                   >
                     <span
                       class="enabled_span"
                       onClick={() => {
-                        this.form.apienabled = item.value
+                        this.form.api_auth = item.value
                         this.doGetData()
                       }}
                     >
@@ -433,10 +433,10 @@ export default {
                 <div class="itv-flex--fs">
                   <itv-icon
                     class="cp"
-                    title={row.enabled ? '有API权限' : '没有API权限'}
-                    type={row.enabled ? 'i-stop' : 'i-start'}
+                    title={row.api_auth ? '有API权限' : '没有API权限'}
+                    type={row.api_auth ? 'i-stop' : 'i-start'}
                     size="20"
-                    style={`color: ${row.enabled ? C_GREEN : C_GREY}`}
+                    style={`color: ${row.api_auth ? C_GREEN : C_GREY}`}
                     onClick={() => {
                       this.$bus.modal.type = 'open_api_domain'
                       this.$bus.modal.show = true
@@ -542,7 +542,7 @@ export default {
       },
       // 获取表格数据的参数
       form: {
-        apienabled: '',
+        api_auth: '',
         enabled: '',
         ws_creator: '',
         search: '',
@@ -636,6 +636,7 @@ export default {
       try {
         const params = {
           ...this.filter,
+          api_auth: this.form.api_auth,
           enabled: this.form.enabled,
           ws_creator: this.form.ws_creator,
           nickname: this.form.search,

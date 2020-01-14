@@ -1,6 +1,24 @@
 import request from '../instance'
 
 export default {
+  putApiAuth(id, params) {
+    return request({
+      method: 'put',
+      name: '设置用户是否有API权限',
+      url: `/api/sl/users/${id}/api_auth/`,
+      params
+    })
+  },
+
+  putApiLimits(id, params) {
+    return request({
+      method: 'put',
+      name: '更新用户的API调用限制',
+      url: `/api/sl/users/${id}/api_limits/`,
+      params
+    })
+  },
+
   putUserEnabled(id, params) {
     return request({
       method: 'put',

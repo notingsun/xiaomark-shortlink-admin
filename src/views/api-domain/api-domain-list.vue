@@ -53,18 +53,7 @@ export default {
             minWidth: 240,
             key: 'hostname netloc favicon',
             render: (h, { row }) => {
-              // <img src={row.favicon} class="img--headimgurl mr8" />
-              return (
-                <div class="table-cell__nickname">
-                  <div class="img--favicon__wrap">
-                    <img
-                      src={row.favicon || require('../../assets/earth.png')}
-                      class="img--favicon"
-                    />
-                  </div>
-                  <span>{row.netloc}</span>
-                </div>
-              )
+              return <span>{row.netloc}</span>
             }
           },
           {
@@ -77,8 +66,13 @@ export default {
                   class="table-cell__nickname table-cell__nickname--click cp"
                   onClick={this.toUserDetail.bind(null, row)}
                 >
-                  <img src={row.favicon} class="img--headimgurl mr8" />
-                  <span class="text--nickname">{row.netloc}</span>
+                  <img
+                    src={(row.user || {}).headimgurl}
+                    class="img--headimgurl mr8"
+                  />
+                  <span class="text--nickname">
+                    {(row.user || {}).nickname}
+                  </span>
                 </div>
               )
             }
@@ -159,14 +153,13 @@ export default {
           qs: this.form.search
         }
 
-        // TODO
-        const res = await this.$api.Link.getTargetLinkStatistic({
+        const res = await this.$api.ApiDomain.getApiDomain({
           ...params,
           ...this.$global.utils.pagination.params()
         })
 
         this.table.total = res.total
-        this.table.data = res.websites || []
+        this.table.data = res.domains || []
       } catch (e) {
         console.error(e)
       }

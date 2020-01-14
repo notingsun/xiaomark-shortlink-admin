@@ -40,15 +40,20 @@ export default {
                   class="table-cell__nickname table-cell__nickname--click cp"
                   onClick={this.toUserDetail.bind(null, row)}
                 >
-                  <img src={row.favicon} class="img--headimgurl mr8" />
-                  <span class="text--nickname">{row.netloc}</span>
+                  <img
+                    src={(row.user || {}).headimgurl}
+                    class="img--headimgurl mr8"
+                  />
+                  <span class="text--nickname">
+                    {(row.user || {}).nickname}
+                  </span>
                 </div>
               )
             }
           },
           {
             title: '提交时间',
-            minWidth: 120,
+            minWidth: 160,
             key: 'create_time',
             render: (h, { row }) => {
               return <span>{this.$PDo.Date.format(row.create_time)}</span>
@@ -56,18 +61,18 @@ export default {
           },
           {
             title: '操作',
-            width: 100,
+            width: 160,
             render: (h, { row }) => {
+              if (row.reviewed) {
+                return <span class="itv-text--grey">已审核</span>
+              }
               return (
-                <div>
-                  <span
-                    class="itv-btn__text"
-                    onClick={this.handleCheck.bind(null, row)}
-                  >
-                    审核
-                  </span>
-                  <span class="itv-text--grey">已审核</span>
-                </div>
+                <span
+                  class="itv-btn__text"
+                  onClick={this.handleCheck.bind(null, row)}
+                >
+                  审核
+                </span>
               )
             }
           }
@@ -123,13 +128,12 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        // TODO
-        const res = await this.$api.Link.getTargetLinkStatistic({
+        const res = await this.$api.ApiDomain.getApiDomainCheckList({
           ...this.$global.utils.pagination.params()
         })
 
         this.table.total = res.total
-        this.table.data = res.websites || []
+        this.table.data = res.applications || []
       } catch (e) {
         console.error(e)
       }
