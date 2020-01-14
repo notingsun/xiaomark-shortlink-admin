@@ -227,7 +227,9 @@ export default {
 
         let token = data.uptoken
 
-        let key = `scrm/${this.$PDo.String.random()}.${file.type.split('/')[1]}`
+        let key = `interval/${this.$PDo.String.random()}.${
+          file.type.split('/')[1]
+        }`
 
         let observable = qiniu.upload(file, key, token, [
           'image/png',
