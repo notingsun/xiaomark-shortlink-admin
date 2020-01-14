@@ -290,7 +290,7 @@ export default {
     // 处理图片
     calImgUrl(url) {
       if (url && !url.includes('https://static.interval.im/')) {
-        return `http://open.interval.im/extensions/bridge/?url=${url}`
+        return `${process.env.VUE_APP_GET_IMG}${url}`
       }
       return url
     },
