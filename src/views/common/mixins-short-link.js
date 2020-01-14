@@ -20,6 +20,11 @@ export default {
         name: '浏览器插件',
         icon: 'i-extention',
         color: C_GREEN
+      },
+      {
+        name: '开放API',
+        icon: 'i-api',
+        color: C_GREEN
       }
     ]
 
