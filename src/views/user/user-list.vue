@@ -236,73 +236,36 @@ export default {
           },
           {
             title: '创建短链数量',
-            minWidth: 120,
-            key: 'n_links'
-          },
-          {
-            title: '普通跳转链接数量',
-            minWidth: 140,
-            key: 'n_normal_links'
-          },
-          {
-            title: '随机跳转链接数量',
-            minWidth: 140,
-            key: 'n_random_links'
-          },
-          {
-            title: '其他',
-            minWidth: 130,
-            key: 'subscribe',
-            // align: 'center',
+            minWidth: 160,
+            key: 'n_links',
             render: (h, { row }) => {
               return (
-                <div>
-                  <span class="mr8" title="是否关注服务号">
-                    <itv-icon
-                      type="i-attention"
-                      style={{ color: row.subscribe ? C_GREEN : C_GREY }}
-                      size="24"
-                    />
-                  </span>
-                  <span class="mr8" title="是否网页登录">
-                    <itv-icon
-                      type="i-pc"
-                      style={{ color: row.sa_openid ? C_ORANGE : C_GREY }}
-                      size="24"
-                    />
-                  </span>
-                  <span title="是否小程序登录">
-                    <itv-icon
-                      type="i-wx"
-                      style={{ color: row.mp_openid ? C_BLUE : C_GREY }}
-                      size="24"
-                    />
-                  </span>
+                <div class="itv-flex--fs">
+                  <p style="width: 30%">{row.n_links}</p>
+                  <div class="itv-flex--v ml8 flex1">
+                    <p>
+                      <span style="color: #afafaf;">普通：</span>
+                      {row.n_normal_links}
+                    </p>
+                    <p>
+                      <span style="color: #afafaf;">随机：</span>
+                      {row.n_random_links}
+                    </p>
+                  </div>
                 </div>
               )
             }
           },
-          {
-            title: '地域',
-            width: 146,
-            key: 'country province city',
-            render: (h, { row }) => {
-              const string = [row.country, row.province, row.city]
-                .filter((item) => item)
-                .join('-')
-
-              return (
-                <Tooltip
-                  content={string}
-                  placement="top-start"
-                  transfer
-                  class="df"
-                >
-                  <div class="text-area">{string}</div>
-                </Tooltip>
-              )
-            }
-          },
+          // {
+          //   title: '普通跳转链接数量',
+          //   minWidth: 140,
+          //   key: 'n_normal_links'
+          // },
+          // {
+          //   title: '随机跳转链接数量',
+          //   minWidth: 140,
+          //   key: 'n_random_links'
+          // },
           {
             // title: '协作空间',
             minWidth: 180,
@@ -507,6 +470,60 @@ export default {
                     }}
                   />
                 </div>
+              )
+            }
+          },
+          {
+            title: '其他',
+            minWidth: 130,
+            key: 'subscribe',
+            // align: 'center',
+            render: (h, { row }) => {
+              return (
+                <div>
+                  <span class="mr8" title="是否关注服务号">
+                    <itv-icon
+                      type="i-attention"
+                      style={{ color: row.subscribe ? C_GREEN : C_GREY }}
+                      size="24"
+                    />
+                  </span>
+                  <span class="mr8" title="是否网页登录">
+                    <itv-icon
+                      type="i-pc"
+                      style={{ color: row.sa_openid ? C_ORANGE : C_GREY }}
+                      size="24"
+                    />
+                  </span>
+                  <span title="是否小程序登录">
+                    <itv-icon
+                      type="i-wx"
+                      style={{ color: row.mp_openid ? C_BLUE : C_GREY }}
+                      size="24"
+                    />
+                  </span>
+                </div>
+              )
+            }
+          },
+          {
+            title: '地域',
+            width: 146,
+            key: 'country province city',
+            render: (h, { row }) => {
+              const string = [row.country, row.province, row.city]
+                .filter((item) => item)
+                .join('-')
+
+              return (
+                <Tooltip
+                  content={string}
+                  placement="top-start"
+                  transfer
+                  class="df"
+                >
+                  <div class="text-area">{string}</div>
+                </Tooltip>
               )
             }
           },
