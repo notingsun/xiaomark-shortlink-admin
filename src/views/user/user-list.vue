@@ -574,6 +574,7 @@ export default {
     const { page, per_page } = this.$route.query
     const params = page && per_page ? { page, per_page } : ''
 
+    this.form.search = this.$route.query.name || ''
     this.doGetData(params)
   },
   watch: {},

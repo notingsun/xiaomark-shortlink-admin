@@ -28,22 +28,22 @@ export default {
           },
           {
             title: '协作者数量',
-            minWidth: 120,
+            minWidth: 100,
             key: 'n_collaborators'
           },
           {
             title: '链接分组数量',
-            minWidth: 140,
+            minWidth: 120,
             key: 'n_groups'
           },
           {
             title: '链接数量',
-            minWidth: 140,
+            minWidth: 90,
             key: 'n_links'
           },
           {
             title: '链接访问次数',
-            minWidth: 140,
+            minWidth: 120,
             key: 'n_clicks'
           }
         ],

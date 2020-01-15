@@ -119,8 +119,7 @@ export default {
     // 去用户详情
     toUserDetail(row) {
       this.$router.push({
-        name: 'ShortLinkListUser',
-        params: { user_id: row.user.id },
+        name: 'UserList',
         query: { name: row.user.nickname }
       })
     },
