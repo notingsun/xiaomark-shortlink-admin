@@ -502,17 +502,19 @@ export default {
     // API域名.开启权限
     async handleOpenApi() {
       this.is_change.open_api_domain = true
+      const api_auth = !this.form.open_api_domain['_switch']
 
       try {
-        const api_auth = !this.modal.obj.api_auth
-
         await this.$api.User.putApiAuth(this.modal.obj.id, {
           api_auth
         })
         this.$Message.success(`API 权限已${api_auth ? '开启' : '关闭'}`)
         this.form.open_api_domain['_switch'] = api_auth
+        this.modal.success_cb({ page: 'now' })
       } catch (e) {
         console.error(e)
+        this.modal.show = false
+        this.modal.success_cb({ page: 'now' })
       }
       this.is_change.open_api_domain = false
 
