@@ -63,7 +63,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <div
-                  class="table-cell__nickname table-cell__nickname--click cp"
+                  class="table-cell__nickname big cp"
                   onClick={this.toUserDetail.bind(null, row)}
                 >
                   <img

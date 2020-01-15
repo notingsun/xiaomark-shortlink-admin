@@ -68,8 +68,15 @@
           <Icon type="md-settings" class="mr16" />
         </span>
         <DropdownMenu slot="list">
-          <DropdownItem @click.native="handleChangePwd">修改密码</DropdownItem>
-          <DropdownItem @click.native="handleSignOut">退出</DropdownItem>
+          <DropdownItem style="width: 160px;" @click.native="handleChangePwd"
+            >修改密码</DropdownItem
+          >
+          <DropdownItem style="width: 160px;" @click.native="toUploadImage"
+            >上传图片</DropdownItem
+          >
+          <DropdownItem style="width: 160px;" @click.native="handleSignOut"
+            >退出</DropdownItem
+          >
         </DropdownMenu>
       </Dropdown>
     </Menu>
@@ -220,6 +227,13 @@ export default {
     }, 300)
   },
   methods: {
+    toUploadImage() {
+      const name = this.$route.name
+
+      if (name !== 'UploadImgs') {
+        this.$router.push({ name: 'UploadImgs' })
+      }
+    },
     // 获取当前管理员详情
     async getAdminDetail() {
       try {

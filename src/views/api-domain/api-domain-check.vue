@@ -37,7 +37,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <div
-                  class="table-cell__nickname table-cell__nickname--click cp"
+                  class="table-cell__nickname big cp"
                   onClick={this.toUserDetail.bind(null, row)}
                 >
                   <img
@@ -58,6 +58,11 @@ export default {
             render: (h, { row }) => {
               return <span>{this.$PDo.Date.format(row.create_time)}</span>
             }
+          },
+          {
+            title: '申请次数',
+            minWidth: 160,
+            key: 'nth'
           },
           {
             title: '操作',
@@ -104,11 +109,7 @@ export default {
       // 屏蔽后该域名从当前列表消失
       this.$bus.modal.type = 'check_api_domain'
       this.$bus.modal.show = true
-      // TODO 假的
-      this.$bus.modal.obj = {
-        ...row,
-        domain_list: [row.netloc]
-      }
+      this.$bus.modal.obj = row
       this.$bus.modal.success_cb = this.doGetData
     },
 
