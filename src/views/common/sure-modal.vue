@@ -207,8 +207,16 @@
               :src="
                 calImgUrl(((modal.obj || {}).wx_share_params || {}).image_url)
               "
-              style="width: 80px;height: 80px;"
+              style="width: 80px;height: 80px;object-fit: cover;"
               alt="fmt"
+              class="cp"
+              title="点击查看大图"
+              @click="
+                img_model.show = true
+                img_model.url = calImgUrl(
+                  ((modal.obj || {}).wx_share_params || {}).image_url
+                )
+              "
             />
           </div>
         </div>
@@ -255,6 +263,7 @@
         </div>
       </template>
     </Modal>
+    <itv-model-img v-model="img_model.show" :imgModelUrl="img_model.url" />
   </div>
 </template>
 
@@ -266,6 +275,10 @@ export default {
   components: {},
   data() {
     return {
+      img_model: {
+        show: false,
+        url: ''
+      },
       loading: false,
       is_change: {
         open_api_domain: false
@@ -481,7 +494,8 @@ export default {
           this.$Message.success('屏蔽成功')
         }, 300)
       } catch (e) {
-        console.error(e)
+        this.modal.show = false
+        this.modal.success_cb({ page: 'now' })
       }
     },
 
@@ -531,8 +545,14 @@ export default {
         await this.$api.ApiDomain.putApiDomainCheck(this.modal.obj.id, {
           enabled_list
         })
+        this.modal.show = false
+        this.modal.success_cb({ page: 'now' })
+        setTimeout(() => {
+          this.$Message.success('屏蔽成功')
+        }, 300)
       } catch (e) {
-        console.error(e)
+        this.modal.show = false
+        this.modal.success_cb({ page: 'now' })
       }
     }
   }

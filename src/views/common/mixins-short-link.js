@@ -91,6 +91,7 @@ export default {
                 return (
                   <img
                     style="width: 20px;"
+                    title={row.wx_share ? '通过审核' : '未通过审核'}
                     class={row.wx_share ? 'cp' : 'cp img--grey'}
                     src={require('../../assets/report/b_wechat.png')}
                     onClick={() => {
