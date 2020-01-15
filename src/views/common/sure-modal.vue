@@ -364,7 +364,6 @@ export default {
     },
     // 打开一个新标签页
     handleOpenNewTag(url) {
-      // TODO
       window.open(`http://${url}`, '_blank')
     },
 
