@@ -358,7 +358,7 @@ export default {
     // 处理图片
     calImgUrl(url) {
       if (url && !url.includes('https://static.interval.im/')) {
-        return `${process.env.VUE_APP_GET_IMG}${url}`
+        return `${process.env.VUE_APP_GET_IMG}${encodeURIComponent(url)}`
       }
       return url
     },
