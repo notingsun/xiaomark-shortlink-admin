@@ -529,7 +529,7 @@ export default {
           },
           {
             title: '操作',
-            width: 100,
+            width: 120,
             fixed: 'right',
             render: (h, { row }) => {
               return (
@@ -538,7 +538,7 @@ export default {
                     <itv-icon
                       type="i-detail"
                       size="20"
-                      class="itv-btn__icon mr16"
+                      class="itv-btn__icon mr8"
                       onClick={this.toUserDetail.bind(null, row)}
                     />
                   </span>
@@ -546,8 +546,16 @@ export default {
                     <itv-icon
                       type="i-member"
                       size="20"
-                      class="itv-btn__icon"
+                      class="itv-btn__icon mr8"
                       onClick={this.toUserSpaceList.bind(null, row)}
+                    />
+                  </span>
+                  <span title="登录该用户">
+                    <itv-icon
+                      type="i-eye"
+                      size="20"
+                      class="itv-btn__icon"
+                      onClick={this.toUserLogin.bind(null, row)}
                     />
                   </span>
                 </div>
@@ -635,6 +643,12 @@ export default {
         params: { user_id: row.id },
         query: { name: row.nickname }
       })
+    },
+    // 登录该用户
+    toUserLogin(row) {
+      this.$bus.modal.type = 'login_user'
+      this.$bus.modal.show = true
+      this.$bus.modal.obj = row
     },
 
     doGetData(page = {}) {

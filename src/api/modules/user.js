@@ -1,6 +1,15 @@
 import request from '../instance'
 
 export default {
+  postUserToken(id, params) {
+    return request({
+      method: 'post',
+      name: '生成用户的身份令牌',
+      url: `/api/sl/users/${id}/token/`,
+      params
+    })
+  },
+
   putApiAuth(id, params) {
     return request({
       method: 'put',
