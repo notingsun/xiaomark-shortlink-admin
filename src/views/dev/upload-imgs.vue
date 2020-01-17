@@ -16,7 +16,7 @@
         />
       </div>
       <div>
-        <Button type="error" @click="deleteAll">删除全部</Button>
+        <Button type="error" @click="deleteAll">删除全部（本地缓存）</Button>
       </div>
     </div>
     <Table :height="560" :columns="columns" :data="data" />
@@ -104,10 +104,7 @@ export default {
     let data = this.getData()
 
     if (data.length === 0) {
-      window.localStorage.setItem('UploadImgs', [
-        'https://static.interval.im/scrm/HbSHB5bnTnWENMKf.png',
-        'https://static.interval.im/scrm/HbSHB5bnTnWENMKf.png'
-      ])
+      window.localStorage.setItem('UploadImgs', [])
     }
 
     this.data = data.map((item) => {
