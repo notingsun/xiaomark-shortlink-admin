@@ -251,6 +251,14 @@
         </div>
       </div>
 
+      <!-- 9、屏蔽API域名 -->
+      <p v-show="modal.type === 'login_user'">
+        <span>确认使用</span>
+        <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
+        <span>的身份登录小码短链接吗？</span>
+        <br />
+      </p>
+
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
@@ -284,6 +292,7 @@ export default {
         open_api_domain: false
       },
       titleMap: {
+        login_user: '确认登录',
         wx_share: '微信分享',
         check_api_domain: '审核API域名',
         open_api_domain: '设置API权限',
@@ -313,6 +322,9 @@ export default {
         wx_share: {
           loading: false,
           _switch: false
+        },
+        login_user: {
+          token: ''
         }
       }
     }
@@ -351,6 +363,9 @@ export default {
       } else if (v && this.modal.type === 'wx_share') {
         // 初始化.微信分享是否开启
         this.form.wx_share['_switch'] = this.modal.obj.wx_share
+      } else if (v && this.modal.type === 'login_user') {
+        // 初始化.获取用户token
+        this.doGetUserToken()
       }
     }
   },
@@ -366,6 +381,16 @@ export default {
     handleOpenNewTag(url) {
       window.open(`http://${url}`, '_blank')
     },
+    // 获取用户的临时token
+    async doGetUserToken() {
+      try {
+        const res = await this.$api.User.postUserToken(this.modal.obj.id)
+
+        this.form.login_user.token = res.token
+      } catch (e) {
+        console.error(e)
+      }
+    },
 
     // 确认对话框
     async handleModal() {
@@ -380,9 +405,32 @@ export default {
       type === 'enabled_target_link' && await this.handleWebsiteEnabled()
       type === 'stop_api_domain' && await this.handleStopApiDomain()
       type === 'check_api_domain' && await this.handleCheckApiDomain()
+      type === 'login_user' && await this.handleUserLogin()
       /* eslint-enable */
 
       this.loading = false
+    },
+
+    // 登录小码短链
+    handleUserLogin() {
+      const token = this.form.login_user.token
+
+      if (token) {
+        const hostname = window.location.hostname
+        const url_map = {
+          localhost: 'http://localhost:8080',
+          'admin-test.xiaomark.com': 'http://sl-stage.xiaomark.com',
+          'admin.xiaomark.com': 'https://xiaomark.com/dashboard'
+        }
+        const url = url_map[hostname]
+
+        window.open(`${url}/interval-admin-login?key=${token}`, '_blank')
+      } else {
+        this.modal.show = false
+        setTimeout(() => {
+          this.$Message.success('token获取失败')
+        }, 300)
+      }
     },
 
     // 是否可以创协作空间
