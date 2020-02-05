@@ -197,6 +197,11 @@ export default {
           name: '8',
           title: 'API待审核域名',
           route: { name: 'ApiDomainCheck' }
+        },
+        {
+          name: '9',
+          title: '自定义域名列表',
+          route: { name: 'CustomDomainList' }
         }
       ],
       menu_qr: [

@@ -394,6 +394,10 @@ export default {
       this.table.height = this.$refs.refTable.$el.clientHeight
     })
     console.log(this.$route.name)
+    // 0 基本
+    // 1 创建者
+    // 2 是否可用
+    // 3 协作空间
     if (this.$route.name === 'ShortLinkListSpace') {
       this.table.columns = [
         ...this.tableColumns[0],
