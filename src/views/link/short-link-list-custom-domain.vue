@@ -13,7 +13,9 @@
         />
         <Breadcrumb>
           <BreadcrumbItem>短链列表</BreadcrumbItem>
-          <BreadcrumbItem>自定义域名：{{ $route.query.name }}</BreadcrumbItem>
+          <BreadcrumbItem>
+            自定义域名：{{ $route.params.domain_name }}
+          </BreadcrumbItem>
         </Breadcrumb>
       </div>
       <Select
@@ -86,7 +88,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
-          user_id: this.$route.params.user_id, // 用户ID
+          domain: this.$route.params.domain_name, // 用户ID
           has_params: this.form.has_params,
           archived: this.form.archived,
           enabled: this.form.enabled,

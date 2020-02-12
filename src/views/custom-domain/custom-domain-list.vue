@@ -26,7 +26,8 @@ export default {
   data() {
     return {
       form: {
-        status: ''
+        status: '',
+        enabled: ''
       },
       loading: true,
       table: {
@@ -38,7 +39,7 @@ export default {
             minWidth: 240,
             key: 'hostname netloc favicon',
             render: (h, { row }) => {
-              return <span>{row.netloc}</span>
+              return <span>{row.domain}</span>
             }
           },
           {
@@ -63,7 +64,7 @@ export default {
             }
           },
           {
-            title: '状态',
+            // title: '状态',
             minWidth: 120,
             key: 'enabled',
             // eslint-disable-next-line no-unused-vars
@@ -97,7 +98,7 @@ export default {
               return (
                 <Dropdown>
                   <div class="cp">
-                    <span class="mr8">是否可用</span>
+                    <span class="mr8">绑定状态</span>
                     <Icon type="ios-funnel" title="筛选" />
                   </div>
                   <DropdownMenu slot="list">{optionsList}</DropdownMenu>
@@ -106,8 +107,60 @@ export default {
             },
             render: (h, { row }) => {
               return (
-                <Tag color={row.netloc === 'shimo.im' ? 'green' : 'default'}>
-                  {row.netloc === 'shimo.im' ? '已生效' : '未生效'}
+                <Tag color={row.dns_resolved ? 'green' : 'default'}>
+                  {row.dns_resolved ? '已生效' : '未生效'}
+                </Tag>
+              )
+            }
+          },
+          {
+            // title: '状态',
+            minWidth: 120,
+            key: 'enabled',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '已启用', value: 1 },
+                { name: '已停用', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.enabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.enabled = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">是否启用</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            render: (h, { row }) => {
+              return (
+                <Tag
+                  color={row.dns_resolved && row.enabled ? 'green' : 'default'}
+                >
+                  {!row.dns_resolved ? '-' : row.enabled ? '已启用' : '已停用'}
                 </Tag>
               )
             }
@@ -117,7 +170,7 @@ export default {
             minWidth: 240,
             key: 'hostname netloc favicon',
             render: (h, { row }) => {
-              return <span>{row.netloc}</span>
+              return <span>{row.n_links}</span>
             }
           },
           {
@@ -163,9 +216,7 @@ export default {
     handleShowLinks(row) {
       this.$router.push({
         name: 'ShortLinkListCustomDomain',
-        // TODO
-        params: { domain_id: row.user.id },
-        query: { name: row.user.nickname }
+        params: { domain_name: row.domain }
       })
     },
 
@@ -185,10 +236,10 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
-          status: this.form.status
+          resolved: this.form.status, // DNS解析是否正确：0 - 否，1 - 是
+          enabled: this.form.enabled // 是否可用：0 - 不可用，1 - 可用
         }
-        // TODO
-        const res = await this.$api.ApiDomain.getApiDomain({
+        const res = await this.$api.CustomDomain.getCustomDomain({
           ...params,
           ...this.$global.utils.pagination.params()
         })

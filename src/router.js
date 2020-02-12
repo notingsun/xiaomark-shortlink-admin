@@ -65,7 +65,7 @@ const layout = {
       component: () => import('@/views/link/short-link-list-space.vue')
     },
     {
-      path: '/short-link-list-custom-domain/:domain_id',
+      path: '/short-link-list-custom-domain/:domain_name',
       meta: { menuIndex: '4', title: '短链列表.自定义域名' },
       name: 'ShortLinkListCustomDomain',
       component: () => import('@/views/link/short-link-list-custom-domain.vue')
