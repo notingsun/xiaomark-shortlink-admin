@@ -9,8 +9,10 @@ import Link from './modules/link'
 import Qr from './modules/qr'
 import Space from './modules/space'
 import ApiDomain from './modules/api-domain'
+import CustomDomain from './modules/custom-domain'
 
 export default {
+  CustomDomain,
   ApiDomain,
   Space,
   Qr,

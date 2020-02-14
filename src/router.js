@@ -64,6 +64,12 @@ const layout = {
       name: 'ShortLinkListSpace',
       component: () => import('@/views/link/short-link-list-space.vue')
     },
+    {
+      path: '/short-link-list-custom-domain/:domain_name',
+      meta: { menuIndex: '4', title: '短链列表.自定义域名' },
+      name: 'ShortLinkListCustomDomain',
+      component: () => import('@/views/link/short-link-list-custom-domain.vue')
+    },
 
     {
       path: '/target-link-statistic',
@@ -104,6 +110,14 @@ const layout = {
       meta: { menuIndex: '8', title: 'API待审核域名' },
       name: 'ApiDomainCheck',
       component: () => import('@/views/api-domain/api-domain-check.vue')
+    },
+
+    /* 自定义域名列表 */
+    {
+      path: '/custom-domain-list',
+      meta: { menuIndex: '9', title: '自定义域名列表' },
+      name: 'CustomDomainList',
+      component: () => import('@/views/custom-domain/custom-domain-list.vue')
     },
 
     // 渠道码

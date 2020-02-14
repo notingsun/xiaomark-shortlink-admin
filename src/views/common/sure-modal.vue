@@ -422,7 +422,7 @@ export default {
           'admin-test.xiaomark.com': 'http://sl-stage.xiaomark.com',
           'admin.xiaomark.com': 'https://xiaomark.com/dashboard'
         }
-        const url = url_map[hostname]
+        const url = url_map[hostname] || url_map.localhost
 
         window.open(`${url}/interval-admin-login?key=${token}`, '_blank')
       } else {
@@ -431,6 +431,7 @@ export default {
           this.$Message.success('token获取失败')
         }, 300)
       }
+      this.modal.show = false
     },
 
     // 是否可以创协作空间
