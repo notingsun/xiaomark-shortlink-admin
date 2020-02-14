@@ -26,8 +26,9 @@ export default {
   data() {
     return {
       form: {
-        status: '',
-        enabled: ''
+        bind: ''
+        // status: '',
+        // enabled: ''
       },
       loading: true,
       table: {
@@ -79,13 +80,13 @@ export default {
                   <DropdownItem
                     class={
                       // eslint-disable-next-line prettier/prettier
-                      this.form.status === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                      this.form.bind === item.value ? 'enabled_active enabled_item' : 'enabled_item'
                     }
                   >
                     <span
                       class="enabled_span"
                       onClick={() => {
-                        this.form.status = item.value
+                        this.form.bind = item.value
                         this.doGetData()
                       }}
                     >
@@ -98,7 +99,7 @@ export default {
               return (
                 <Dropdown>
                   <div class="cp">
-                    <span class="mr8">绑定状态</span>
+                    <span class="mr8">状态</span>
                     <Icon type="ios-funnel" title="筛选" />
                   </div>
                   <DropdownMenu slot="list">{optionsList}</DropdownMenu>
@@ -107,67 +108,25 @@ export default {
             },
             render: (h, { row }) => {
               return (
-                <Tag color={row.dns_resolved ? 'green' : 'default'}>
-                  {row.dns_resolved ? '已生效' : '未生效'}
+                // eslint-disable-next-line prettier/prettier
+                <Tag color={row.status === 0 ? 'default' : row.status === 1 ? 'green' : 'red'}>
+                  {/* eslint-disable-next-line prettier/prettier*/}
+                  {row.status === 0 ? '未生效' : row.status === 1 ? '已启用' : '已停用'}
                 </Tag>
               )
             }
           },
           {
-            // title: '状态',
-            minWidth: 120,
-            key: 'enabled',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '已启用', value: 1 },
-                { name: '已停用', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.enabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.enabled = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">是否启用</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
+            title: '绑定时间',
+            minWidth: 180,
+            key: 'create_time',
             render: (h, { row }) => {
-              return (
-                <Tag
-                  color={row.dns_resolved && row.enabled ? 'green' : 'default'}
-                >
-                  {!row.dns_resolved ? '-' : row.enabled ? '已启用' : '已停用'}
-                </Tag>
-              )
+              return <span>{this.$PDo.Date.format(row.bind_time)}</span>
             }
           },
           {
             title: '短链数量',
-            minWidth: 240,
+            minWidth: 120,
             key: 'hostname netloc favicon',
             render: (h, { row }) => {
               return <span>{row.n_links}</span>
@@ -236,8 +195,9 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
-          resolved: this.form.status, // DNS解析是否正确：0 - 否，1 - 是
-          enabled: this.form.enabled // 是否可用：0 - 不可用，1 - 可用
+          bind: this.form.bind
+          // resolved: this.form.status, // DNS解析是否正确：0 - 否，1 - 是
+          // enabled: this.form.enabled // 是否可用：0 - 不可用，1 - 可用
         }
         const res = await this.$api.CustomDomain.getCustomDomain({
           ...params,
