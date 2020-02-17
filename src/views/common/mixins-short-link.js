@@ -116,7 +116,7 @@ export default {
               return (
                 <span>
                   {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  {arr[1] && <br />}
                   {arr[1]}
                 </span>
               )
