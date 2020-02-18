@@ -71,9 +71,8 @@
       <!-- 5、屏蔽API域名 -->
       <div v-show="modal.type === 'stop_api_domain'">
         <p class="mb16">
-          屏蔽后该域名会从当前列表消失，确认屏蔽【{{
-            (modal.obj || {}).netloc || '-'
-          }}】吗？
+          <!-- 屏蔽后该域名会从当前列表消失， -->
+          确认屏蔽【{{ (modal.obj || {}).netloc || '-' }}】吗？
         </p>
         <Checkbox v-model="form.stop_api_domain.recursive" size="large"
           >设置相关联的链接</Checkbox
@@ -185,13 +184,13 @@
             >
               {{ item }}
             </p>
-            <i-switch
+            <!-- <i-switch
               v-model="form.check_api_domain._switch[index]"
               class="mr16"
             >
               <span slot="open">开</span>
               <span slot="close">关</span>
-            </i-switch>
+            </i-switch> -->
           </div>
           <p v-show="((modal.obj || {}).netloc_list || []).length === 0">无</p>
         </div>
@@ -294,7 +293,7 @@ export default {
       titleMap: {
         login_user: '确认登录',
         wx_share: '微信分享',
-        check_api_domain: '审核API域名',
+        check_api_domain: '查看API域名',
         open_api_domain: '设置API权限',
         stop_api_domain: '屏蔽API域名',
         enabled_target_link: '设置网站是否可用',
@@ -334,7 +333,7 @@ export default {
       return this.$bus.modal
     },
     show_footer() {
-      const arr_no_show = ['open_api_domain', 'wx_share']
+      const arr_no_show = ['open_api_domain', 'wx_share', 'check_api_domain']
 
       return !arr_no_show.includes(this.modal.type)
     }

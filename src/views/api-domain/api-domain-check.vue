@@ -60,7 +60,7 @@ export default {
             }
           },
           {
-            title: '申请次数',
+            title: '本月提交次数',
             minWidth: 160,
             key: 'nth'
           },
@@ -76,7 +76,7 @@ export default {
                   class="itv-btn__text"
                   onClick={this.handleCheck.bind(null, row)}
                 >
-                  审核
+                  查看
                 </span>
               )
             }

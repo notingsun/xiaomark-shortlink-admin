@@ -39,6 +39,9 @@ export default {
   props: {},
   components: {},
   data() {
+    const C_GREEN = '#47cb89'
+    const C_GREY = '#c5c8ce'
+
     return {
       form: {
         search: ''
@@ -74,6 +77,20 @@ export default {
                     {(row.user || {}).nickname}
                   </span>
                 </div>
+              )
+            }
+          },
+          {
+            title: '是否可用',
+            minWidth: 120,
+            render: (h, { row }) => {
+              return (
+                <Icon
+                  title={row.enabled ? '已归档' : '未归档'}
+                  type="md-checkmark-circle"
+                  color={row.enabled ? C_GREEN : C_GREY}
+                  size="20"
+                />
               )
             }
           },
