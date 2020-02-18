@@ -36,7 +36,20 @@ export default {
           {
             title: '短链名称',
             minWidth: 150,
-            key: 'name'
+            // key: 'name',
+            render: (h, { row }) => {
+              return (
+                <Tooltip
+                  placement="bottom"
+                  max-width={300}
+                  theme="light"
+                  content={row.name}
+                  transfer
+                >
+                  <span class="itv-text--2row">{row.name}</span>
+                </Tooltip>
+              )
+            }
           },
           {
             title: '短链',
