@@ -13,6 +13,12 @@ export default new Vue({
         obj: null, // 操作对象
         success_cb: Function // 操作成功的回调
       }, // 是否xxx.确认.对话框
+      modal2: {
+        type: '', // 对话框类型
+        show: false, // 显示对话框
+        obj: null, // 操作对象
+        success_cb: Function // 操作成功的回调
+      }, // 是否xxx.确认.对话框(渠道码)
       EVENTS: {
         LOGIN: 'LOGIN',
         AUTO_LOGIN: 'AUTO_LOGIN'

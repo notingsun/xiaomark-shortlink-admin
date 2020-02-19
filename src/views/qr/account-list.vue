@@ -96,6 +96,38 @@ export default {
               /* eslint-enable */
             }
           },
+          // TODO
+          {
+            title: '套餐',
+            minWidth: 120,
+            key: 'n_qrcodes',
+            render: (h, { row }) => {
+              return <span onClick={this.handlePackage.bind(this, row)}>-</span>
+            }
+          },
+          {
+            title: '套餐到期时间',
+            minWidth: 150,
+            key: 'create_time',
+            render: (h, { row }) => {
+              // const arr = this.$PDo.Date.format(row.create_time).split(' ')
+              // <span>{arr[0]}</span>
+
+              return (
+                <div>
+                  <span>-</span>
+                  <itv-icon
+                    title="编辑"
+                    type="i-edit"
+                    class="ml16 "
+                    size="18"
+                    color="primary"
+                    onClick={this.handlePackage.bind(this, row)}
+                  />
+                </div>
+              )
+            }
+          },
           {
             title: '二维码数量',
             minWidth: 120,
@@ -281,6 +313,13 @@ export default {
         console.error(e)
       }
       this.loading = false
+    },
+    handlePackage(row) {
+      // 屏蔽后该域名从当前列表消失
+      this.$bus.modal2.type = 'package'
+      this.$bus.modal2.show = true
+      this.$bus.modal2.obj = row
+      this.$bus.modal2.success_cb = this.doGetData
     }
   }
 }

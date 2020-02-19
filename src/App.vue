@@ -3,15 +3,18 @@
     <router-view />
     <!-- 对话框 -->
     <sure-modal />
+    <!-- 对话框 -->
+    <sure-modal2 />
   </div>
 </template>
 
 <script>
 import SureModal from './views/common/sure-modal'
+import SureModal2 from './views/qr/components/sure-modal'
 
 export default {
   name: 'app',
-  components: { SureModal },
+  components: { SureModal, SureModal2 },
   created() {
     console.log(process.env.NODE_ENV)
     if (process.env.NODE_ENV === 'development') {
