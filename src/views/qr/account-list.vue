@@ -16,6 +16,20 @@
       </div>
       <div>
         <Select
+          v-model="form.combo"
+          style="width:150px"
+          @on-change="doGetData"
+          class="mr8"
+          placement="bottom-end"
+        >
+          <Option
+            v-for="(item, index) in options.combo"
+            :value="item.value"
+            :key="index"
+            >{{ item.label }}</Option
+          >
+        </Select>
+        <Select
           v-model="form.authorized"
           style="width:150px"
           @on-change="doGetData"
@@ -72,6 +86,8 @@ export default {
     // const C_BLUE = '#4F87FB'
     const C_GREY = '#c5c8ce'
 
+    const comboArr = ['免费版', '入门版', '专业版']
+
     return {
       loading: true,
       table: {
@@ -96,13 +112,12 @@ export default {
               /* eslint-enable */
             }
           },
-          // TODO
           {
             title: '套餐',
             minWidth: 120,
             key: 'n_qrcodes',
             render: (h, { row }) => {
-              return <span onClick={this.handlePackage.bind(this, row)}>-</span>
+              return <span>{comboArr[row.combo]}</span>
             }
           },
           {
@@ -110,20 +125,25 @@ export default {
             minWidth: 150,
             key: 'create_time',
             render: (h, { row }) => {
-              // const arr = this.$PDo.Date.format(row.create_time).split(' ')
+              const arr = this.$PDo.Date.format(row.stop_date).split(' ')
               // <span>{arr[0]}</span>
 
               return (
                 <div>
-                  <span>-</span>
-                  <itv-icon
-                    title="编辑"
-                    type="i-edit"
-                    class="ml16 "
-                    size="18"
-                    color="primary"
-                    onClick={this.handlePackage.bind(this, row)}
-                  />
+                  <span>{arr[0] || '-'}</span>
+                  {/* eslint-disable */}
+                  { row.combo !== 0 && (
+                      <itv-icon
+                        title="编辑"
+                        type="i-edit"
+                        class="ml16 "
+                        size="18"
+                        color="primary"
+                        onClick={this.handlePackage.bind(this, row)}
+                      />
+                    )
+                  }
+                  {/* eslint-enable */}
                 </div>
               )
             }
@@ -244,10 +264,17 @@ export default {
       },
       form: {
         search: '',
+        combo: '*',
         authorized: '*', // 公众号授权状态：0 - 取消授权，1 - 授权中
         sort: 'time'
       },
       options: {
+        combo: [
+          { value: '*', label: '不限套餐' },
+          { value: '0', label: '免费版' },
+          { value: '1', label: '入门版' },
+          { value: '2', label: '专业版' }
+        ],
         authorized: [
           { value: '*', label: '不限授权' },
           { value: '0', label: '未授权' },
@@ -298,6 +325,7 @@ export default {
       try {
         const params = {
           qs: this.form.search,
+          combo: this.form.combo,
           authorized: this.form.authorized,
           order_by: this.form.sort
         }

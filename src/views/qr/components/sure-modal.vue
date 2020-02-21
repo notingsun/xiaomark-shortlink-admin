@@ -27,6 +27,7 @@
               v-model="form_package._count"
               style="width: 100px"
               class="mr16"
+              :min="1"
             />
           </div>
         </div>
@@ -94,8 +95,8 @@ export default {
         }, 300)
       } else if (v && this.modal.type === 'package') {
         // 初始化.修改套餐到期日
-        this.form_package['_date'] = '2021-04-02'
-        this.form_package['_count'] = this.modal.obj.n_qrcodes
+        this.form_package['_date'] = this.modal.stop_date || '-'
+        this.form_package['_count'] = 0
       }
     }
   },
@@ -113,7 +114,22 @@ export default {
       this.loading = false
     },
     async doChangePackage() {
-      console.log('doChangePackage')
+      const days = Number(this.form_package['_count'])
+
+      if (days < 0 || parseInt(days) !== days) {
+        this.$Message.error('增加数值错误')
+        return
+      }
+      try {
+        await this.$api.Qr.putPackageDate(this.modal.obj.id, {
+          days
+        })
+        this.$Message.success('增加成功')
+        this.$bus.modal2.show = false
+        this.modal.success_cb()
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 }

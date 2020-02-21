@@ -35,5 +35,14 @@ export default {
       url: '/api/qr/qrcodes/',
       params
     })
+  },
+
+  putPackageDate(id, params) {
+    return request({
+      method: 'put',
+      name: '修改公众号套餐到期日',
+      url: `/api/qr/platforms/${id}/date/`,
+      params
+    })
   }
 }
