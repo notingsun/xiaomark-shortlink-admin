@@ -419,6 +419,14 @@ export default {
       ]
       return
     }
+    if (this.$route.name === 'ShortLinkListCustomDomain') {
+      this.table.columns = [
+        ...this.tableColumns[0],
+        ...this.tableColumns[2],
+        ...this.tableColumns[3]
+      ]
+      return
+    }
     /* eslint-disable */
     this.table.columns = this.$route.name === 'ShortLinkListUser'
       ? [...this.tableColumns[0], ...this.tableColumns[2], ...this.tableColumns[3]]
