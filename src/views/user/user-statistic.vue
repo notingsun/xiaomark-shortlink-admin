@@ -18,7 +18,9 @@
             <!-- 历史总的数据 -->
             <div class="overview__cell__value">
               <Tooltip
-                :disabled="config[overview.key].data[item.key] < 1000"
+                :disabled="
+                  config[overview.key].data[item.key] < 1000 || item.noShort
+                "
                 placement="top"
                 theme="light"
               >
@@ -27,7 +29,10 @@
                 </div>
                 <div class="pr minh38">
                   <Spin fix v-if="config[overview.key].loading"></Spin>
-                  <span>{{
+                  <span v-if="item.noShort">{{
+                    config[overview.key].data[item.key]
+                  }}</span>
+                  <span v-else>{{
                     config[overview.key].data[item.key] | countShort
                   }}</span>
                 </div>
@@ -103,7 +108,7 @@ export default {
           key: 'overview',
           map: [
             [
-              { key: 'n_users' },
+              { key: 'n_users', noShort: true },
               { key: 'n_users_new_today' },
               { key: 'n_users_active_today' }
             ],
