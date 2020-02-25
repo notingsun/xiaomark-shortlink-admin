@@ -4,6 +4,7 @@ export default {
     const C_BLUE = '#4F87FB'
     const C_ORANGE = '#e88986'
     const C_GREY = '#c5c8ce'
+    const C_BLACK = '#2c3358'
     const SOURCE_MAP = [
       {},
       {
@@ -24,7 +25,7 @@ export default {
       {
         name: '开放API',
         icon: 'i-api',
-        color: C_GREEN
+        color: C_BLACK
       }
     ]
 
