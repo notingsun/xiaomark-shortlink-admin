@@ -95,7 +95,7 @@ export default {
         }, 300)
       } else if (v && this.modal.type === 'package') {
         // 初始化.修改套餐到期日
-        this.form_package['_date'] = this.modal.stop_date || '-'
+        this.form_package['_date'] = this.modal.obj.stop_date || '-'
         this.form_package['_count'] = 0
       }
     }
