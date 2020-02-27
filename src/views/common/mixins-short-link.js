@@ -30,6 +30,9 @@ export default {
     ]
 
     return {
+      form: {
+        api: false // 来源
+      },
       loading: true,
       tableColumns: [
         // 0 基本
@@ -55,8 +58,220 @@ export default {
           {
             title: '短链',
             minWidth: 180,
-            key: 'url'
+            // key: 'url',
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <div class="flex1">{row.url}</div>
+                  <div class="ml4 fs0" title="查看报告分享">
+                    <itv-icon
+                      type="i-statistic"
+                      size="20"
+                      class="itv-btn__icon"
+                      color="sub"
+                      onClick={() => {
+                        window.open(row.share_link)
+                      }}
+                    />
+                  </div>
+                </div>
+              )
+            }
           },
+          {
+            title: '创建时间',
+            minWidth: 90,
+            key: 'create_time',
+            render: (h, { row }) => {
+              const arr = this.$PDo.Date.format(row.create_time).split(' ')
+
+              return (
+                <span>
+                  {arr[0]}
+                  {arr[1] && <br />}
+                  {arr[1]}
+                </span>
+              )
+            }
+          },
+          {
+            title: '跳转链接',
+            width: 166,
+            tooltip: true,
+            key: 'origin_url',
+            render: (h, { row }) => {
+              // 随机链接
+              /* eslint-disable */
+              const arr_a = row.mode === 0 ? [] : (row.origin_url_list || []).map((item, index) => (
+                <p>
+                  <span>【{index + 1}】</span>
+                  <a
+                    target="_blank"
+                    href={item.url}
+                    rel="noreferrer"
+                    >
+                    {item.url}
+                  </a>
+                </p>
+              ))
+              /* eslint-enable */
+
+              return (
+                <div class="itv-flex--fs">
+                  {/* eslint-disable */}
+                  <Tooltip placement="bottom" max-width={500} theme="light" class="flex1">
+                    {
+                      row.mode === 0 
+                      ? <a
+                        target="_blank"
+                        href={row.origin_url}
+                        rel="noreferrer"
+                        class="text--oneRow"
+                        style="width: 116px;display: inline-block;vertical-align: middle;"
+                        >
+                          {row.origin_url}
+                        </a>
+                      : <div class="cp" style="color: #2D8cF0;">随机_{row.mode === 1 ? '' : '非'}记忆</div>
+                    }
+                    <div slot="content">
+                      {
+                        row.mode === 0 
+                        ? <a
+                          target="_blank"
+                          href={row.origin_url}
+                          rel="noreferrer"
+                          >
+                            {row.origin_url}
+                          </a>
+                        : arr_a
+                      }
+                    </div>
+                  </Tooltip>
+                  {/* eslint-enable */}
+                  <div class="ml4 fs0" title="查看报告分享">
+                    <itv-icon
+                      type="i-qrcode"
+                      size="20"
+                      class="itv-btn__icon"
+                      color="sub"
+                      onClick={() => {
+                        // eslint-disable-next-line prettier/prettier
+                        let arr
+
+                        if (row.mode === 0) {
+                          arr = [row.origin_url]
+                        } else {
+                          arr = (row.origin_url_list || []).map(
+                            (item) => item.url
+                          )
+                        }
+
+                        this.$bus.modal.type = 'link_qr' // 链接的二维码
+                        this.$bus.modal.show = true
+                        this.$bus.modal.obj = {
+                          list: arr
+                        }
+                        this.$bus.modal.success_cb = this.doGetData
+                      }}
+                    />
+                  </div>
+                </div>
+              )
+            }
+          },
+          {
+            title: '访问次数 / 人数 / IP数',
+            minWidth: 160,
+            format: this.$global.utils.countFormat.three,
+            render: (h, { row }) => {
+              const n_clicks = this.$global.utils.countFormat.three(
+                row.n_clicks
+              )
+              const n_visitors = this.$global.utils.countFormat.three(
+                row.n_visitors
+              )
+              const n_ips = this.$global.utils.countFormat.three(row.n_ips)
+
+              return (
+                <div class="cp">
+                  <span class="text-visit" title="次数">
+                    {n_clicks}
+                  </span>
+                  <span> / </span>
+                  <span class="text-visit" title="人数">
+                    {n_visitors}
+                  </span>
+                  <span> / </span>
+                  <span class="text-visit" title="IP数">
+                    {n_ips}
+                  </span>
+                </div>
+              )
+            }
+          }
+        ],
+        // 1 创建者
+        [
+          {
+            title: '创建者',
+            minWidth: 160,
+            key: 'user.nickname user.headimgurl',
+            render: (h, { row }) => {
+              return (
+                <div
+                  class="table-cell__nickname table-cell__nickname--click cp"
+                  onClick={this.toUserDetail.bind(null, row)}
+                >
+                  <img src={row.user.headimgurl} class="img--headimgurl mr8" />
+                  <span class="text--nickname">{row.user.nickname}</span>
+                </div>
+              )
+            }
+          }
+        ],
+        // 2 来源  微信分享 是否可用 是否归档
+        [
+          // 来源
+          {
+            // title: '来源',
+            minWidth: 136,
+            key: 'source',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              return (
+                <div class="itv-flex--fs">
+                  <span class="mr8">来源</span>
+                  <Button
+                    size="small"
+                    style="width: 60px;"
+                    type="dashed"
+                    class="mr16"
+                    onClick={() => {
+                      this.form.api = !this.form.api
+                      this.doGetData()
+                    }}
+                  >
+                    <Icon type="md-swap" />
+                    {this.form.api ? '用户' : 'API'}
+                  </Button>
+                </div>
+              )
+            },
+            render: (h, { row }) => {
+              return (
+                <div>
+                  <span class="mr8" title={SOURCE_MAP[row.source].name || '--'}>
+                    <itv-icon
+                      type={SOURCE_MAP[row.source].icon || '--'}
+                      style={{ color: SOURCE_MAP[row.source].color || '--' }}
+                      size="24"
+                    />
+                  </span>
+                </div>
+              )
+            }
+          },
+          // 微信分享
           {
             title: ' ',
             minWidth: 120,
@@ -120,198 +335,7 @@ export default {
               return null
             }
           },
-          {
-            title: '创建时间',
-            minWidth: 120,
-            key: 'create_time',
-            render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.create_time).split(' ')
-
-              return (
-                <span>
-                  {arr[0]}
-                  {arr[1] && <br />}
-                  {arr[1]}
-                </span>
-              )
-            }
-          },
-          {
-            title: '跳转链接',
-            width: 156,
-            tooltip: true,
-            key: 'origin_url',
-            render: (h, { row }) => {
-              /* eslint-disable */
-              const arr_a = row.mode === 0 ? [] : (row.origin_url_list || []).map((item, index) => (
-                <p>
-                  <span>【{index + 1}】</span>
-                  <a
-                    target="_blank"
-                    href={item.url}
-                    rel="noreferrer"
-                    >
-                    {item.url}
-                  </a>
-                </p>
-              ))
-
-              return (
-                <Tooltip placement="bottom" max-width={500} theme="light">
-                  {
-                    row.mode === 0 
-                    ? <a
-                      target="_blank"
-                      href={row.origin_url}
-                      rel="noreferrer"
-                      class="text--oneRow"
-                      style="width: 120px;display: inline-block;"
-                      >
-                        {row.origin_url}
-                      </a>
-                    : <span class="cp" style="color: #2D8cF0;">随机_{row.mode === 1 ? '' : '非'}记忆</span>
-                  }
-                  <div slot="content">
-                    {
-                      row.mode === 0 
-                      ? <a
-                        target="_blank"
-                        href={row.origin_url}
-                        rel="noreferrer"
-                        >
-                          {row.origin_url}
-                        </a>
-                      : arr_a
-                    }
-                  </div>
-                </Tooltip>
-              )
-              /* eslint-enable */
-            }
-          },
-          {
-            title: '访问次数 / 人数 / IP数',
-            minWidth: 160,
-            format: this.$global.utils.countFormat.three,
-            render: (h, { row }) => {
-              const n_clicks = this.$global.utils.countFormat.three(
-                row.n_clicks
-              )
-              const n_visitors = this.$global.utils.countFormat.three(
-                row.n_visitors
-              )
-              const n_ips = this.$global.utils.countFormat.three(row.n_ips)
-
-              return (
-                <div class="cp">
-                  <span class="text-visit" title="次数">
-                    {n_clicks}
-                  </span>
-                  <span> / </span>
-                  <span class="text-visit" title="人数">
-                    {n_visitors}
-                  </span>
-                  <span> / </span>
-                  <span class="text-visit" title="IP数">
-                    {n_ips}
-                  </span>
-                </div>
-              )
-            }
-          },
-          {
-            title: '是否归档',
-            minWidth: 120,
-            key: '',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '已归档', value: 1 },
-                { name: '未归档', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.archived === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.archived = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">是否归档</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
-            render: (h, { row }) => {
-              return (
-                <Icon
-                  title={row.archived ? '已归档' : '未归档'}
-                  type="md-checkmark-circle"
-                  color={row.archived ? C_GREEN : C_GREY}
-                  size="20"
-                />
-              )
-            }
-          },
-          {
-            title: '来源',
-            minWidth: 80,
-            key: 'source',
-            render: (h, { row }) => {
-              return (
-                <div>
-                  <span class="mr8" title={SOURCE_MAP[row.source].name || '--'}>
-                    <itv-icon
-                      type={SOURCE_MAP[row.source].icon || '--'}
-                      style={{ color: SOURCE_MAP[row.source].color || '--' }}
-                      size="24"
-                    />
-                  </span>
-                </div>
-              )
-            }
-          }
-        ],
-        // 1 创建者
-        [
-          {
-            title: '创建者',
-            minWidth: 160,
-            key: 'user.nickname user.headimgurl',
-            render: (h, { row }) => {
-              return (
-                <div
-                  class="table-cell__nickname table-cell__nickname--click cp"
-                  onClick={this.toUserDetail.bind(null, row)}
-                >
-                  <img src={row.user.headimgurl} class="img--headimgurl mr8" />
-                  <span class="text--nickname">{row.user.nickname}</span>
-                </div>
-              )
-            }
-          }
-        ],
-        // 2 是否可用
-        [
+          // 是否可用
           {
             title: '是否可用',
             minWidth: 120,
@@ -383,6 +407,63 @@ export default {
               return <span>{(row.workspace || {}).name || '-'}</span>
             }
           }
+        ],
+        // 4是否归档
+        [
+          // 是否归档
+          {
+            title: '是否归档',
+            minWidth: 120,
+            key: '',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '已归档', value: 1 },
+                { name: '未归档', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.archived === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.archived = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">是否归档</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            render: (h, { row }) => {
+              return (
+                <Icon
+                  title={row.archived ? '已归档' : '未归档'}
+                  type="md-checkmark-circle"
+                  color={row.archived ? C_GREEN : C_GREY}
+                  size="20"
+                />
+              )
+            }
+          }
         ]
       ],
       table: {
@@ -416,7 +497,8 @@ export default {
       this.table.columns = [
         ...this.tableColumns[0],
         ...this.tableColumns[1],
-        ...this.tableColumns[2]
+        ...this.tableColumns[2],
+        ...this.tableColumns[4]
       ]
       return
     }
@@ -424,25 +506,22 @@ export default {
       this.table.columns = [
         ...this.tableColumns[0],
         ...this.tableColumns[2],
-        ...this.tableColumns[3]
+        ...this.tableColumns[3],
+        ...this.tableColumns[4]
       ]
       return
     }
     /* eslint-disable */
     this.table.columns = this.$route.name === 'ShortLinkListUser'
-      ? [...this.tableColumns[0], ...this.tableColumns[2], ...this.tableColumns[3]]
+      ? [...this.tableColumns[0], ...this.tableColumns[2], ...this.tableColumns[3], ...this.tableColumns[4]]
       : [ ...this.tableColumns[0],
           ...this.tableColumns[1],
           ...this.tableColumns[2],
-          ...this.tableColumns[3]
+          ...this.tableColumns[3],
+          ...this.tableColumns[4]
         ]
     /* eslint-enable */
   },
   watch: {},
-  methods: {
-    // 查看用户详情
-    handleDrawerUser() {
-      this.$bus.drawer_user.show = true
-    }
-  }
+  methods: {}
 }

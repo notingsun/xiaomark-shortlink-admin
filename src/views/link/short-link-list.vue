@@ -13,7 +13,6 @@
           class="mr8"
         />
         <Button type="primary" @click="doGetData">搜索</Button>
-        <Button type="primary" @click="handleDrawerUser">用户详情</Button>
       </div>
       <Select
         v-model="form.sort"
@@ -75,11 +74,13 @@ export default {
   methods: {
     // 去用户详情
     toUserDetail(row) {
-      this.$router.push({
-        name: 'ShortLinkListUser',
-        params: { user_id: row.user.id },
-        query: { name: row.user.nickname }
-      })
+      this.$bus.drawer_user.show = true
+      this.$bus.drawer_user.id = row.user.id
+      // this.$router.push({
+      //   name: 'ShortLinkListUser',
+      //   params: { user_id: row.user.id },
+      //   query: { name: row.user.nickname }
+      // })
     },
     doGetData(page = {}) {
       if (!page.page) {
@@ -96,6 +97,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          api: this.form.api ? 1 : 0, // 是否为开放API创建
           has_params: this.form.has_params,
           archived: this.form.archived,
           enabled: this.form.enabled,

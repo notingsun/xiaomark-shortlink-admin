@@ -13,7 +13,19 @@
         />
         <Breadcrumb>
           <BreadcrumbItem>短链列表</BreadcrumbItem>
-          <BreadcrumbItem>创建者：{{ $route.query.name }}</BreadcrumbItem>
+          <BreadcrumbItem>
+            创建者：{{ $route.query.name }}
+            <Button
+              class="ml16"
+              @click="
+                () => {
+                  $bus.drawer_user.show = true
+                }
+              "
+            >
+              用户详情
+            </Button>
+          </BreadcrumbItem>
         </Breadcrumb>
       </div>
       <Select
@@ -86,6 +98,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          api: this.form.api ? 1 : 0, // 是否为开放API创建
           user_id: this.$route.params.user_id, // 用户ID
           has_params: this.form.has_params,
           archived: this.form.archived,

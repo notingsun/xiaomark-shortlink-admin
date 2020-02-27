@@ -1,4 +1,4 @@
-/* 确认对话框 */ /* TODO */
+/* 确认对话框 */
 <template>
   <div>
     <Modal

@@ -57,7 +57,13 @@ export default {
             // minWidth: 160,
             render: (h, { row }) => {
               return (
-                <div class="table-cell__nickname">
+                <div
+                  class="table-cell__nickname cp"
+                  onClick={() => {
+                    this.$bus.drawer_user.show = true
+                    this.$bus.drawer_user.id = row.id
+                  }}
+                >
                   <div
                     class={`img--headimgurl__wrap ${
                       row.creator ? 'creator' : ''

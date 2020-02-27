@@ -88,6 +88,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          api: this.form.api ? 1 : 0, // 是否为开放API创建
           domain: this.$route.params.domain_name, // 用户ID
           has_params: this.form.has_params,
           archived: this.form.archived,

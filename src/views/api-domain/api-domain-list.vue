@@ -135,10 +135,12 @@ export default {
   methods: {
     // 去用户详情
     toUserDetail(row) {
-      this.$router.push({
-        name: 'UserList',
-        query: { name: row.user.nickname }
-      })
+      this.$bus.drawer_user.show = true
+      this.$bus.drawer_user.id = row.user.id
+      // this.$router.push({
+      //   name: 'UserList',
+      //   query: { name: row.user.nickname }
+      // })
     },
 
     // 确认屏蔽
