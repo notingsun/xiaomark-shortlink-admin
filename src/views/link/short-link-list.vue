@@ -13,6 +13,7 @@
           class="mr8"
         />
         <Button type="primary" @click="doGetData">搜索</Button>
+        <Button type="primary" @click="handleDrawerUser">用户详情</Button>
       </div>
       <Select
         v-model="form.sort"

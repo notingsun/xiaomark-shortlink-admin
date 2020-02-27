@@ -439,5 +439,10 @@ export default {
     /* eslint-enable */
   },
   watch: {},
-  methods: {}
+  methods: {
+    // 查看用户详情
+    handleDrawerUser() {
+      this.$bus.drawer_user.show = true
+    }
+  }
 }

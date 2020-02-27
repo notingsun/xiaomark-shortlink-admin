@@ -48,7 +48,8 @@ export default {
     return {
       // 获取表格数据的参数
       form: {
-        sort: 'time'
+        sort: 'time',
+        n_collaborators: ''
       }
     }
   },
@@ -80,7 +81,8 @@ export default {
         const params = {
           ...this.filter,
           // user_id: this.form.user_id,
-          order_by: this.form.sort
+          order_by: this.form.sort,
+          n_collaborators: this.form.n_collaborators // 协作空间的数量
         }
 
         const res = await this.$api.Space.getSpaceList({
