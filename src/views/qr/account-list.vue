@@ -325,7 +325,7 @@ export default {
       try {
         const params = {
           qs: this.form.search,
-          combo: this.form.combo,
+          combo: this.form.combo === '*' ? '' : this.form.combo,
           authorized: this.form.authorized,
           order_by: this.form.sort
         }
