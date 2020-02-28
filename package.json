@@ -19,6 +19,7 @@
     "qiniu-js": "^2.5.5",
     "v-charts": "^1.19.0",
     "vue": "^2.6.10",
+    "vue-qr": "^2.2.1",
     "vue-router": "^3.0.3"
   },
   "devDependencies": {

@@ -258,6 +258,25 @@
         <br />
       </p>
 
+      <!-- 10、查看二维码 -->
+      <div v-show="modal.type === 'link_qr'">
+        <div
+          v-for="(item, i) in (modal.obj || {}).list || []"
+          :key="i"
+          class="mb16"
+        >
+          <vue-qr
+            class="mt16"
+            style="width:130px;display:block;"
+            :text="item"
+            :margin="0"
+            :dotScale="1"
+            :size="500"
+          />
+          <p style="word-break: break-all;">{{ item }}</p>
+        </div>
+      </div>
+
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
@@ -275,11 +294,12 @@
 </template>
 
 <script>
+import VueQr from 'vue-qr'
 export default {
   name: 'SureModal',
   mixins: [],
   props: {},
-  components: {},
+  components: { VueQr },
   data() {
     return {
       img_model: {
@@ -299,7 +319,8 @@ export default {
         enabled_target_link: '设置网站是否可用',
         enabled_short_link: '设置短链是否可用',
         ws_creator: '设置创建协作空间权限',
-        enabled: '设置用户登录权限'
+        enabled: '设置用户登录权限',
+        link_qr: '跳转链接二维码'
       },
       form: {
         enabled_target_link: {
@@ -313,7 +334,7 @@ export default {
           _list: [],
           _count_default: 0,
           _count: 0,
-          isEditing: false
+          isEditing: true
         },
         check_api_domain: {
           _switch: []
@@ -333,7 +354,12 @@ export default {
       return this.$bus.modal
     },
     show_footer() {
-      const arr_no_show = ['open_api_domain', 'wx_share', 'check_api_domain']
+      const arr_no_show = [
+        'open_api_domain',
+        'wx_share',
+        'check_api_domain',
+        'link_qr'
+      ]
 
       return !arr_no_show.includes(this.modal.type)
     }
@@ -581,8 +607,10 @@ export default {
         this.$Message.success('设置成功')
         this.form.open_api_domain['_count_default'] = n_links_d
         this.form.open_api_domain.isEditing = false
+        this.modal.success_cb({ page: 'now' })
       } catch (e) {
         console.error(e)
+        this.modal.success_cb({ page: 'now' })
       }
     },
 

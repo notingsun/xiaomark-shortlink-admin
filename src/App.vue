@@ -51,7 +51,6 @@ export default {
     )
 
     // 如果没有token，跳转到登陆页
-    // TODO 测试一下这个有没有问题
     if (!this.$bus.token && this.$route.name !== 'Login') {
       this.$router.replace({ name: 'Login' })
     }

@@ -19,6 +19,11 @@ export default new Vue({
         obj: null, // 操作对象
         success_cb: Function // 操作成功的回调
       }, // 是否xxx.确认.对话框(渠道码)
+      /* 用户详情.抽屉 */
+      drawer_user: {
+        show: false, // 是否显示
+        id: '' // 用户的id
+      },
       EVENTS: {
         LOGIN: 'LOGIN',
         AUTO_LOGIN: 'AUTO_LOGIN'

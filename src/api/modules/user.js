@@ -1,6 +1,16 @@
 import request from '../instance'
 
 export default {
+  getUserDetail(id, params) {
+    return request({
+      method: 'get',
+      name: '获取用户详情',
+      url: `/api/sl/users/${id}/`,
+      showError: false,
+      params
+    })
+  },
+
   postUserToken(id, params) {
     return request({
       method: 'post',

@@ -28,8 +28,46 @@ export default {
           },
           {
             title: '协作者数量',
-            minWidth: 100,
-            key: 'n_collaborators'
+            minWidth: 120,
+            key: 'n_collaborators',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '大于0', value: 1 },
+                { name: '0', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.n_collaborators === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.n_collaborators = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">协作者数量</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            }
           },
           {
             title: '链接分组数量',

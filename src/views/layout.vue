@@ -80,6 +80,8 @@
         </DropdownMenu>
       </Dropdown>
     </Menu>
+
+    <!-- 具体的内容 -->
     <div
       :class="[
         'layout-content-wrap',
@@ -90,6 +92,11 @@
         <router-view class="layout-content" v-if="show_view" />
       </transition>
     </div>
+
+    <!-- 用户详情.抽屉 -->
+    <drawer-user />
+
+    <!-- 对话框.修改密码 -->
     <Modal
       :mask-closable="false"
       v-model="modal.show"
@@ -129,8 +136,11 @@
 </template>
 
 <script>
+import DrawerUser from './common/drawer-user'
+
 export default {
   name: 'Layout',
+  components: { DrawerUser },
   data() {
     return {
       show_view: false,
@@ -193,11 +203,11 @@ export default {
           title: 'API域名列表',
           route: { name: 'ApiDomainList' }
         },
-        {
-          name: '8',
-          title: 'API待审核域名',
-          route: { name: 'ApiDomainCheck' }
-        },
+        // {
+        //   name: '8',
+        //   title: 'API待审核域名',
+        //   route: { name: 'ApiDomainCheck' }
+        // },
         {
           name: '9',
           title: '自定义域名列表',

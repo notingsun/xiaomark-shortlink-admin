@@ -112,6 +112,30 @@
     max-height: 40px;
     overflow: hidden;
   }
+  // 文字按钮
+  &--btn {
+    color: #3464E0;
+    cursor: pointer;
+    &:hover {
+      filter: brightness(1.5);
+    }
+    // 底部有线
+    &.a {
+      text-decoration: underline;
+    }
+    // 红色
+    &.red {
+      color: #FD525B;
+    }
+    // 禁用
+    &.disabled {
+      color: #DCE3F2;
+      cursor: not-allowed;
+      &:hover {
+        filter: none;
+      }
+    }
+  }
 }
 
 // 标题
@@ -360,6 +384,9 @@
 
 // 表格 render 中的样式
 .ivu-table {
+  .ivu-table-cell {
+    padding-right: 8px;
+  }
   // 头像
   .img--user {
     width: 32px;
