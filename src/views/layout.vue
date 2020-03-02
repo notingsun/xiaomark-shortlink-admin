@@ -3,8 +3,9 @@
     <Menu
       class="layout-menu"
       :active-name="$route.meta.menuIndex"
-      :open-names="['01', '02']"
+      :open-names="['02']"
     >
+      <!-- :open-names="['01', '02']" -->
       <!-- 只打开一个 -->
       <!-- :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']" -->
       <!-- logo -->
@@ -224,6 +225,16 @@ export default {
           name: '103',
           title: '二维码列表',
           route: { name: 'QrList' }
+        },
+        {
+          name: '105',
+          title: '模版消息列表',
+          route: { name: 'TemplateList' }
+        },
+        {
+          name: '106',
+          title: '客服消息列表',
+          route: { name: 'ServiceList' }
         },
         {
           name: '104',

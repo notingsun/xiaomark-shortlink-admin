@@ -17,6 +17,150 @@ const not_found = {
   component: () => import('@/views/404.vue')
 }
 
+// 短链
+const short_link = [
+  {
+    path: '/user-list',
+    meta: { menuIndex: '2', title: '用户列表' },
+    name: 'UserList',
+    component: () => import('@/views/user/user-list.vue')
+  },
+
+  {
+    path: '/short-link-statistic',
+    meta: { menuIndex: '3', title: '短链数据' },
+    name: 'ShortLinkStatistic',
+    component: () => import('@/views/link/short-link-statistic.vue')
+  },
+
+  /* 短链列表 */
+  {
+    path: '/short-link-list',
+    meta: { menuIndex: '4', title: '短链列表' },
+    name: 'ShortLinkList',
+    component: () => import('@/views/link/short-link-list.vue')
+  },
+  {
+    path: '/short-link-list-user/:user_id',
+    meta: { menuIndex: '4', title: '短链列表.用户' },
+    name: 'ShortLinkListUser',
+    component: () => import('@/views/link/short-link-list-user.vue')
+  },
+  {
+    path: '/short-link-list-space/:space_id',
+    meta: { menuIndex: '4', title: '短链列表.协作空间' },
+    name: 'ShortLinkListSpace',
+    component: () => import('@/views/link/short-link-list-space.vue')
+  },
+  {
+    path: '/short-link-list-custom-domain/:domain_name',
+    meta: { menuIndex: '4', title: '短链列表.自定义域名' },
+    name: 'ShortLinkListCustomDomain',
+    component: () => import('@/views/link/short-link-list-custom-domain.vue')
+  },
+
+  {
+    path: '/target-link-statistic',
+    meta: { menuIndex: '5', title: '跳转链接数据' },
+    name: 'TargetLinkStatistic',
+    component: () => import('@/views/link/target-link-statistic.vue')
+  },
+
+  /* 协作空间列表 */
+  {
+    path: '/space-list',
+    meta: { menuIndex: '6', title: '协作空间列表' },
+    name: 'SpaceList',
+    component: () => import('@/views/space/space-list.vue')
+  },
+  {
+    path: '/space-list-user/:user_id',
+    meta: { menuIndex: '6', title: '协作空间列表.用户' },
+    name: 'SpaceListUser',
+    component: () => import('@/views/space/space-list-user.vue')
+  },
+  {
+    path: '/space-detail/:space_id',
+    meta: { menuIndex: '6', title: '某个协作空间的详细信息' },
+    name: 'SpaceDetail',
+    component: () => import('@/views/space/space-detail.vue')
+  },
+
+  /* api域名 */
+  {
+    path: '/apI-domain-list',
+    meta: { menuIndex: '7', title: 'API域名列表' },
+    name: 'ApiDomainList',
+    component: () => import('@/views/api-domain/api-domain-list.vue')
+  },
+  {
+    path: '/apI-domain-check',
+    meta: { menuIndex: '8', title: 'API待审核域名' },
+    name: 'ApiDomainCheck',
+    component: () => import('@/views/api-domain/api-domain-check.vue')
+  },
+
+  /* 自定义域名列表 */
+  {
+    path: '/custom-domain-list',
+    meta: { menuIndex: '9', title: '自定义域名列表' },
+    name: 'CustomDomainList',
+    component: () => import('@/views/custom-domain/custom-domain-list.vue')
+  }
+]
+
+// 渠道码
+const qr = [
+  {
+    path: '/user-list-qr',
+    meta: { menuIndex: '101', title: '用户列表-渠道码' },
+    name: 'UserListQr',
+    component: () => import('@/views/qr/user-list-qr.vue')
+  },
+  {
+    path: '/account-qr-list/:account_id',
+    meta: { menuIndex: '104', title: '公众号列表-二维码' },
+    name: 'AccountQrList',
+    component: () => import('@/views/qr/account-qr-list.vue')
+  },
+  {
+    path: '/template-list',
+    meta: { menuIndex: '105', title: '模版消息' },
+    name: 'TemplateList',
+    component: () => import('@/views/qr/template-list.vue')
+  },
+  {
+    path: '/service-list',
+    meta: { menuIndex: '106', title: '客服消息' },
+    name: 'ServiceList',
+    component: () => import('@/views/qr/service-list.vue')
+  },
+  {
+    path: '/template-list/:account_id',
+    meta: { menuIndex: '104', title: '公众号列表-模版消息' },
+    name: 'AccountTemplateList',
+    component: () => import('@/views/qr/template-list.vue')
+  },
+  {
+    path: '/service-list/:account_id',
+    meta: { menuIndex: '104', title: '公众号列表-客服消息' },
+    name: 'AccountServiceList',
+    component: () => import('@/views/qr/service-list.vue')
+  },
+  {
+    path: '/qr-list',
+    meta: { menuIndex: '103', title: '二维码列表' },
+    name: 'QrList',
+    component: () => import('@/views/qr/qr-list.vue')
+  },
+  {
+    path: '/account-list',
+    meta: { menuIndex: '104', title: '公众号列表' },
+    name: 'AccountList',
+    component: () => import('@/views/qr/account-list.vue')
+  }
+]
+
 // 入口
 const layout = {
   path: '/',
@@ -31,120 +175,11 @@ const layout = {
       component: () => import('@/views/user/user-statistic.vue')
     },
 
-    {
-      path: '/user-list',
-      meta: { menuIndex: '2', title: '用户列表' },
-      name: 'UserList',
-      component: () => import('@/views/user/user-list.vue')
-    },
-
-    {
-      path: '/short-link-statistic',
-      meta: { menuIndex: '3', title: '短链数据' },
-      name: 'ShortLinkStatistic',
-      component: () => import('@/views/link/short-link-statistic.vue')
-    },
-
-    /* 短链列表 */
-    {
-      path: '/short-link-list',
-      meta: { menuIndex: '4', title: '短链列表' },
-      name: 'ShortLinkList',
-      component: () => import('@/views/link/short-link-list.vue')
-    },
-    {
-      path: '/short-link-list-user/:user_id',
-      meta: { menuIndex: '4', title: '短链列表.用户' },
-      name: 'ShortLinkListUser',
-      component: () => import('@/views/link/short-link-list-user.vue')
-    },
-    {
-      path: '/short-link-list-space/:space_id',
-      meta: { menuIndex: '4', title: '短链列表.协作空间' },
-      name: 'ShortLinkListSpace',
-      component: () => import('@/views/link/short-link-list-space.vue')
-    },
-    {
-      path: '/short-link-list-custom-domain/:domain_name',
-      meta: { menuIndex: '4', title: '短链列表.自定义域名' },
-      name: 'ShortLinkListCustomDomain',
-      component: () => import('@/views/link/short-link-list-custom-domain.vue')
-    },
-
-    {
-      path: '/target-link-statistic',
-      meta: { menuIndex: '5', title: '跳转链接数据' },
-      name: 'TargetLinkStatistic',
-      component: () => import('@/views/link/target-link-statistic.vue')
-    },
-
-    /* 协作空间列表 */
-    {
-      path: '/space-list',
-      meta: { menuIndex: '6', title: '协作空间列表' },
-      name: 'SpaceList',
-      component: () => import('@/views/space/space-list.vue')
-    },
-    {
-      path: '/space-list-user/:user_id',
-      meta: { menuIndex: '6', title: '协作空间列表.用户' },
-      name: 'SpaceListUser',
-      component: () => import('@/views/space/space-list-user.vue')
-    },
-    {
-      path: '/space-detail/:space_id',
-      meta: { menuIndex: '6', title: '某个协作空间的详细信息' },
-      name: 'SpaceDetail',
-      component: () => import('@/views/space/space-detail.vue')
-    },
-
-    /* api域名 */
-    {
-      path: '/apI-domain-list',
-      meta: { menuIndex: '7', title: 'API域名列表' },
-      name: 'ApiDomainList',
-      component: () => import('@/views/api-domain/api-domain-list.vue')
-    },
-    {
-      path: '/apI-domain-check',
-      meta: { menuIndex: '8', title: 'API待审核域名' },
-      name: 'ApiDomainCheck',
-      component: () => import('@/views/api-domain/api-domain-check.vue')
-    },
-
-    /* 自定义域名列表 */
-    {
-      path: '/custom-domain-list',
-      meta: { menuIndex: '9', title: '自定义域名列表' },
-      name: 'CustomDomainList',
-      component: () => import('@/views/custom-domain/custom-domain-list.vue')
-    },
+    // 短链
+    ...short_link,
 
     // 渠道码
-    {
-      path: '/user-list-qr',
-      meta: { menuIndex: '101', title: '用户列表-渠道码' },
-      name: 'UserListQr',
-      component: () => import('@/views/qr/user-list-qr.vue')
-    },
-    {
-      path: '/account-qr-list/:account_id',
-      meta: { menuIndex: '104', title: '公众号列表-二维码' },
-      name: 'AccountQrList',
-      component: () => import('@/views/qr/account-qr-list.vue')
-    },
-    {
-      path: '/qr-list',
-      meta: { menuIndex: '103', title: '二维码列表' },
-      name: 'QrList',
-      component: () => import('@/views/qr/qr-list.vue')
-    },
-    {
-      path: '/account-list',
-      meta: { menuIndex: '104', title: '公众号列表' },
-      name: 'AccountList',
-      component: () => import('@/views/qr/account-list.vue')
-    }
+    ...qr
   ]
 }
 

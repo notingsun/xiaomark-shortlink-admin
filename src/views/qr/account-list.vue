@@ -113,7 +113,7 @@ export default {
             }
           },
           {
-            title: '套餐',
+            title: '渠道码套餐',
             minWidth: 120,
             key: 'n_qrcodes',
             render: (h, { row }) => {
@@ -182,6 +182,21 @@ export default {
             }
           },
           {
+            title: '模版/客服消息',
+            minWidth: 120,
+            // key: 'n_leave'
+            // eslint-disable-next-line no-unused-vars
+            render: (h, { row }) => {
+              return (
+                <div>
+                  <span>100</span>
+                  <span> / </span>
+                  <span>239</span>
+                </div>
+              )
+            }
+          },
+          {
             title: '绑定用户',
             key: 'nickname headimgurl',
             minWidth: 120,
@@ -244,18 +259,46 @@ export default {
           },
           {
             title: '操作',
-            width: 60,
+            width: 110,
             fixed: 'right',
             render: (h, { row }) => {
               return (
-                <span title="查看二维码">
-                  <itv-icon
-                    type="i-qrcode"
-                    size="20"
-                    class="itv-btn__icon"
-                    onClick={this.toAccountQrList.bind(null, row)}
-                  />
-                </span>
+                <div class="itv-flex--fs">
+                  <span title="查看二维码" class="mr8">
+                    <itv-icon
+                      type="i-qrcode"
+                      size="20"
+                      class="itv-btn__icon"
+                      onClick={this.toAccountXList.bind(
+                        null,
+                        row,
+                        'AccountQrList'
+                      )}
+                    />
+                  </span>
+                  <div
+                    class="itv-text--btn2 mr8"
+                    title="查看模版消息"
+                    onClick={this.toAccountXList.bind(
+                      null,
+                      row,
+                      'AccountTemplateList'
+                    )}
+                  >
+                    模
+                  </div>
+                  <div
+                    class="itv-text--btn2"
+                    title="查看客服消息"
+                    onClick={this.toAccountXList.bind(
+                      null,
+                      row,
+                      'AccountServiceList'
+                    )}
+                  >
+                    客
+                  </div>
+                </div>
               )
             }
           }
@@ -297,14 +340,16 @@ export default {
     const { page, per_page } = this.$route.query
     const params = page && per_page ? { page, per_page } : ''
 
+    this.form.search = this.$route.query.account || ''
+
     this.doGetData(params)
   },
   watch: {},
   methods: {
     // 去公众号二维码列表
-    toAccountQrList(row) {
+    toAccountXList(row, name) {
       this.$router.push({
-        name: 'AccountQrList',
+        name: name,
         params: { account_id: row.id },
         query: { name: row.nick_name }
       })
@@ -353,7 +398,19 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
-//.account-list {
-//}
+<style lang="less">
+.account-list {
+  @btn-size: 20px;
+  .itv-text--btn2 {
+    width: @btn-size;
+    height: @btn-size;
+    border-radius: 50%;
+    text-align: center;
+    background: @primary-color;
+    line-height: @btn-size;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+  }
+}
 </style>
