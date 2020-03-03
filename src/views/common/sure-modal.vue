@@ -502,8 +502,6 @@ export default {
         await this.$api.Link.putLinkEnabled(this.modal.obj.id, {
           enabled: !this.modal.obj.enabled
         })
-        this.modal.show = false
-        this.modal.success_cb({ page: 'now' })
         setTimeout(() => {
           this.$Message.success(
             // eslint-disable-next-line prettier/prettier
@@ -513,6 +511,9 @@ export default {
       } catch (e) {
         console.error(e)
       }
+
+      this.modal.show = false
+      this.modal.success_cb({ page: 'now' })
     },
 
     // 网站是否可用
