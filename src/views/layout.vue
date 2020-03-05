@@ -3,9 +3,9 @@
     <Menu
       class="layout-menu"
       :active-name="$route.meta.menuIndex"
-      :open-names="['02']"
+      :open-names="['01', '02']"
     >
-      <!-- :open-names="['01', '02']" -->
+      <!-- :open-names="[ '02']" -->
       <!-- 只打开一个 -->
       <!-- :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']" -->
       <!-- logo -->
@@ -226,20 +226,25 @@ export default {
           title: '二维码列表',
           route: { name: 'QrList' }
         },
-        {
-          name: '105',
-          title: '模版消息列表',
-          route: { name: 'TemplateList' }
-        },
-        {
-          name: '106',
-          title: '客服消息列表',
-          route: { name: 'ServiceList' }
-        },
+        // {
+        //   name: '105',
+        //   title: '模版消息列表',
+        //   route: { name: 'TemplateList' }
+        // },
+        // {
+        //   name: '106',
+        //   title: '客服消息列表',
+        //   route: { name: 'ServiceList' }
+        // },
         {
           name: '104',
           title: '公众号列表',
           route: { name: 'AccountList' }
+        },
+        {
+          name: '107',
+          title: '订单列表',
+          route: { name: 'OrderList' }
         }
       ]
     }

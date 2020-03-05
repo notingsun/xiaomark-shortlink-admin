@@ -148,6 +148,12 @@ const qr = [
     component: () => import('@/views/qr/service-list.vue')
   },
   {
+    path: '/order-list',
+    meta: { menuIndex: '107', title: '订单列表' },
+    name: 'OrderList',
+    component: () => import('@/views/qr/order-list.vue')
+  },
+  {
     path: '/qr-list',
     meta: { menuIndex: '103', title: '二维码列表' },
     name: 'QrList',

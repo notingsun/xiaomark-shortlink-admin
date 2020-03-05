@@ -181,21 +181,22 @@ export default {
               return <span>{((row.stay_ratio || 0) * 100).toFixed(1)}%</span>
             }
           },
-          {
-            title: '模版/客服消息',
-            minWidth: 120,
-            // key: 'n_leave'
-            // eslint-disable-next-line no-unused-vars
-            render: (h, { row }) => {
-              return (
-                <div>
-                  <span>100</span>
-                  <span> / </span>
-                  <span>239</span>
-                </div>
-              )
-            }
-          },
+          // TODO 显示
+          // {
+          //   title: '模版/客服消息',
+          //   minWidth: 120,
+          //   // key: 'n_leave'
+          //   // eslint-disable-next-line no-unused-vars
+          //   render: (h, { row }) => {
+          //     return (
+          //       <div>
+          //         <span>100</span>
+          //         <span> / </span>
+          //         <span>239</span>
+          //       </div>
+          //     )
+          //   }
+          // },
           {
             title: '绑定用户',
             key: 'nickname headimgurl',
@@ -259,49 +260,71 @@ export default {
           },
           {
             title: '操作',
-            width: 110,
+            width: 60,
             fixed: 'right',
             render: (h, { row }) => {
               return (
-                <div class="itv-flex--fs">
-                  <span title="查看二维码" class="mr8">
-                    <itv-icon
-                      type="i-qrcode"
-                      size="20"
-                      class="itv-btn__icon"
-                      onClick={this.toAccountXList.bind(
-                        null,
-                        row,
-                        'AccountQrList'
-                      )}
-                    />
-                  </span>
-                  <div
-                    class="itv-text--btn2 mr8"
-                    title="查看模版消息"
+                <span title="查看二维码">
+                  <itv-icon
+                    type="i-qrcode"
+                    size="20"
+                    class="itv-btn__icon"
                     onClick={this.toAccountXList.bind(
                       null,
                       row,
-                      'AccountTemplateList'
+                      'AccountQrList'
                     )}
-                  >
-                    模
-                  </div>
-                  <div
-                    class="itv-text--btn2"
-                    title="查看客服消息"
-                    onClick={this.toAccountXList.bind(
-                      null,
-                      row,
-                      'AccountServiceList'
-                    )}
-                  >
-                    客
-                  </div>
-                </div>
+                  />
+                </span>
               )
             }
           }
+          // TODO 显示
+          // {
+          //   title: '操作',
+          //   width: 110,
+          //   fixed: 'right',
+          //   render: (h, { row }) => {
+          //     return (
+          //       <div class="itv-flex--fs">
+          //         <span title="查看二维码" class="mr8">
+          //           <itv-icon
+          //             type="i-qrcode"
+          //             size="20"
+          //             class="itv-btn__icon"
+          //             onClick={this.toAccountXList.bind(
+          //               null,
+          //               row,
+          //               'AccountQrList'
+          //             )}
+          //           />
+          //         </span>
+          //         <div
+          //           class="itv-text--btn2 mr8"
+          //           title="查看模版消息"
+          //           onClick={this.toAccountXList.bind(
+          //             null,
+          //             row,
+          //             'AccountTemplateList'
+          //           )}
+          //         >
+          //           模
+          //         </div>
+          //         <div
+          //           class="itv-text--btn2"
+          //           title="查看客服消息"
+          //           onClick={this.toAccountXList.bind(
+          //             null,
+          //             row,
+          //             'AccountServiceList'
+          //           )}
+          //         >
+          //           客
+          //         </div>
+          //       </div>
+          //     )
+          //   }
+          // }
         ],
         height: null // 表格的高度
       },

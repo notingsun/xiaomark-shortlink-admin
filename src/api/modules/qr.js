@@ -28,6 +28,15 @@ export default {
     })
   },
 
+  getQrderList(params) {
+    return request({
+      method: 'get',
+      name: '列出订单',
+      url: '/api/qr/platforms/orders/',
+      params
+    })
+  },
+
   getQrList(params) {
     return request({
       method: 'get',

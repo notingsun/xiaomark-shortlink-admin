@@ -151,57 +151,58 @@ export default {
                 ) : <span>未绑定</span>
             }
           },
+          // TODO 显示
           // 登录应用
-          {
-            title: ' ',
-            minWidth: 120,
-            key: 'wx_share',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '仅渠道码', value: 1 },
-                { name: '仅小码推送', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.login_way === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.login_way = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
+          // {
+          //   title: ' ',
+          //   minWidth: 120,
+          //   key: 'wx_share',
+          //   // eslint-disable-next-line no-unused-vars
+          //   renderHeader: (h) => {
+          //     const options = [
+          //       { name: '全部', value: '' },
+          //       { name: '仅渠道码', value: 1 },
+          //       { name: '仅小码推送', value: 0 }
+          //     ]
+          //     const optionsList = options.map((item) => {
+          //       return (
+          //         <DropdownItem
+          //           class={
+          //             // eslint-disable-next-line prettier/prettier
+          //             this.form.login_way === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+          //           }
+          //         >
+          //           <span
+          //             class="enabled_span"
+          //             onClick={() => {
+          //               this.form.login_way = item.value
+          //               this.doGetData()
+          //             }}
+          //           >
+          //             {item.name}
+          //           </span>
+          //         </DropdownItem>
+          //       )
+          //     })
 
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">登录应用</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
-            // eslint-disable-next-line no-unused-vars
-            render: (h, { row }) => {
-              return (<div>
-                <span class="mr8" title="小码渠道码"><itv-icon type="i-qrcode" size="20" color="sub" /></span>
-                <span title="小码推送"><itv-icon type="menu-Push" size="20" color="primary"/></span>
-              </div>)
-            }
-          },
+          //     return (
+          //       <Dropdown>
+          //         <div class="cp">
+          //           <span class="mr8">登录应用</span>
+          //           <Icon type="ios-funnel" title="筛选" />
+          //         </div>
+          //         <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+          //       </Dropdown>
+          //     )
+          //   },
+          //   // eslint-disable-next-line no-unused-vars
+          //   render: (h, { row }) => {
+          //     return (<div>
+          //       <span class="mr8" title="小码渠道码"><itv-icon type="i-qrcode" size="20" color="sub" /></span>
+          //       <span title="小码推送"><itv-icon type="menu-Push" size="20" color="primary"/></span>
+          //     </div>)
+          //   }
+          // },
           {
             title: '注册时间',
             minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
@@ -234,6 +235,23 @@ export default {
               )
             }
           },
+          // TODO 显示
+          // {
+          //   title: '推送最近登录时间',
+          //   minWidth: this.$bus.view_width <= 1300 ? 130 : 150,
+          //   key: 'last_login_time',
+          //   render: (h, { row }) => {
+          //     const arr = this.$PDo.Date.format(row.last_login_time).split(' ')
+
+          //     return (
+          //       <span>
+          //         {arr[0]}
+          //         {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+          //         {arr[1]}
+          //       </span>
+          //     )
+          //   }
+          // },
           {
             title: '是否关注服务号',
             width: 150,
