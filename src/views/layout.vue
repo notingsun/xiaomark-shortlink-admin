@@ -226,16 +226,16 @@ export default {
           title: '二维码列表',
           route: { name: 'QrList' }
         },
-        // {
-        //   name: '105',
-        //   title: '模版消息列表',
-        //   route: { name: 'TemplateList' }
-        // },
-        // {
-        //   name: '106',
-        //   title: '客服消息列表',
-        //   route: { name: 'ServiceList' }
-        // },
+        {
+          name: '105',
+          title: '模版消息列表',
+          route: { name: 'TemplateList' }
+        },
+        {
+          name: '106',
+          title: '客服消息列表',
+          route: { name: 'ServiceList' }
+        },
         {
           name: '104',
           title: '公众号列表',
