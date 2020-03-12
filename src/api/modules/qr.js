@@ -46,6 +46,24 @@ export default {
     })
   },
 
+  getTemplateList(params) {
+    return request({
+      method: 'get',
+      name: '模版消息列表',
+      url: '/api/templateMessage/',
+      params
+    })
+  },
+
+  getServiceList(params) {
+    return request({
+      method: 'get',
+      name: '客服消息列表',
+      url: '/api/customMessage/',
+      params
+    })
+  },
+
   putPackageDate(id, params) {
     return request({
       method: 'put',

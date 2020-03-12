@@ -1,0 +1,84 @@
+
+.itv-text {
+  &--24 {
+    font-size: 24px;
+    line-height:29px;
+  }
+  &--18 {
+    font-size: 18px;
+    line-height:25px;
+  }
+  &--16 {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  &--14 {
+    font-size: 14px;
+    line-height:20px;
+  }
+  &--12 {
+    font-size: 12px;
+    line-height:20px;
+  }
+  &--blod {
+    font-weight: bold;
+  }
+  &--grey {
+    color: @subsidiary-color;
+  }
+  &--grey2 {
+    color: #DCE3F2;
+  }
+  &--sub{
+    font-size:12px;
+    color: @subsidiary-color;
+  }
+  &--primary{
+    color: @primary-color;
+  }
+
+  // 文字不换行，显示省略号
+  &--nowrap {
+    width: inherit;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // 文字按钮
+  &--btn {
+    color: #3464E0;
+    cursor: pointer;
+    &:hover {
+      filter: brightness(1.5);
+    }
+    // 底部有线
+    &.a {
+      text-decoration: underline;
+    }
+    // 红色
+    &.red {
+      color: #FD525B;
+    }
+    // 禁用
+    &.disabled {
+      color: #DCE3F2;
+      cursor: not-allowed;
+      &:hover {
+        filter: none;
+      }
+    }
+  }
+  &--link{
+    color: @primary-color; 
+    &:hover{
+    color: @primary-color; 
+    text-decoration: underline;
+    }
+  }
+}
+
+.fw500 {
+  font-weight: 500;
+}

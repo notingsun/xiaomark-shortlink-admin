@@ -104,9 +104,80 @@ const countFormat = {
 }
 
 /**
+ *  格式化编辑器内链接 返回该编辑器内链接的对象数组
+ * @param {*} edit_format - 编辑器内已格式化后的内容
+ */
+const formatEditorLinkArray = (edit_format) => {
+  if (!edit_format) {
+    return
+  }
+
+  const regexp = /<a id="link[^>]+>([^]*?)(<\/a *>)/g
+  const regexp_help = /<a id="help[^>]+>/g
+  // 被匹配到的链接数组
+  const links = edit_format.match(regexp)
+  const helps = edit_format.match(regexp_help)
+
+  let new_cnt = null
+
+  let links_arr = []
+
+  let helps_arr = []
+
+  // 获取各链接信息返
+  if (links) {
+    // 格式化所有链接，替换为占位符，是后端要的
+    links.forEach((item) => {
+      const get_id = /(id=")([^]*?)(")/g
+      const get_name = /(data-name=")([^]*?)(")/g
+      const get_href = /(href=")([^]*?)(")/g
+      const get_tags = /(data-tags=")([^]*?)(")/g
+
+      let tags = []
+
+      // 判断是否有标签
+      // 注意：不能直接exec后，直接去[2]
+      const get_tags_exec = get_tags.exec(item) || []
+      const get_id_exec = get_id.exec(item) || []
+      const get_name_exec = get_name.exec(item) || []
+      const get_href_exec = get_href.exec(item) || []
+
+      if (get_tags_exec[2] !== '' && get_tags_exec[2]) {
+        tags = get_tags_exec[2].split(',').map(Number)
+      } else {
+        tags = []
+      }
+
+      links_arr.push({
+        id: get_id_exec[2],
+        name: get_name_exec[2],
+        origin_url: get_href_exec[2],
+        tag_ids: tags
+      })
+    })
+  }
+
+  // 获取各助力口令
+  if (helps) {
+    helps.forEach((item) => {
+      const get_name = /(data-name=")([^]*?)(")/g
+      const get_name_exec = get_name.exec(item) || []
+
+      helps_arr.push(get_name_exec[2] + '助力进度')
+    })
+  }
+
+  // eslint-disable-next-line
+  new_cnt = edit_format.replace(regexp, '$$$LINK$$$').replace(/(<a ).*?(href=\".+?\").*?(>.+?<\/a>)/g, '$1$2$3') // 只保留href标签
+
+  return { new_cnt, links_arr, helps_arr }
+}
+
+/**
  * 需要注册的工具函数
  */
 const UTILS = {
+  formatEditorLinkArray,
   countFormat,
   verifyForm,
   pagination,

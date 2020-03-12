@@ -189,9 +189,9 @@ export default {
             render: (h, { row }) => {
               return (
                 <div>
-                  <span>100</span>
+                  <span>{row.n_template}</span>
                   <span> / </span>
-                  <span>239</span>
+                  <span>{row.n_custom}</span>
                 </div>
               )
             }
@@ -258,25 +258,10 @@ export default {
             }
           },
           {
-            title: '操作',
-            width: 60,
-            fixed: 'right',
-            render: (h, { row }) => {
-              return (
-                <span title="查看二维码">
-                  <itv-icon
-                    type="i-qrcode"
-                    size="20"
-                    class="itv-btn__icon"
-                    onClick={this.toAccountXList.bind(
-                      null,
-                      row,
-                      'AccountQrList'
-                    )}
-                  />
-                </span>
-              )
-            }
+            title: '主体名称',
+            width: 160,
+            tooltip: true,
+            key: 'principal_name'
           },
           {
             title: '操作',
@@ -290,6 +275,9 @@ export default {
                       type="i-qrcode"
                       size="20"
                       class="itv-btn__icon"
+                      color={
+                        (row.user || {}).last_login_time ? 'primary' : 'sub'
+                      }
                       onClick={this.toAccountXList.bind(
                         null,
                         row,
@@ -298,7 +286,9 @@ export default {
                     />
                   </span>
                   <div
-                    class="itv-text--btn2 mr8"
+                    class={`itv-text--btn2 mr8 ${
+                      (row.user || {}).final_login_time ? '' : 'sub'
+                    }`}
                     title="查看模版消息"
                     onClick={this.toAccountXList.bind(
                       null,
@@ -309,7 +299,9 @@ export default {
                     模
                   </div>
                   <div
-                    class="itv-text--btn2"
+                    class={`itv-text--btn2 ${
+                      (row.user || {}).final_login_time ? '' : 'sub'
+                    }`}
                     title="查看客服消息"
                     onClick={this.toAccountXList.bind(
                       null,
@@ -432,6 +424,9 @@ export default {
     font-size: 12px;
     color: #fff;
     cursor: pointer;
+    &.sub {
+      background: #c5c7ce;
+    }
   }
 }
 </style>

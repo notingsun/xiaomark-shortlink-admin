@@ -11,8 +11,12 @@ import ItvBreadcrumb from './breadcrumb/breadcrumb.vue'
 import ItvChartLine from './chart/chart-line'
 import ItvUploadImage from './upload-images/upload-images'
 import ItvModelImg from './upload-images/model-img'
+import ItvGraphic from './msg-graphic/graphic'
+import ItvGraphicItem from './msg-graphic/graphic-item'
 
 const COMPONENTS = {
+  ItvGraphic,
+  ItvGraphicItem,
   ItvUploadImage,
   ItvModelImg,
   ItvChartLine,

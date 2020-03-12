@@ -159,8 +159,8 @@ export default {
             renderHeader: (h) => {
               const options = [
                 { name: '全部', value: '' },
-                { name: '仅渠道码', value: 1 },
-                { name: '仅小码推送', value: 0 }
+                { name: '仅渠道码', value: 'QRCODE' },
+                { name: '仅小码推送', value: 'PUSH' }
               ]
               const optionsList = options.map((item) => {
                 return (
@@ -195,9 +195,9 @@ export default {
             },
             // eslint-disable-next-line no-unused-vars
             render: (h, { row }) => {
-              return (<div>
-                <span class="mr8" title="小码渠道码"><itv-icon type="i-qrcode" size="20" color="sub" /></span>
-                <span title="小码推送"><itv-icon type="menu-Push" size="20" color="primary"/></span>
+              return (<div style="color: rgb(71, 203, 137);">
+                <span class="mr8" title="小码渠道码"><itv-icon type="i-qrcode" size="20" color={row.last_login_time ? '' : 'sub'} /></span>
+                <span title="小码推送"><itv-icon type="menu-Push" size="20" color={row.final_login_time ? '' : 'sub'}/></span>
               </div>)
             }
           },
@@ -236,9 +236,9 @@ export default {
           {
             title: '推送最近登录时间',
             minWidth: this.$bus.view_width <= 1300 ? 130 : 150,
-            key: 'last_login_time',
+            key: 'final_login_time',
             render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.last_login_time).split(' ')
+              const arr = this.$PDo.Date.format(row.final_login_time).split(' ')
 
               return (
                 <span>
@@ -270,7 +270,7 @@ export default {
       },
       // 获取表格数据的参数
       form: {
-        login_way: '*', // 登录应用
+        login_way: '', // 登录应用
         search: '',
         bound: '*', // 公众号绑定状态：0 - 未绑定，1 - 已绑定
         authorized: '*', // 公众号授权状态：0 - 取消授权，1 - 授权中
@@ -327,6 +327,7 @@ export default {
       try {
         const params = {
           nickname: this.form.search,
+          apply: this.form.login_way, // 登陆应用筛选 QRCODE-仅渠道码 PUSH-仅推送 空为全部
           bound: this.form.bound, // 公众号绑定状态：0 - 未绑定，1 - 已绑定
           authorized: this.form.authorized, // 公众号授权状态：0 - 取消授权，1 - 授权中
           order_by: this.form.sort
