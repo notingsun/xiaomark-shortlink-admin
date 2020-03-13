@@ -187,7 +187,7 @@ export default {
       try {
         await this.$api.Qr.putPackage(this.modal.obj.id, {
           stop_date: this.$PDo.Date.format(
-            (this.form_package.stop_date || new Date()).toJSON(),
+            new Date(this.form_package.stop_date).toJSON(),
             'y-m-d'
           ),
           combo: this.form_package.combo
