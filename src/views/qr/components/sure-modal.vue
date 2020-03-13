@@ -8,28 +8,46 @@
       :mask-closable="false"
     >
       <!-- 修改套餐到期日 -->
-      <div v-show="modal.type === 'package'">
-        <!-- 域名列表 -->
+      <div v-if="modal.type === 'package'">
         <div class="mb24">
           <span class="itv-title--14 mr16 mb8 label">
-            原先套餐到期日：
+            原套餐：
           </span>
-          <span>
-            {{ form_package._date }}
-          </span>
+          <span>{{ combo_map[form_package._combo] || '-' }}</span>
         </div>
-        <!-- 每日创建短链接上限 -->
-        <div class="itv-flex--fs" style="height: 32px;">
-          <p class="mr16 itv-title--14 label">增加：</p>
-          <div class="itv-flex--fs">
-            <Input
-              type="number"
-              v-model="form_package._count"
-              style="width: 100px"
-              class="mr16"
-              :min="1"
-            />
-          </div>
+        <div class="mb24">
+          <span class="itv-title--14 mr16 mb8 label">
+            原套餐到期日：
+          </span>
+          <span>{{ form_package._stop_date }}</span>
+        </div>
+
+        <div class="mb24">
+          <span class="itv-title--14 mr16 mb8 label">
+            套餐：
+          </span>
+          <Select v-model="form_package.combo" class="value" size="large">
+            <Option
+              v-for="item in options.combo"
+              :value="item.value"
+              :key="item.value"
+            >
+              {{ item.label }}
+            </Option>
+          </Select>
+        </div>
+        <div class="mb24">
+          <span class="itv-title--14 mr16 mb8 label">
+            套餐到期日：
+          </span>
+          <DatePicker
+            size="large"
+            class="value"
+            type="date"
+            placeholder="请选择"
+            v-model="form_package.stop_date"
+            :options="options.shortcuts_combo"
+          ></DatePicker>
         </div>
       </div>
 
@@ -68,9 +86,50 @@ export default {
       titleMap: {
         package: '修改套餐到期日'
       },
+      // 修改套餐
       form_package: {
-        _date: '',
-        _count: 0
+        _stop_date: '',
+        _combo: '',
+        stop_date: '',
+        combo: ''
+      },
+      // 下拉框的选项
+      options: {
+        // 套餐
+        combo: [
+          { value: 0, label: '免费版' },
+          { value: 1, label: '入门版' },
+          { value: 2, label: '专业版' }
+        ],
+        // 套餐到期日快捷选择
+        shortcuts_combo: {
+          shortcuts: [
+            {
+              text: '7天后',
+              value() {
+                return new Date(Date.now() + 86400000 * 7)
+              }
+            },
+            {
+              text: '30天后',
+              value() {
+                return new Date(Date.now() + 86400000 * 30)
+              }
+            },
+            {
+              text: '90天后',
+              value() {
+                return new Date(Date.now() + 86400000 * 90)
+              }
+            },
+            {
+              text: '365天后',
+              value() {
+                return new Date(Date.now() + 86400000 * 365)
+              }
+            }
+          ]
+        }
       }
     }
   },
@@ -82,6 +141,14 @@ export default {
       const arr_no_show = []
 
       return !arr_no_show.includes(this.modal.type)
+    },
+    combo_map() {
+      let res = {}
+
+      this.options.combo.forEach((item) => {
+        res[item.value] = item.label
+      })
+      return res
     }
   },
   created() {},
@@ -95,8 +162,10 @@ export default {
         }, 300)
       } else if (v && this.modal.type === 'package') {
         // 初始化.修改套餐到期日
-        this.form_package['_date'] = this.modal.obj.stop_date || '-'
-        this.form_package['_count'] = 0
+        this.form_package['_stop_date'] = this.modal.obj.stop_date || '-'
+        this.form_package['stop_date'] = this.modal.obj.stop_date || new Date()
+        this.form_package['combo'] = this.modal.obj.combo || 0
+        this.form_package['_combo'] = this.modal.obj.combo || 0
       }
     }
   },
@@ -113,18 +182,17 @@ export default {
 
       this.loading = false
     },
+    // 修改公众号套餐
     async doChangePackage() {
-      const days = Number(this.form_package['_count'])
-
-      if (days < 0 || parseInt(days) !== days) {
-        this.$Message.error('增加数值错误')
-        return
-      }
       try {
-        await this.$api.Qr.putPackageDate(this.modal.obj.id, {
-          days
+        await this.$api.Qr.putPackage(this.modal.obj.id, {
+          stop_date: this.$PDo.Date.format(
+            (this.form_package.stop_date || new Date()).toJSON(),
+            'y-m-d'
+          ),
+          combo: this.form_package.combo
         })
-        this.$Message.success('增加成功')
+        this.$Message.success('修改成功')
         this.$bus.modal2.show = false
         this.modal.success_cb()
       } catch (e) {
@@ -141,9 +209,12 @@ export default {
     font-size: 14px;
   }
   .label {
-    width: 120px;
+    width: 110px;
     text-align: right;
     display: inline-block;
+  }
+  .value {
+    width: 280px;
   }
   .text_one_line {
     width: 360px;

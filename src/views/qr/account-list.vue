@@ -126,24 +126,18 @@ export default {
             key: 'create_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.stop_date).split(' ')
-              // <span>{arr[0]}</span>
 
               return (
-                <div>
-                  <span>{arr[0] || '-'}</span>
-                  {/* eslint-disable */}
-                  { row.combo !== 0 && (
-                      <itv-icon
-                        title="编辑"
-                        type="i-edit"
-                        class="ml16 "
-                        size="18"
-                        color="primary"
-                        onClick={this.handlePackage.bind(this, row)}
-                      />
-                    )
-                  }
-                  {/* eslint-enable */}
+                <div class="itv-flex--fs">
+                  <p style="width: 70px;">{arr[0] || '-'}</p>
+                  <itv-icon
+                    title="编辑"
+                    type="i-edit"
+                    class="ml16 "
+                    size="18"
+                    color="primary"
+                    onClick={this.handlePackage.bind(this, row)}
+                  />
                 </div>
               )
             }

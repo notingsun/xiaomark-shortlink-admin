@@ -64,11 +64,11 @@ export default {
     })
   },
 
-  putPackageDate(id, params) {
+  putPackage(id, params) {
     return request({
       method: 'put',
-      name: '修改公众号套餐到期日',
-      url: `/api/qr/platforms/${id}/date/`,
+      name: '修改公众号套餐（此API会归零已扫码次数）',
+      url: `/api/qr/platforms/${id}/combo/`,
       params
     })
   }
