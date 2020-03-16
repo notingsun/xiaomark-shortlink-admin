@@ -243,7 +243,7 @@ export default {
         },
         {
           name: '107',
-          title: '订单列表',
+          title: '渠道码订单列表',
           route: { name: 'OrderList' }
         }
       ]

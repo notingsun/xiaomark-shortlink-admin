@@ -87,6 +87,7 @@ export default {
     const C_GREY = '#c5c8ce'
 
     const comboArr = ['免费版', '入门版', '专业版']
+    const mealArr = ['', '单条', '包年']
 
     return {
       loading: true,
@@ -121,7 +122,7 @@ export default {
             }
           },
           {
-            title: '套餐到期时间',
+            title: '渠道码套餐到期时间',
             minWidth: 150,
             key: 'create_time',
             render: (h, { row }) => {
@@ -138,6 +139,33 @@ export default {
                     color="primary"
                     onClick={this.handlePackage.bind(this, row)}
                   />
+                </div>
+              )
+            }
+          },
+          {
+            title: '推送套餐',
+            minWidth: 120,
+            key: 'n_qrcodes',
+            render: (h, { row }) => {
+              return (
+                <span>
+                  {mealArr[row.meal]}
+                  {row.meal === 1 ? `（剩余: ${row.n_push}）` : ''}
+                </span>
+              )
+            }
+          },
+          {
+            title: '推送套餐到期时间',
+            minWidth: 150,
+            // key: 'over_date',
+            render: (h, { row }) => {
+              const arr = this.$PDo.Date.format(row.over_date).split(' ')
+
+              return (
+                <div class="itv-flex--fs">
+                  <p style="width: 70px;">{arr[0] || '-'}</p>
                 </div>
               )
             }
