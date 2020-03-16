@@ -20,6 +20,7 @@
               @click="
                 () => {
                   $bus.drawer_user.show = true
+                  $bus.drawer_user.id = $route.params.user_id
                 }
               "
             >
