@@ -47,12 +47,10 @@ export default {
         text: '文本消息',
         image: '图片消息',
         mpnews: '图文消息',
-        template: '模板消息具体的名称'
+        template: ''
       }
 
-      const title =
-        // eslint-disable-next-line prettier/prettier
-        this.dialog.category === 'template' ? this.dialog.obj.title : title_map[this.dialog.category]
+      const title = title_map[this.dialog.category]
 
       this.dialog.title = title
     },

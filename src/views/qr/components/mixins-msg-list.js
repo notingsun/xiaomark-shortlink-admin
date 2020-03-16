@@ -39,7 +39,7 @@ export default {
       // this.columns_map.push_time, // 实际发送时间
       push_time: {
         title: '实际发送时间',
-        minWidth: 150,
+        minWidth: 170,
         key: 'create_time',
         render: (h, { row }) => {
           return (
@@ -67,7 +67,7 @@ export default {
       // this.columns_template_map.title, // 使用模版
       title: {
           title: '使用模版',
-          minWidth: 160,
+          minWidth: 150,
           key: 'title'
         },
       // this.columns_template_map.link_url, // 跳转链接
@@ -108,7 +108,7 @@ export default {
       // this.columns_template_map.actions, // 操作
       actions: {
         title: '操作',
-        minWidth: 120,
+        minWidth: 110,
         // key: 'n_sub',
         render: (h, { row }) => {
           return (
@@ -137,7 +137,7 @@ export default {
       // this.columns_service_map.actions, // 操作
       actions: {
         title: '操作',
-        minWidth: 120,
+        width: 120,
         // key: 'n_sub',
         render: (h, { row }) => {
           return (

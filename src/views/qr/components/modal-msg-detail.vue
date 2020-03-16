@@ -19,7 +19,8 @@
 
           <!-- 2.模板消息 -->
           <div v-if="dialog.category === 'template'">
-            <div v-html="dialog.content.template_html"></div>
+            <!-- <div v-html="dialog.content.template_html"></div> -->
+            <itv-preview-template :content="dialog.content" />
           </div>
 
           <!-- 3.图片消息 -->

@@ -13,8 +13,10 @@ import ItvUploadImage from './upload-images/upload-images'
 import ItvModelImg from './upload-images/model-img'
 import ItvGraphic from './msg-graphic/graphic'
 import ItvGraphicItem from './msg-graphic/graphic-item'
+import ItvPreviewTemplate from './preview-template/template-detail'
 
 const COMPONENTS = {
+  ItvPreviewTemplate,
   ItvGraphic,
   ItvGraphicItem,
   ItvUploadImage,
