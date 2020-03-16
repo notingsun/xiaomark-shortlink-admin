@@ -16,34 +16,6 @@
       </div>
       <div>
         <Select
-          v-model="form.combo"
-          style="width:150px"
-          @on-change="doGetData"
-          class="mr8"
-          placement="bottom-end"
-        >
-          <Option
-            v-for="(item, index) in options.combo"
-            :value="item.value"
-            :key="index"
-            >{{ item.label }}</Option
-          >
-        </Select>
-        <Select
-          v-model="form.authorized"
-          style="width:150px"
-          @on-change="doGetData"
-          class="mr8"
-          placement="bottom-end"
-        >
-          <Option
-            v-for="(item, index) in options.authorized"
-            :value="item.value"
-            :key="index"
-            >{{ item.label }}</Option
-          >
-        </Select>
-        <Select
           v-model="form.sort"
           style="width:150px"
           @on-change="doGetData"
@@ -113,9 +85,48 @@ export default {
             }
           },
           {
-            title: '渠道码套餐',
+            // title: '渠道码套餐',
             minWidth: 120,
             key: 'n_qrcodes',
+            // eslint-disable-next-line
+            renderHeader: (h) => {
+              const options = [
+                { value: '', name: '不限套餐' },
+                { value: '0', name: '免费版' },
+                { value: '1', name: '入门版' },
+                { value: '2', name: '专业版' }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.combo === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.combo = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">渠道码套餐</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
             render: (h, { row }) => {
               return <span>{comboArr[row.combo]}</span>
             }
@@ -143,9 +154,47 @@ export default {
             }
           },
           {
-            title: '推送套餐',
+            // title: '推送套餐',
             minWidth: 130,
             key: 'n_qrcodes',
+            // eslint-disable-next-line
+            renderHeader: (h) => {
+              const options = [
+                { value: '', name: '不限套餐' },
+                { value: '1', name: '单条' },
+                { value: '2', name: '包年' }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.meal === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.meal = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">推送套餐</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
             render: (h, { row }) => {
               let mealName =
                 row.meal === 2 ? '包年' : row.n_push === 0 ? '-' : '单条'
@@ -258,9 +307,47 @@ export default {
             }
           },
           {
-            title: '其他',
+            // title: '其他',
             // key: 'nickname',
             minWidth: 120,
+            // eslint-disable-next-line
+            renderHeader: (h) => {
+              const options = [
+                { value: '', name: '不限授权' },
+                { value: '0', name: '未授权' },
+                { value: '1', name: '已授权' }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.authorized === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.authorized = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">其他</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
@@ -352,22 +439,12 @@ export default {
       },
       form: {
         search: '',
-        combo: '*',
-        authorized: '*', // 公众号授权状态：0 - 取消授权，1 - 授权中
+        combo: '',
+        meal: '',
+        authorized: '', // 公众号授权状态：0 - 取消授权，1 - 授权中
         sort: 'time'
       },
       options: {
-        combo: [
-          { value: '*', label: '不限套餐' },
-          { value: '0', label: '免费版' },
-          { value: '1', label: '入门版' },
-          { value: '2', label: '专业版' }
-        ],
-        authorized: [
-          { value: '*', label: '不限授权' },
-          { value: '0', label: '未授权' },
-          { value: '1', label: '已授权' }
-        ],
         sort: [
           { value: 'time', label: '按创建时间倒序' },
           { value: 'qrcode', label: '按二维码数量倒序' },
@@ -415,7 +492,8 @@ export default {
       try {
         const params = {
           qs: this.form.search,
-          combo: this.form.combo === '*' ? '' : this.form.combo,
+          meal: this.form.meal,
+          combo: this.form.combo,
           authorized: this.form.authorized,
           order_by: this.form.sort
         }
