@@ -203,7 +203,7 @@ export default {
           },
           {
             title: '创建时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            minWidth: 130,
             // key: 'create_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.create_time).split(' ')
@@ -211,7 +211,7 @@ export default {
               return (
                 <span>
                   {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  <br />
                   {arr[1]}
                 </span>
               )
@@ -219,7 +219,7 @@ export default {
           },
           {
             title: '完成时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            minWidth: 130,
             // key: 'finish_time',
             render: (h, { row }) => {
               const arr = this.$PDo.Date.format(row.finish_time).split(' ')
@@ -227,7 +227,7 @@ export default {
               return (
                 <span>
                   {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  <br />
                   {arr[1]}
                 </span>
               )
@@ -241,7 +241,7 @@ export default {
           },
           {
             title: '套餐开始日期',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            minWidth: 120,
             // key: 'start_date',
             render: (h, { row }) => {
               return (
@@ -253,7 +253,7 @@ export default {
           },
           {
             title: '套餐截止日期',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            minWidth: 120,
             // key: 'stop_date',
             render: (h, { row }) => {
               return (
@@ -265,7 +265,7 @@ export default {
           },
           {
             title: '下次可续费日期',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            minWidth: 120,
             key: 'renew_date'
           },
           {

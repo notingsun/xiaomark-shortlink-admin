@@ -87,7 +87,6 @@ export default {
     const C_GREY = '#c5c8ce'
 
     const comboArr = ['免费版', '入门版', '专业版']
-    const mealArr = ['', '单条', '包年']
 
     return {
       loading: true,
@@ -145,13 +144,16 @@ export default {
           },
           {
             title: '推送套餐',
-            minWidth: 120,
+            minWidth: 130,
             key: 'n_qrcodes',
             render: (h, { row }) => {
+              let mealName =
+                row.meal === 2 ? '包年' : row.n_push === 0 ? '-' : '单条'
+
               return (
                 <span>
-                  {mealArr[row.meal]}
-                  {row.meal === 1 ? `（剩余: ${row.n_push}）` : ''}
+                  {mealName}
+                  {row.meal === 1 && row.n_push ? `（余: ${row.n_push}）` : ''}
                 </span>
               )
             }

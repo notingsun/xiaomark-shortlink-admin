@@ -296,16 +296,20 @@ export default {
       const id = this.modal.obj.id
 
       if (this.form_package2.meal === 1) {
-        this.$api.Qr.putPackage2(id, {
+        await this.$api.Qr.putPackage2(id, {
           meal: this.form_package2.meal,
           n_push: this.form_package2.n_push - 0
         })
       } else if (this.form_package2.meal === 2) {
-        this.$api.Qr.putPackage2(id, {
+        await this.$api.Qr.putPackage2(id, {
           meal: this.form_package2.meal,
           over_date: moment(this.form_package2.over_date).format('YYYY-MM-DD')
         })
       }
+
+      this.$Message.success('修改成功')
+      this.$bus.modal2.show = false
+      this.modal.success_cb()
     },
     // 修改推送套餐，包年
     async doChangeMeal() {},
