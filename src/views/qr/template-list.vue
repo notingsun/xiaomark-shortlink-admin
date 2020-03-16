@@ -74,6 +74,7 @@ export default {
           this.columns_map.push_time, // 实际发送时间
           this.columns_template_map.title, // 使用模版
           this.columns_template_map.link_url, // 跳转链接
+          this.columns_map.tag_ids, // 推送标签
           this.columns_map.n_pushes, // 送达的人数
           this.columns_template_map.actions // 操作
         ]
@@ -84,6 +85,7 @@ export default {
           this.columns_map.push_time, // 实际发送时间
           this.columns_template_map.title, // 使用模版
           this.columns_template_map.link_url, // 跳转链接
+          this.columns_map.tag_ids, // 推送标签
           this.columns_map.n_pushes, // 送达的人数
           this.columns_template_map.actions // 操作
         ]
