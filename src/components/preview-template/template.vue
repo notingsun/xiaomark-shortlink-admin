@@ -240,9 +240,9 @@ export default {
   }
   &.new_style {
     .template__url {
-      margin-left: -8% !important;
-      width: 116% !important;
-      padding: 6px 8% 0 !important;
+      margin-left: -8px !important;
+      width: calc(~'100% + 16px') !important;
+      padding: 6px 8px 0 !important;
     }
   }
 }
