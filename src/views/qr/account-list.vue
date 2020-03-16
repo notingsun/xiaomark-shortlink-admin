@@ -166,6 +166,14 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <p style="width: 70px;">{arr[0] || '-'}</p>
+                  <itv-icon
+                    title="编辑"
+                    type="i-edit"
+                    class="ml16 "
+                    size="18"
+                    color="primary"
+                    onClick={this.handlePackage2.bind(this, row)}
+                  />
                 </div>
               )
             }
@@ -425,6 +433,13 @@ export default {
     handlePackage(row) {
       // 屏蔽后该域名从当前列表消失
       this.$bus.modal2.type = 'package'
+      this.$bus.modal2.show = true
+      this.$bus.modal2.obj = row
+      this.$bus.modal2.success_cb = this.doGetData
+    },
+    handlePackage2(row) {
+      // 屏蔽后该域名从当前列表消失
+      this.$bus.modal2.type = 'package2'
       this.$bus.modal2.show = true
       this.$bus.modal2.obj = row
       this.$bus.modal2.success_cb = this.doGetData

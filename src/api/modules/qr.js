@@ -31,8 +31,17 @@ export default {
   getQrderList(params) {
     return request({
       method: 'get',
-      name: '列出订单',
+      name: '列出订单(渠道码)',
       url: '/api/qr/platforms/orders/',
+      params
+    })
+  },
+
+  getPushQrderList(params) {
+    return request({
+      method: 'get',
+      name: '列出订单(推送)',
+      url: '/api/ps/platforms/indents/',
       params
     })
   },
@@ -69,6 +78,15 @@ export default {
       method: 'put',
       name: '修改公众号套餐（此API会归零已扫码次数）',
       url: `/api/qr/platforms/${id}/combo/`,
+      params
+    })
+  },
+
+  putPackage2(id, params) {
+    return request({
+      method: 'put',
+      name: '修改公众号推送套餐',
+      url: `/api/ps/platforms/${id}/meal/`,
       params
     })
   }

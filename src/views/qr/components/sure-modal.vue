@@ -7,7 +7,7 @@
       :title="titleMap[modal.type]"
       :mask-closable="false"
     >
-      <!-- 修改套餐到期日 -->
+      <!-- 修改渠道码套餐到期日 -->
       <div v-if="modal.type === 'package'">
         <div class="mb24">
           <span class="itv-title--14 mr16 mb8 label">
@@ -51,6 +51,67 @@
         </div>
       </div>
 
+      <!-- 修改推送套餐 -->
+      <div v-if="modal.type === 'package2'">
+        <div class="mb24">
+          <span class="itv-title--14 mr16 mb8 label">
+            原套餐：
+          </span>
+          <span>{{ meal_map[form_package2._meal] || '-' }}</span>
+        </div>
+        <div class="mb24" v-show="form_package2._meal === 2">
+          <span class="itv-title--14 mr16 mb8 label">
+            原套餐到期日：
+          </span>
+          <span>{{ form_package2._over_date }}</span>
+        </div>
+        <div class="mb24" v-show="form_package2._meal === 1">
+          <span class="itv-title--14 mr16 mb8 label">
+            原可用条数：
+          </span>
+          <span>{{ form_package2._n_push }}</span>
+        </div>
+
+        <div class="mb24">
+          <span class="itv-title--14 mr16 mb8 label">
+            套餐：
+          </span>
+          <Select v-model="form_package2.meal" class="value" size="large">
+            <Option
+              v-for="item in options.meal"
+              :value="item.value"
+              :key="item.value"
+            >
+              {{ item.label }}
+            </Option>
+          </Select>
+        </div>
+        <div class="mb24" v-show="form_package2.meal === 2">
+          <span class="itv-title--14 mr16 mb8 label">
+            套餐到期日：
+          </span>
+          <DatePicker
+            size="large"
+            class="value"
+            type="date"
+            placeholder="请选择"
+            v-model="form_package2.over_date"
+            :options="options.shortcuts_combo"
+          ></DatePicker>
+        </div>
+        <div class="mb24" v-show="form_package2.meal === 1">
+          <span class="itv-title--14 mr16 mb8 label">
+            可用条数：
+          </span>
+          <Input
+            type="number"
+            v-model="form_package2.n_push"
+            class="value"
+            size="large"
+          />
+        </div>
+      </div>
+
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
@@ -68,6 +129,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'SureModal',
   mixins: [],
@@ -84,14 +147,24 @@ export default {
         package: false
       },
       titleMap: {
-        package: '修改套餐到期日'
+        package: '修改渠道码套餐到期日',
+        package2: '修改推送套餐到期日'
       },
-      // 修改套餐
+      // 修改渠道码套餐
       form_package: {
         _stop_date: '',
         _combo: '',
         stop_date: '',
         combo: ''
+      },
+      // 修改推送套餐
+      form_package2: {
+        _over_date: '',
+        _meal: '',
+        _n_push: '',
+        over_date: '',
+        meal: '',
+        n_push: ''
       },
       // 下拉框的选项
       options: {
@@ -100,6 +173,11 @@ export default {
           { value: 0, label: '免费版' },
           { value: 1, label: '入门版' },
           { value: 2, label: '专业版' }
+        ],
+        // 套餐
+        meal: [
+          { value: 1, label: '单条' },
+          { value: 2, label: '包年' }
         ],
         // 套餐到期日快捷选择
         shortcuts_combo: {
@@ -149,6 +227,14 @@ export default {
         res[item.value] = item.label
       })
       return res
+    },
+    meal_map() {
+      let res = {}
+
+      this.options.meal.forEach((item) => {
+        res[item.value] = item.label
+      })
+      return res
     }
   },
   created() {},
@@ -166,6 +252,14 @@ export default {
         this.form_package['stop_date'] = this.modal.obj.stop_date || new Date()
         this.form_package['combo'] = this.modal.obj.combo || 0
         this.form_package['_combo'] = this.modal.obj.combo || 0
+      } else if (v && this.modal.type === 'package2') {
+        // 初始化.修改套餐到期日
+        this.form_package2['_n_push'] = this.modal.obj.n_push || '-'
+        this.form_package2['n_push'] = this.modal.obj.n_push || new Date()
+        this.form_package2['_over_date'] = this.modal.obj.over_date || '-'
+        this.form_package2['over_date'] = this.modal.obj.over_date || new Date()
+        this.form_package2['meal'] = this.modal.obj.meal || 1
+        this.form_package2['_meal'] = this.modal.obj.meal || 1
       }
     }
   },
@@ -178,18 +272,16 @@ export default {
 
       /* eslint-disable */
       type === 'package' && await this.doChangePackage()
+      type === 'package2' && await this.doChangePackage2()
       /* eslint-enable */
 
       this.loading = false
     },
-    // 修改公众号套餐
+    // 修改公众号渠道码套餐
     async doChangePackage() {
       try {
         await this.$api.Qr.putPackage(this.modal.obj.id, {
-          stop_date: this.$PDo.Date.format(
-            new Date(this.form_package.stop_date).toJSON(),
-            'y-m-d'
-          ),
+          stop_date: moment(this.form_package.stop_date).format('YYYY-MM-DD'),
           combo: this.form_package.combo
         })
         this.$Message.success('修改成功')
@@ -198,7 +290,27 @@ export default {
       } catch (e) {
         console.error(e)
       }
-    }
+    },
+    // 修改推送套餐
+    async doChangePackage2() {
+      const id = this.modal.obj.id
+
+      if (this.form_package2.meal === 1) {
+        this.$api.Qr.putPackage2(id, {
+          meal: this.form_package2.meal,
+          n_push: this.form_package2.n_push - 0
+        })
+      } else if (this.form_package2.meal === 2) {
+        this.$api.Qr.putPackage2(id, {
+          meal: this.form_package2.meal,
+          over_date: moment(this.form_package2.over_date).format('YYYY-MM-DD')
+        })
+      }
+    },
+    // 修改推送套餐，包年
+    async doChangeMeal() {},
+    // 修改推送次数
+    async doChangeNPush() {}
   }
 }
 </script>

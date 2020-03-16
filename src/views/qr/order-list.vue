@@ -1,6 +1,10 @@
 /* 订单列表 */
 <template>
   <div class="order-list itv-flex-v--fs">
+    <Tabs v-model="order_type">
+      <TabPane label="渠道码" name="qr"></TabPane>
+      <TabPane label="推送" name="push"></TabPane>
+    </Tabs>
     <!-- 表格 -->
     <Table
       :loading="loading"
@@ -50,6 +54,7 @@ export default {
 
     return {
       loading: true,
+      order_type: 'qr',
       table: {
         data: [],
         total: 0,
@@ -73,13 +78,62 @@ export default {
             }
           },
           {
-            title: '所选套餐',
+            // title: '所选套餐',
             minWidth: 100,
             // key: 'combo',
+            // eslint-disable-next-line
+            renderHeader: (h) => {
+              const optionsMap = {
+                qr: [
+                  { name: '全部', value: '' },
+                  { name: '入门版', value: 1 },
+                  { name: '专业版', value: 2 }
+                ],
+                push: [
+                  { name: '全部', value: '' },
+                  { name: '付费版', value: 2 },
+                  { name: '单条额度', value: 1 }
+                ]
+              }
+              const options = optionsMap[this.order_type] || []
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.combo === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.combo = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">所选套餐</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
             render: (h, { row }) => {
               return (
                 <div>
-                  <span>{row.combo === 1 ? '入门' : '专业'}</span>
+                  {/* eslint-disable-next-line prettier/prettier */}
+                  <span>{this.order_type === 'qr' ? row.combo === 1 ? '入门' : '专业' : ''}</span>
+                  {/* eslint-disable-next-line prettier/prettier */}
+                  <span>{this.order_type === 'push' ? row.meal === 1 ? '单条额度' : '付费版' : ''}</span>
                 </div>
               )
             }
@@ -100,40 +154,53 @@ export default {
             key: 'real_prize'
           },
           {
-            title: '支付结果',
+            // title: '支付结果',
             minWidth: 100,
             // key: 'pay',
+            // eslint-disable-next-line
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '已支付', value: 'SUCCESS' },
+                { name: '未支付', value: 'NOTPAY' }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.result === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.result = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">支付结果</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
             render: (h, { row }) => {
               const icon = resMap[row.result] || {}
 
               return <span class="mr8">{icon.name || '-'}</span>
             }
           },
-          // {
-          //   title: '支付方式',
-          //   minWidth: 100,
-          //   // key: 'pay',
-          //   render: (h, { row }) => {
-          //     const icon = resMap[row.result]
-
-          //     /* eslint-disable */
-          //     // type="md-remove-circle"
-          //     return (
-          //       <div class="itv-flex--fs">
-          //         <span class="mr8">{row.combo === 1 ? '微信' : '-'}</span>
-          //         {
-          //           row.combo === 1 && icon && <Icon
-          //             title={icon.name}
-          //             type={icon.icon}
-          //             color={icon.color}
-          //             size="20"
-          //           />
-          //         }
-          //       </div>
-          //     )
-          //     /* eslint-enable */
-          //   }
-          // },
           {
             title: '创建时间',
             minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
@@ -175,12 +242,26 @@ export default {
           {
             title: '套餐开始日期',
             minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
-            key: 'start_date'
+            // key: 'start_date',
+            render: (h, { row }) => {
+              return (
+                <span>
+                  {this.order_type === 'qr' ? row.start_date : row.begin_date}
+                </span>
+              )
+            }
           },
           {
             title: '套餐截止日期',
             minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
-            key: 'stop_date'
+            // key: 'stop_date',
+            render: (h, { row }) => {
+              return (
+                <span>
+                  {this.order_type === 'qr' ? row.stop_date : row.over_date}
+                </span>
+              )
+            }
           },
           {
             title: '下次可续费日期',
@@ -206,11 +287,11 @@ export default {
           }
         ],
         height: null // 表格的高度
+      },
+      form: {
+        combo: '', // 套餐
+        result: '' // 支付结果
       }
-      // form: {
-      //   search: '',
-      //   sort: 'time'
-      // },
       // options: {
       //   sort: [
       //     { value: 'time', label: '按创建时间倒序' },
@@ -227,7 +308,14 @@ export default {
   mounted() {
     this.doGetData()
   },
-  watch: {},
+  watch: {
+    order_type() {
+      // 重置初始化星系
+      this.form.combo = ''
+      this.form.result = ''
+      this.doGetData()
+    }
+  },
   methods: {
     doGetData(page = {}) {
       if (!page.page) {
@@ -243,18 +331,25 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        const params = {
-          // qs: this.form.search,
-          // order_by: this.form.sort
+        let res = {}
+
+        if (this.order_type === 'qr') {
+          res = await this.$api.Qr.getQrderList({
+            combo: this.form.combo,
+            result: this.form.result,
+            ...this.$global.utils.pagination.params()
+          })
+          this.table.data = res.orders || []
+        } else if (this.order_type === 'push') {
+          res = await this.$api.Qr.getPushQrderList({
+            meal: this.form.combo,
+            result: this.form.result,
+            ...this.$global.utils.pagination.params()
+          })
+          this.table.data = res.indents || []
         }
 
-        const res = await this.$api.Qr.getQrderList({
-          ...params,
-          ...this.$global.utils.pagination.params()
-        })
-
         this.table.total = res.total
-        this.table.data = res.orders || []
       } catch (e) {
         console.error(e)
       }
