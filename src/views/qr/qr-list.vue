@@ -56,7 +56,7 @@ export default {
     // const C_BLUE = '#4F87FB'
     const C_GREY = '#c5c8ce'
 
-    const arr_reply = ['无', '文本消息', '图片消息', '图文消息']
+    const arr_reply = ['无', '文本消息', '图片消息', '图文消息', '网页链接']
     const arr_reply_status = ['未开始', '进行中', '进行中']
 
     return {
