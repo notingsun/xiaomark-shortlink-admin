@@ -72,6 +72,7 @@ export default {
           this.columns_map.name, // 推送名称
           this.columns_map.push_time, // 实际发送时间
           this.columns_service_map.msg_type, // 消息类型
+          this.columns_map.tag_ids, // 推送标签
           this.columns_map.n_pushes, // 送达的人数
           this.columns_service_map.actions // 操作
         ]
@@ -81,6 +82,7 @@ export default {
           this.columns_map.platform, // 服务号
           this.columns_map.push_time, // 实际发送时间
           this.columns_service_map.msg_type, // 消息类型
+          this.columns_map.tag_ids, // 推送标签
           this.columns_map.n_pushes, // 送达的人数
           this.columns_service_map.actions // 操作
         ]

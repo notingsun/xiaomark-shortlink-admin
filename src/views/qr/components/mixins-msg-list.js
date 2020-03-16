@@ -54,6 +54,15 @@ export default {
           )
         }
       },
+      // this.columns_map.tag_ids, // 推送标签
+      tag_ids: {
+        title: '推送对象',
+        minWidth: 120,
+        // key: 'tag_ids',
+        render: (h, { row }) => {
+          return <span>{(row.tag_ids || []).length ? '全部' : '部分粉丝'}</span>
+        }
+      },
       // this.columns_map.n_pushes, // 送达的人数
       n_pushes: {
         title: '送达的人数',
