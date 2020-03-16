@@ -121,7 +121,7 @@ export default {
             }
           },
           {
-            title: '套餐到期时间',
+            title: '渠道码套餐到期时间',
             minWidth: 150,
             key: 'create_time',
             render: (h, { row }) => {
@@ -137,6 +137,44 @@ export default {
                     size="18"
                     color="primary"
                     onClick={this.handlePackage.bind(this, row)}
+                  />
+                </div>
+              )
+            }
+          },
+          {
+            title: '推送套餐',
+            minWidth: 130,
+            key: 'n_qrcodes',
+            render: (h, { row }) => {
+              let mealName =
+                row.meal === 2 ? '包年' : row.n_push === 0 ? '-' : '单条'
+
+              return (
+                <span>
+                  {mealName}
+                  {row.meal === 1 && row.n_push ? `（余: ${row.n_push}）` : ''}
+                </span>
+              )
+            }
+          },
+          {
+            title: '推送套餐到期时间',
+            minWidth: 150,
+            // key: 'over_date',
+            render: (h, { row }) => {
+              const arr = this.$PDo.Date.format(row.over_date).split(' ')
+
+              return (
+                <div class="itv-flex--fs">
+                  <p style="width: 70px;">{arr[0] || '-'}</p>
+                  <itv-icon
+                    title="编辑"
+                    type="i-edit"
+                    class="ml16 "
+                    size="18"
+                    color="primary"
+                    onClick={this.handlePackage2.bind(this, row)}
                   />
                 </div>
               )
@@ -397,6 +435,13 @@ export default {
     handlePackage(row) {
       // 屏蔽后该域名从当前列表消失
       this.$bus.modal2.type = 'package'
+      this.$bus.modal2.show = true
+      this.$bus.modal2.obj = row
+      this.$bus.modal2.success_cb = this.doGetData
+    },
+    handlePackage2(row) {
+      // 屏蔽后该域名从当前列表消失
+      this.$bus.modal2.type = 'package2'
       this.$bus.modal2.show = true
       this.$bus.modal2.obj = row
       this.$bus.modal2.success_cb = this.doGetData
