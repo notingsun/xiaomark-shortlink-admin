@@ -278,7 +278,7 @@ export default {
                 <div class="itv-flex--fs">
                   <img src={row.headimgurl} class="img--headimgurl mr8" />
                   <Tooltip content={row.nickname} placement="top" transfer class="df">
-                    <div class='text--oneRow' style={{width: '120px'}}>{row.nick_name}</div>
+                    <div class='text--oneRow' style={{width: '120px'}}>{row.nickname}</div>
                   </Tooltip>
                 </div>
               )
