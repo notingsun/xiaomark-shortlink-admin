@@ -58,7 +58,20 @@ export default {
     // const C_BLUE = '#4F87FB'
     const C_GREY = '#c5c8ce'
 
-    const comboArr = ['免费版', '入门版', '专业版']
+    // 渠道码套餐
+    const comboMap = {
+      0: '免费版',
+      1: '入门版',
+      2: '专业版',
+      4: '活动赠送'
+    }
+
+    // 推送套餐
+    const mealMap = {
+      0: '活动赠送',
+      1: '单条',
+      2: '包年'
+    }
 
     return {
       loading: true,
@@ -128,7 +141,7 @@ export default {
               )
             },
             render: (h, { row }) => {
-              return <span>{comboArr[row.combo]}</span>
+              return <span>{comboMap[row.combo]}</span>
             }
           },
           {
@@ -197,7 +210,7 @@ export default {
             },
             render: (h, { row }) => {
               let mealName =
-                row.meal === 2 ? '包年' : row.n_push === 0 ? '-' : '单条'
+                row.meal === 1 && row.n_push === 0 ? '-' : mealMap[row.meal]
 
               return (
                 <span>
