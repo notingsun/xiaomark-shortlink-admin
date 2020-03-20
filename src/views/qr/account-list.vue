@@ -46,6 +46,7 @@
 
 <script>
 import tableMixins from '../table-mixins'
+import { comboMap, mealMap } from './components/common-data'
 
 export default {
   name: 'AccountList',
@@ -57,21 +58,6 @@ export default {
     // const C_ORANGE = '#e88986'
     // const C_BLUE = '#4F87FB'
     const C_GREY = '#c5c8ce'
-
-    // 渠道码套餐
-    const comboMap = {
-      0: '免费版',
-      1: '入门版',
-      2: '专业版',
-      4: '活动赠送'
-    }
-
-    // 推送套餐
-    const mealMap = {
-      0: '活动赠送',
-      1: '单条',
-      2: '包年'
-    }
 
     return {
       loading: true,

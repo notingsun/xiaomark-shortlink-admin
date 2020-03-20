@@ -21,6 +21,7 @@
 
 <script>
 import tableMixins from '../table-mixins'
+import { comboMap, mealMap } from './components/common-data'
 
 export default {
   name: 'QrderList',
@@ -131,9 +132,7 @@ export default {
               return (
                 <div>
                   {/* eslint-disable-next-line prettier/prettier */}
-                  <span>{this.order_type === 'qr' ? row.combo === 1 ? '入门' : '专业' : ''}</span>
-                  {/* eslint-disable-next-line prettier/prettier */}
-                  <span>{this.order_type === 'push' ? row.meal === 1 ? '单条额度' : '付费版' : ''}</span>
+                  <span>{this.order_type === 'qr' ? comboMap[row.combo] : this.order_type === 'push' ? mealMap[row.meal] : '' }</span>
                 </div>
               )
             }
