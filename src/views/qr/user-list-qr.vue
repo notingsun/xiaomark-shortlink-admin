@@ -297,6 +297,7 @@ export default {
   computed: {},
   created() {},
   mounted() {
+    this.form.search = this.$route.query.name || ''
     this.doGetData()
   },
   watch: {},

@@ -282,7 +282,10 @@ export default {
             minWidth: 120,
             render: (h, { row }) => {
               return (
-                <div class="table-cell__nickname">
+                <div
+                  class="table-cell__nickname cp"
+                  onClick={this.toUserDetail.bind(null, row)}
+                >
                   <img src={row.user.headimgurl} class="img--headimgurl mr8" />
                   <div class="">{row.user.nickname}</div>
                 </div>
@@ -467,6 +470,14 @@ export default {
   },
   watch: {},
   methods: {
+    // 去用户详情
+    toUserDetail(row) {
+      this.$router.push({
+        name: 'UserListQr',
+        params: { user_id: row.user.id },
+        query: { name: row.user.nickname }
+      })
+    },
     // 去公众号二维码列表
     toAccountXList(row, name) {
       this.$router.push({
