@@ -281,7 +281,7 @@
       <div v-show="modal.type === 'user_tags'">
         <Select v-model="form.user_tags.tagids">
           <Option
-            v-for="item in options.user_tags"
+            v-for="item in options.user_tags || []"
             :value="item.id"
             :key="item.id"
             >{{ item.name }}</Option
@@ -364,7 +364,7 @@ export default {
         }
       },
       options: {
-        user_tags: []
+        user_tags: null
       }
     }
   },
@@ -384,10 +384,7 @@ export default {
     }
   },
   created() {},
-  mounted() {
-    // TODO 获取用户标签
-    this.doGetUserTags()
-  },
+  mounted() {},
   watch: {
     // 重置表单
     'modal.show'(v) {
@@ -413,6 +410,13 @@ export default {
       } else if (v && this.modal.type === 'login_user') {
         // 初始化.获取用户token
         this.doGetUserToken()
+      } else if (
+        v &&
+        this.modal.type === 'user_tags' &&
+        !this.options.user_tags
+      ) {
+        // 初始化.微信标签
+        this.doGetUserTags()
       }
     }
   },
