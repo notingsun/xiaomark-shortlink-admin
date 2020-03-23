@@ -277,6 +277,18 @@
         </div>
       </div>
 
+      <!-- 11、用户打标签 user_tags -->
+      <div v-show="modal.type === 'user_tags'">
+        <Select v-model="form.user_tags.tagids">
+          <Option
+            v-for="item in options.user_tags"
+            :value="item.id"
+            :key="item.id"
+            >{{ item.name }}</Option
+          >
+        </Select>
+      </div>
+
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
@@ -311,6 +323,7 @@ export default {
         open_api_domain: false
       },
       titleMap: {
+        user_tags: '设置用户标签',
         login_user: '确认登录',
         wx_share: '微信分享',
         check_api_domain: '查看API域名',
@@ -345,7 +358,13 @@ export default {
         },
         login_user: {
           token: ''
+        },
+        user_tags: {
+          tagids: ''
         }
+      },
+      options: {
+        user_tags: []
       }
     }
   },
@@ -365,7 +384,10 @@ export default {
     }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    // TODO 获取用户标签
+    this.doGetUserTags()
+  },
   watch: {
     // 重置表单
     'modal.show'(v) {
@@ -395,6 +417,18 @@ export default {
     }
   },
   methods: {
+    // 获取用户标签
+    async doGetUserTags() {
+      try {
+        const res = await this.$api.User.getUserTags()
+
+        console.log({ res })
+
+        this.options.user_tags = (res || {}).tags || []
+      } catch (e) {
+        console.error(e)
+      }
+    },
     // 处理图片
     calImgUrl(url) {
       if (url && !url.includes('https://static.interval.im/')) {
@@ -431,9 +465,33 @@ export default {
       type === 'stop_api_domain' && await this.handleStopApiDomain()
       type === 'check_api_domain' && await this.handleCheckApiDomain()
       type === 'login_user' && await this.handleUserLogin()
+      type === 'user_tags' && await this.handleUserTags()
       /* eslint-enable */
 
       this.loading = false
+    },
+
+    // 给用户打标签
+    async handleUserTags() {
+      const tagids = this.form.user_tags.tagids
+      const userid = this.modal.obj.id
+
+      if (!tagids) {
+        this.$Message.error('请选择标签')
+        return false
+      }
+      console.log({ tagids, userid })
+
+      try {
+        await this.$api.User.putUserTags(userid, { tag_id: tagids })
+        this.modal.show = false
+        // this.modal.success_cb({ page: 'now' })
+        setTimeout(() => {
+          this.$Message.success('添加成功')
+        }, 300)
+      } catch (e) {
+        console.error(e)
+      }
     },
 
     // 登录小码短链

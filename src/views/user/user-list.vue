@@ -174,7 +174,10 @@ export default {
             // minWidth: 160,
             render: (h, { row }) => {
               return (
-                <div class="table-cell__nickname">
+                <div
+                  class="table-cell__nickname cp"
+                  onClick={this.openUserDetail.bind(null, row)}
+                >
                   <img src={row.headimgurl} class="img--headimgurl mr8" />
                   {/* onError={this.handleImgError.bind(null, row, index)} */}
                   {/* eslint-disable */
@@ -507,6 +510,11 @@ export default {
             }
           },
           {
+            title: '来源',
+            minWidth: 120,
+            key: 'source'
+          },
+          {
             title: '地域',
             width: 146,
             key: 'country province city',
@@ -528,8 +536,14 @@ export default {
             }
           },
           {
+            title: 'openid',
+            minWidth: 120,
+            key: 'sa_openid',
+            tooltip: true
+          },
+          {
             title: '操作',
-            width: 120,
+            width: 140,
             fixed: 'right',
             render: (h, { row }) => {
               return (
@@ -554,8 +568,16 @@ export default {
                     <itv-icon
                       type="i-eye"
                       size="20"
-                      class="itv-btn__icon"
+                      class="itv-btn__icon mr8"
                       onClick={this.toUserLogin.bind(null, row)}
+                    />
+                  </span>
+                  <span title="给用户打标签">
+                    <itv-icon
+                      type="i-tag"
+                      size="20"
+                      class="itv-btn__icon"
+                      onClick={this.handleUserTags.bind(null, row)}
                     />
                   </span>
                 </div>
@@ -604,6 +626,11 @@ export default {
   },
   watch: {},
   methods: {
+    // 打开用户详情窗口
+    openUserDetail(row) {
+      this.$bus.drawer_user.show = true
+      this.$bus.drawer_user.id = row.id
+    },
     // handleImgError(row, index) {
     // console.log(row, index)
     // this.table.data[index].headimgurl = this.img_default
@@ -647,6 +674,12 @@ export default {
     // 登录该用户
     toUserLogin(row) {
       this.$bus.modal.type = 'login_user'
+      this.$bus.modal.show = true
+      this.$bus.modal.obj = row
+    },
+    // 给用户打标签
+    handleUserTags(row) {
+      this.$bus.modal.type = 'user_tags'
       this.$bus.modal.show = true
       this.$bus.modal.obj = row
     },

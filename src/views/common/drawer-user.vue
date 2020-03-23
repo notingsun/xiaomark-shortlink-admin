@@ -158,10 +158,17 @@
         </div>
       </div>
 
+      <!-- openid -->
+      <div class="row">
+        <div class="label">openid</div>
+        <div style="word-break: break-all">{{ data.sa_openid }}</div>
+      </div>
+
       <!-- 操作 -->
       <div class="row">
         <div class="label">操作</div>
         <div class="itv-flex--v--fs">
+          <!-- 查看短链 -->
           <div
             class="mb8 itv-flex--fs"
             @click="
@@ -176,6 +183,7 @@
             <itv-icon type="i-detail" size="20" class="itv-btn__icon mr8" />
             <span class="itv-text--btn">查看短链</span>
           </div>
+          <!-- 查看协作空间 -->
           <div
             class="mb8 itv-flex--fs"
             @click="
@@ -190,8 +198,9 @@
             <itv-icon type="i-member" size="20" class="itv-btn__icon mr8" />
             <span class="itv-text--btn">查看协作空间</span>
           </div>
+          <!-- 登录该用户 -->
           <div
-            class="itv-flex--fs"
+            class="mb8 itv-flex--fs"
             @click="
               () => {
                 $bus.modal.type = 'login_user'
@@ -202,6 +211,20 @@
           >
             <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" />
             <span class="itv-text--btn">登录该用户</span>
+          </div>
+          <!-- 打标签 -->
+          <div
+            class="mb8 itv-flex--fs"
+            @click="
+              () => {
+                $bus.modal.type = 'user_tags'
+                $bus.modal.show = true
+                $bus.modal.obj = data
+              }
+            "
+          >
+            <itv-icon type="i-tag" size="20" class="itv-btn__icon mr8" />
+            <span class="itv-text--btn">打标签</span>
           </div>
         </div>
       </div>

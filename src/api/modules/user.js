@@ -1,6 +1,24 @@
 import request from '../instance'
 
 export default {
+  putUserTags(id, params) {
+    return request({
+      method: 'post',
+      name: '给用户打标签',
+      url: `/api/sl/users/${id}/tag/`,
+      params
+    })
+  },
+
+  getUserTags(params) {
+    return request({
+      method: 'get',
+      name: '获取用户标签',
+      url: '/api/sl/tags/',
+      params
+    })
+  },
+
   getUserDetail(id, params) {
     return request({
       method: 'get',
