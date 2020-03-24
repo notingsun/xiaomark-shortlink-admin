@@ -60,7 +60,7 @@ export default {
         minWidth: 120,
         // key: 'tag_ids',
         render: (h, { row }) => {
-          return <span>{(row.tag_ids || []).length ? '全部' : '部分粉丝'}</span>
+          return <span>{(row.tag_ids || []).length === 0 ? '全部' : '部分粉丝'}</span>
         }
       },
       // this.columns_map.n_pushes, // 送达的人数
