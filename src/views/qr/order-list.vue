@@ -41,7 +41,7 @@ export default {
         icon: 'md-checkmark-circle'
       },
       PAYERROR: {
-        name: '支付成功',
+        name: '支付失败',
         color: C_ORANGE,
         icon: 'md-close-circle'
       },
@@ -197,7 +197,8 @@ export default {
             render: (h, { row }) => {
               const icon = resMap[row.result] || {}
 
-              return <span class="mr8">{icon.name || '-'}</span>
+              // eslint-disable-next-line prettier/prettier
+              return row.real_prize > 0 ? <Tag color={icon.color}>{icon.name}</Tag> : <span>-</span>
             }
           },
           {
