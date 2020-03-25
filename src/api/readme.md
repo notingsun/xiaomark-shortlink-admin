@@ -131,10 +131,8 @@ instance.interceptors.response.use(
 
 对于请求超时有两种情况:
 
-第一种request阶段，请求没有发出去。可以通过设置axios的`config.timeout`处理。
-
-第二种response阶段，请求发出去了一直没有响应。需要手动处理处理（可以暂停原本的请求）
-- emm...这个暂停是必须的吗？
+请求超时。可以通过设置axios的`config.timeout`处理。
+响应超时。需要手动处理处理（可以暂停原本的请求）（这个暂停是必须的吗？）
 
 ``` JS
 const request = (config) => {

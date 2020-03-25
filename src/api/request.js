@@ -40,9 +40,7 @@ instance.interceptors.request.use(
         process.env.VUE_APP_COOKIE
       )
     }
-    // return config
-    // 这个timeout好像只会作用于request请求的时间
-    // 第一种请求超时处理
+    // 请求超时 timeout
     return { ...config, timeout: 2000 }
   },
   (err) => {
@@ -83,6 +81,14 @@ const handleResponse = ({ response, config, timer }) => {
   // 第三级错误：接口返回错误（传参格式不对、没有权限等）
   return Promise.reject(response.data) // 返回接口返回的错误信息
 }
+// 响应超级
+const handleTimeout = ({ rej, controller }) => {
+  return setTimeout(() => {
+    showMessageError('第二级错误：请求超时')
+    controller.abort()
+    rej('第二级错误：请求超时')
+  }, 2000)
+}
 
 // 拦截响应
 instance.interceptors.response.use(
@@ -119,12 +125,8 @@ const request = (config) => {
 
   // 返回一个请求实例
   return new Promise((res, rej) => {
-    // 第二种请求超时处理
-    timer = setTimeout(() => {
-      showMessageError('第二级错误：请求超时')
-      controller.abort()
-      rej('第二级错误：请求超时')
-    }, 2000)
+    // 响应超时
+    timer = handleTimeout({ rej, controller })
 
     instance[method](url, params).then(res, rej) // 记得.then
   })
