@@ -129,9 +129,32 @@ instance.interceptors.response.use(
 第二级错误：`远程服务错误`（接口没有找到，status的状态不是2xx）（response阶段）
 第三级错误：`接口返回错误`（传参格式不对、没有权限等）（response阶段）
 
-对于请求超时有两种情况
-- 第一种request阶段，请求没有发出去。可以通过设置axios的`config.timeout`处理。
-- 第二种response阶段，请求发出去了一直没有响应。需要手动处理处理（可以暂停原本的请求）（emm...这个暂停是必须的吗？）
+对于请求超时有两种情况:
+
+第一种request阶段，请求没有发出去。可以通过设置axios的`config.timeout`处理。
+
+第二种response阶段，请求发出去了一直没有响应。需要手动处理处理（可以暂停原本的请求）
+- emm...这个暂停是必须的吗？
+
+``` JS
+const request = (config) => {
+  const controller = new AbortController() // 一个控制器，可以中止请求
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      controller.abort()
+      rej('第二级错误：请求超时')
+    }, 2000)
+
+    instance[method](url, params).then(res, rej) // 记得.then
+  })
+    .then((response) => Promise.resolve({ response, config, timer }))
+    .then(handleResponse) // 对response做统一处理，且为了获取到config自定义数据
+    .catch((error) => {
+      return Promise.reject(error)
+    })
+}
+```
+
 
 
 #### 3.2、config 中添加自定义信息

@@ -42,6 +42,7 @@ instance.interceptors.request.use(
     }
     // return config
     // 这个timeout好像只会作用于request请求的时间
+    // 第一种请求超时处理
     return { ...config, timeout: 2000 }
   },
   (err) => {
@@ -118,13 +119,14 @@ const request = (config) => {
 
   // 返回一个请求实例
   return new Promise((res, rej) => {
+    // 第二种请求超时处理
     timer = setTimeout(() => {
       showMessageError('第二级错误：请求超时')
       controller.abort()
       rej('第二级错误：请求超时')
     }, 2000)
 
-    instance[method](url, params).then(res, rej)
+    instance[method](url, params).then(res, rej) // 记得.then
   })
     .then((response) => Promise.resolve({ response, config, timer }))
     .then(handleResponse) // 对response做统一处理，且为了获取到config自定义数据
