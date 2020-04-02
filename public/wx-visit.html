@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <title>小码短链接</title>
+
+  <!-- 获取url的参数 -->
+  <script>
+    // eslint-disable-next-line no-unused-vars
+    function getUrlQuery() {
+      var search = window.location.search.slice(1).split('&')
+      var query_map = {}
+      var param_arr
+
+      search.forEach(function(param) {
+        if (param && param.indexOf('=') !== -1) {
+          param_arr = param.split('=')
+          query_map[param_arr[0]] = query_map[param_arr[0].toLocaleLowerCase()] = decodeURIComponent(param_arr[1] || '')
+        }
+      })
+
+      console.log({
+        query_map
+      })
+      return query_map
+    }
+  </script>
+
+  <!-- 获取用户信息 -->
+  <script>
+    /* eslint-disable no-unused-vars */
+    var wx_info = {
+      appid: 'wxfa3cf7c6417f7ed4',
+      redirect_uri: 'http://admin-test.xiaomark.com/wx-visit.html',
+      response_type: 'code',
+      scope: 'snsapi_userinfo',
+      state: 'lijing'
+    }
+    var wx_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?'
+
+    Object.keys(wx_info).forEach(function(key, i) {
+      if (i !== 0) {
+        wx_url += '&'
+      }
+      wx_url = wx_url + key + '=' + encodeURIComponent(wx_info[key])
+    })
+
+    console.log('wx_url:', wx_url)
+  </script>
+
+  <!-- 判断是否是微信浏览器，打开目标页面 -->
+  <script>
+    var target_url = 'https://www.baidu.com'
+    var is_weixin_browser = /micromessenger/.test(window.navigator.userAgent.toLowerCase())
+
+    window.addEventListener('load', function() {
+      // eslint-disable-next-line no-undef
+      var params = getUrlQuery()
+      var wx_code = params.code
+
+      var str_text = JSON.stringify(params)
+      var id_container = document.getElementById('container')
+
+      id_container.innerHTML = str_text + window.location.href
+
+      if (is_weixin_browser && !wx_code) {
+        // 显示在浏览器中打开
+        // eslint-disable-next-line no-undef
+        window.location.href = wx_url
+      } else {
+        // 直接跳转
+        setTimeout(() => {
+          console.log('直接跳转:', target_url)
+          // window.location.href = target_url
+        }, 1000)
+      }
+    })
+  </script>
+
+  <!-- 计算页面 html 的 font-size -->
+  <script>
+    /* 备注：设置html的font-size，用于rem的计算，按照375的设计稿 */
+    var w_document = document.documentElement.clientWidth
+
+    document.documentElement.style.fontSize = w_document / 375 + 'px'
+  </script>
+
+  <!-- XMLHttpRequest 的 GET 和 POST 的封装 -->
+  <script type="text/javascript">
+    /* eslint-disable vars-on-top */
+    // eslint-disable-next-line no-unused-vars
+    function request(option) {
+      if (String(option) !== '[object Object]') {
+        return false
+      }
+
+      option.method = option.method ? option.method.toUpperCase() : 'GET'
+      option.data = option.data || {}
+
+      // GET 的参数
+      var formData = []
+
+      for (var key in option.data) {
+        formData.push(''.concat(key, '=', encodeURIComponent(option.data[key])))
+      }
+      option.data = formData.join('&')
+
+      if (option.method === 'GET') {
+        option.url += location.search.length === 0 ? ''.concat(option.data ? '?' : '', option.data) : ''.concat('&', option.data)
+      }
+
+      // 新建一个请求
+      var xhr = new XMLHttpRequest()
+
+      xhr.responseType = option.responseType || 'json'
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            if (option.success && typeof option.success === 'function') {
+              typeof option.success === 'function' && option.success(xhr.response)
+            }
+          } else if (option.error && typeof option.error === 'function') {
+            typeof option.error === 'function' && option.error()
+          }
+        }
+      }
+
+      xhr.open(option.method, option.url, true)
+
+      if (option.method === 'POST') {
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      }
+
+      xhr.send(option.method === 'POST' ? option.data : null)
+    }
+  </script>
+
+  <!-- 接口请求 -->
+  <script>
+    // 测试接口的请求
+    // eslint-disable-next-line no-undef
+    // request({
+    //   url: 'https://xiaomark.com/api/slmp/links/aseh7loi/',
+    //   method: 'GET',
+    //   data: {},
+    //   success: function(res) {
+    //     console.log({
+    //       res
+    //     })
+    //   },
+    //   error: function(err) {
+    //     console.log({
+    //       err
+    //     })
+    //   }
+    // })
+  </script>
+
+  <!-- 页面样式 -->
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    /* html {
+      font-size: 4%;
+    } */
+    #container {
+      width: 100vw;
+      height: 100vh;
+      font-size: 14rem;
+      line-height: 20rem;
+      position: relative;
+      background: pink;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+  </div>
+</body>
+
+</html>
