@@ -39,6 +39,7 @@
 
 <script>
 import tableMixins from '../table-mixins'
+import { arr_reply, arr_reply_status_map } from './components/data-const'
 
 export default {
   name: 'AccountQrList',
@@ -46,9 +47,6 @@ export default {
   props: {},
   components: {},
   data() {
-    const arr_reply = ['无', '文本消息', '图片消息', '图文消息']
-    const arr_reply_status = ['未开始', '进行中', '进行中']
-
     return {
       loading: true,
       table: {
@@ -83,13 +81,23 @@ export default {
             minWidth: 160,
             // key: 'reply',
             render: (h, { row }) => {
+              const reply_status = arr_reply_status_map[row.reply_status] || {}
+
               return (
-                <div>
-                  <span>{arr_reply[row.reply] || '-'}</span>（
-                  <span title="自动回复状态">
-                    {arr_reply_status[row.reply_status] || '-'}
-                  </span>
-                  ）
+                <div
+                  class="itv-flex--fs"
+                  title={'自动回复状态:' + (reply_status.text || '-')}
+                >
+                  <div
+                    style={{
+                      background: reply_status.color,
+                      width: '8px',
+                      height: '8px',
+                      'border-radius': '50%',
+                      'margin-right': '8px'
+                    }}
+                  />
+                  <div>{arr_reply[row.reply] || '-'}</div>
                 </div>
               )
             }
