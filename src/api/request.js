@@ -30,6 +30,7 @@ const consoleResponse = function(is_true, response_data, config) {
 
 /* 二、请求实例 */
 const instance = axios.create()
+const TIMEOUT_VALUE = 20000 // 请求超时的时间（后台管理接口比较慢）
 
 // 拦截请求
 instance.interceptors.request.use(
@@ -41,7 +42,7 @@ instance.interceptors.request.use(
       )
     }
     // 请求超时 timeout
-    return { ...config, timeout: 2000 }
+    return { ...config, timeout: TIMEOUT_VALUE }
   },
   (err) => {
     // 第一级错误：网络错误（请求没有发送成功、超时了、断网）
@@ -87,7 +88,7 @@ const handleTimeout = ({ rej, controller }) => {
     showMessageError('第二级错误：请求超时')
     controller.abort()
     rej('第二级错误：请求超时')
-  }, 2000)
+  }, TIMEOUT_VALUE)
 }
 
 // 拦截响应
