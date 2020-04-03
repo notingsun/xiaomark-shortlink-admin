@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1">
-  <title>小码短链接2</title>
+  <title>小码短链接</title>
 
   <!-- 获取url的参数 -->
   <script>
@@ -28,11 +28,12 @@
     }
   </script>
 
-  <!-- 获取用户信息 -->
+  <!-- 跳转用户授权 url -->
   <script>
     /* eslint-disable no-unused-vars */
     var wx_info = {
       appid: 'wxfa3cf7c6417f7ed4',
+      // redirect_uri: 'http://192.168.3.27:8081/public/wx-visit.html',
       redirect_uri: 'http://admin-test.xiaomark.com/wx-visit.html',
       response_type: 'code',
       scope: 'snsapi_userinfo',
@@ -47,7 +48,33 @@
       wx_url = wx_url + key + '=' + encodeURIComponent(wx_info[key])
     })
 
+    wx_url = wx_url + '#wechat_redirect'
+
     console.log('wx_url:', wx_url)
+  </script>
+
+  <!-- 立即执行防抖函数 -->
+  <script>
+    // eslint-disable-next-line no-unused-vars
+    function debounce({ delay, successCb }) {
+      var timer_target = null
+
+      return function() {
+        // eslint-disable-next-line no-underscore-dangle
+        var _delay = delay || 1000
+
+        if (!timer_target) {
+          typeof successCb === 'function' && successCb()
+        }
+        if (timer_target) {
+          clearTimeout(timer_target)
+        }
+        timer_target = setTimeout(function() {
+          // eslint-disable-next-line no-undefined
+          timer_target = undefined
+        }, _delay)
+      }
+    }
   </script>
 
   <!-- 判断是否是微信浏览器，打开目标页面 -->
@@ -57,24 +84,52 @@
 
     window.addEventListener('load', function() {
       // eslint-disable-next-line no-undef
-      var params = getUrlQuery()
-      var wx_code = params.code
+      var wx_code = (getUrlQuery() || {}).code // 微信授权成功后会有这个参数
 
-      var str_text = JSON.stringify(params)
-      var id_container = document.getElementById('container')
+      // 获取页面重的元素
+      var div__test = document.getElementById('div__test')
+      var btn__target = document.getElementById('btn__target')
+      var btn__wx = document.getElementById('btn__wx')
 
-      id_container.innerHTML = str_text + window.location.href
+      // 打开目标页
+      var handleToTarget = function() {
+        div__test.innerHTML = '直接跳转:' + target_url
+        window.location.replace(target_url)
+      }
 
-      if (is_weixin_browser && !wx_code) {
+      if (is_weixin_browser) {
+        // 感觉可以先用静默授权，用oppenid去获取用户信息，有的话直接跳转目标，没有的话就跳转授权
         // 显示在浏览器中打开
         // eslint-disable-next-line no-undef
-        window.location.href = wx_url
+        !wx_code && (window.location.href = wx_url) // 没有授权，跳转授权（拒绝授权后，不会重定向会本目标页）
+
+        div__test.innerHTML = window.location.href
+
+        // 点击跳转防抖
+        // eslint-disable-next-line no-undef,vars-on-top
+        var handleBtnTarget = debounce({
+          successCb: handleToTarget
+        })
+
+        btn__target.addEventListener('click', handleBtnTarget)
+
+        // 点击重新授权防抖
+        // eslint-disable-next-line no-undef,vars-on-top
+        var handleBtnWx = debounce({
+          successCb: function() {
+            // eslint-disable-next-line no-undef
+            window.location.href = wx_url
+          }
+        })
+
+        btn__wx.addEventListener('click', handleBtnWx)
+
+        // 显示按钮
+        btn__target.style.display = 'flex'
+        btn__wx.style.display = 'flex'
       } else {
         // 直接跳转
-        setTimeout(() => {
-          console.log('直接跳转:', target_url)
-          // window.location.href = target_url
-        }, 1000)
+        handleToTarget()
       }
     })
   </script>
@@ -178,12 +233,34 @@
       position: relative;
       background: pink;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .btn {
+      width: 120rem;
+      height: 40rem;
+      font-size: 14rem;
+      border-radius: 4rem;
+      border: 1px solid #a8a8a8;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+
+    #btn__target {
+      margin-top: 12rem;
+      margin-bottom: 12rem;
     }
   </style>
 </head>
 
 <body>
   <div id="container">
+    <div id="div__test"></div>
+    <div id="btn__target" class="btn">跳转到目标页</div>
+    <div id="btn__wx" class="btn">重新授权</div>
   </div>
 </body>
 
