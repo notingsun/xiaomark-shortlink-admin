@@ -36,7 +36,8 @@
       // redirect_uri: 'http://192.168.3.27:8081/public/wx-visit.html',
       redirect_uri: 'http://admin-test.xiaomark.com/wx-visit.html',
       response_type: 'code',
-      scope: 'snsapi_userinfo',
+      scope: 'snsapi_base', // TODO 静默授权
+      // scope: 'snsapi_userinfo',
       state: 'lijing'
     }
     var wx_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?'
@@ -87,32 +88,42 @@
       var wx_code = (getUrlQuery() || {}).code // 微信授权成功后会有这个参数
 
       // 获取页面重的元素
+      // TODO
       var div__test1 = document.getElementById('div__test1')
       var div__test = document.getElementById('div__test')
       var btn__target = document.getElementById('btn__target')
       var btn__wx = document.getElementById('btn__wx')
 
+      // TODO 直接自动跳转
+      var count = 0
+
+      // x秒后，自动打开目标页
+      var handleAutoToTarget = function() {
+        count++
+        div__test1.textContent = 4 - count + ' s 后自动跳转'
+        if (count === 3) {
+          // eslint-disable-next-line no-use-before-define
+          handleToTarget()
+          // eslint-disable-next-line no-use-before-define
+          clearInterval(timer_auto)
+        }
+      }
+      var timer_auto = setInterval(handleAutoToTarget, 1000)
+
       // 打开目标页
       var handleToTarget = function() {
         div__test.innerHTML = '直接跳转:' + target_url
         window.location.replace(target_url)
+        clearInterval(timer_auto)
       }
-
-      var count = 0
-
-      var timer_auto = setInterval(() => {
-        div__test1.textContent = ++count
-        if (count === 2) {
-          handleToTarget()
-          clearInterval(timer_auto)
-        }
-      }, 1000)
 
       if (is_weixin_browser && !wx_code) {
         // 感觉可以先用静默授权，用oppenid去获取用户信息，有的话直接跳转目标，没有的话就跳转授权
         // 显示在浏览器中打开
         // eslint-disable-next-line no-undef
-        window.location.href = wx_url // 没有授权，跳转授权（拒绝授权后，不会重定向会本目标页）
+        window.location.replace(wx_url) // 没有授权，跳转授权（拒绝授权后，不会重定向会本目标页）
+        // eslint-disable-next-line no-undef
+        // window.location.href = wx_url // 没有授权，跳转授权（拒绝授权后，不会重定向会本目标页）
 
         div__test.innerHTML = '当前网页的地址：' + window.location.href
 
@@ -121,9 +132,6 @@
         var handleBtnTarget = debounce({
           successCb: handleToTarget
         })
-
-        btn__target.addEventListener('click', handleBtnTarget)
-
         // 点击重新授权防抖
         // eslint-disable-next-line no-undef,vars-on-top
         var handleBtnWx = debounce({
@@ -133,11 +141,15 @@
           }
         })
 
+        // 按钮点击事件绑定
+        btn__target.addEventListener('click', handleBtnTarget)
         btn__wx.addEventListener('click', handleBtnWx)
 
         // 显示按钮
         btn__target.style.display = 'flex'
         btn__wx.style.display = 'flex'
+      } else if (is_weixin_browser) {
+        div__test.innerHTML = '当前网页的地址222：' + window.location.href
       } else {
         // 直接跳转
         handleToTarget()
@@ -269,7 +281,7 @@
 
 <body>
   <div id="container">
-    <div id="div__test1"></div>
+    <div id="div__test1">倒计时</div>
     <div id="div__test"></div>
     <div id="btn__target" class="btn">跳转到目标页</div>
     <div id="btn__wx" class="btn">重新授权</div>
