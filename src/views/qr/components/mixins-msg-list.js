@@ -1,3 +1,5 @@
+import { arr_status_status_map } from '../components/data-const'
+
 export default {
   data() {
     // 客服消息类型
@@ -67,7 +69,28 @@ export default {
       n_pushes: {
         title: '送达的人数',
         minWidth: 120,
-        key: 'n_pushes'
+        // key: 'n_pushes',
+        render: (h, { row }) => {
+          const reply_status = arr_status_status_map[row.status] || {}
+
+          return (
+            <div
+              class="itv-flex--fs"
+              title={'推送状态:' + (reply_status.text || '-')}
+            >
+              <div
+                style={{
+                  background: reply_status.color,
+                  width: '8px',
+                  height: '8px',
+                  'border-radius': '50%',
+                  'margin-right': '8px'
+                }}
+              />
+              <div>{row.status === 0 ? '-' : row.n_pushes}</div>
+            </div>
+          )
+        }
       }
     }
 
