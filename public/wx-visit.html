@@ -36,8 +36,8 @@
       // redirect_uri: 'http://192.168.3.27:8081/public/wx-visit.html',
       redirect_uri: 'http://admin-test.xiaomark.com/wx-visit.html',
       response_type: 'code',
-      scope: 'snsapi_base', // TODO 静默授权
-      // scope: 'snsapi_userinfo',
+      // scope: 'snsapi_base', // TODO 静默授权
+      scope: 'snsapi_userinfo',
       state: 'lijing'
     }
     var wx_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?'
@@ -88,20 +88,19 @@
       var wx_code = (getUrlQuery() || {}).code // 微信授权成功后会有这个参数
 
       // 获取页面重的元素
-      // TODO
       var div__test1 = document.getElementById('div__test1')
       var div__test = document.getElementById('div__test')
       var btn__target = document.getElementById('btn__target')
       var btn__wx = document.getElementById('btn__wx')
 
-      // TODO 直接自动跳转
       var count = 0
+      var auto_sum = 10
 
       // x秒后，自动打开目标页
       var handleAutoToTarget = function() {
         count++
-        div__test1.textContent = 4 - count + ' s 后自动跳转'
-        if (count === 3) {
+        div__test1.textContent = auto_sum - count + ' s 后自动跳转'
+        if (count === auto_sum) {
           // eslint-disable-next-line no-use-before-define
           handleToTarget()
           // eslint-disable-next-line no-use-before-define
