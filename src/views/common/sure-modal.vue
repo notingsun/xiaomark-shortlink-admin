@@ -250,7 +250,7 @@
         </div>
       </div>
 
-      <!-- 9、屏蔽API域名 -->
+      <!-- 9、登录用户 -->
       <p v-show="modal.type === 'login_user'">
         <span>确认使用</span>
         <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>

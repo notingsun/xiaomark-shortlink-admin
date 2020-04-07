@@ -17,6 +17,15 @@ export default {
     }
   },
 
+  postUserToken(id, params) {
+    return {
+      method: 'post',
+      name: '生成用户的身份令牌',
+      url: `/api/qr/users/${id}/token/`,
+      params
+    }
+  },
+
   getAccountList(params) {
     return {
       method: 'get',

@@ -264,6 +264,25 @@ export default {
                 />
               )
             }
+          },
+          {
+            title: '操作',
+            width: 60,
+            fixed: 'right',
+            render: (h, { row }) => {
+              return (
+                <div>
+                  <span title="登录该用户">
+                    <itv-icon
+                      type="i-eye"
+                      size="20"
+                      class="itv-btn__icon mr8"
+                      onClick={this.toUserLogin.bind(null, row)}
+                    />
+                  </span>
+                </div>
+              )
+            }
           }
         ],
         height: null // 表格的高度
@@ -309,6 +328,14 @@ export default {
         params: { user_id: row.id },
         query: { name: row.nickname }
       })
+    },
+
+
+    // 登录该用户
+    toUserLogin(row) {
+      this.$bus.modal2.type = 'login_user'
+      this.$bus.modal2.show = true
+      this.$bus.modal2.obj = row
     },
 
     doGetData(page = {}) {

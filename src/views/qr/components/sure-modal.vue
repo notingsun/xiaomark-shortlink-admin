@@ -112,6 +112,14 @@
         </div>
       </div>
 
+      <!-- 登录用户 -->
+      <p v-show="modal.type === 'login_user'">
+        <span>确认使用</span>
+        <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
+        <span>的身份登录小码短链接吗？</span>
+        <br />
+      </p>
+
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
@@ -147,6 +155,7 @@ export default {
         package: false
       },
       titleMap: {
+        login_user: '确认登录',
         package: '修改渠道码套餐到期日',
         package2: '修改推送套餐到期日'
       },
@@ -165,6 +174,10 @@ export default {
         over_date: '',
         meal: '',
         n_push: ''
+      },
+      // 登录用户
+      form_login_user: {
+        token: ''
       },
       // 下拉框的选项
       options: {
@@ -260,6 +273,9 @@ export default {
         this.form_package2['over_date'] = this.modal.obj.over_date || new Date()
         this.form_package2['meal'] = this.modal.obj.meal || 1
         this.form_package2['_meal'] = this.modal.obj.meal || 1
+      } else if (v && this.modal.type === 'login_user') {
+        // 初始化.获取用户token
+        this.doGetUserToken()
       }
     }
   },
@@ -273,10 +289,62 @@ export default {
       /* eslint-disable */
       type === 'package' && await this.doChangePackage()
       type === 'package2' && await this.doChangePackage2()
+      type === 'login_user' && await this.handleUserLogin()
       /* eslint-enable */
 
       this.loading = false
     },
+
+    // 获取用户的临时token
+    async doGetUserToken() {
+      try {
+        const res = await this.$api.Qr.postUserToken(this.modal.obj.id)
+
+        this.form_login_user.token = res.token
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    // 登录小码短链
+    handleUserLogin() {
+      const token = this.form_login_user.token
+
+      if (token) {
+        const hostname = window.location.hostname
+        const info_map = {
+          localhost: {
+            url: 'http://localhost:8081',
+            c_name: 'xiaomark-qr-dev',
+            domain: 'localhost'
+          },
+          'admin-test.xiaomark.com': {
+            url: 'http://test.xiaomark.com/beta',
+            c_name: 'xiaomark-qr-stage',
+            domain: '.test.xiaomark.com'
+          },
+          'admin.xiaomark.com': {
+            url: 'https://xiaomark.com/beta',
+            c_name: 'xiaomark-qr',
+            domain: '.xiaomark.com'
+          }
+        }
+        const info = info_map[hostname] || info_map.localhost || {}
+        const { url, c_name, domain } = info
+
+        document.cookie = `${encodeURIComponent(c_name)}=${encodeURIComponent(
+          token
+        )};domain=${encodeURIComponent(domain)}`
+
+        window.open(`${url}`, '_blank')
+      } else {
+        this.modal.show = false
+        setTimeout(() => {
+          this.$Message.success('token获取失败')
+        }, 300)
+      }
+      this.modal.show = false
+    },
+
     // 修改公众号渠道码套餐
     async doChangePackage() {
       try {
