@@ -320,7 +320,7 @@ export default {
           'admin-test.xiaomark.com': {
             url: 'http://test.xiaomark.com/beta',
             c_name: 'xiaomark-qr-stage',
-            domain: '.xiaomark.com'
+            domain: 'test.xiaomark.com'
           },
           'admin.xiaomark.com': {
             url: 'https://xiaomark.com/beta',
