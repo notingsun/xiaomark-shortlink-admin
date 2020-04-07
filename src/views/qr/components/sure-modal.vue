@@ -320,7 +320,7 @@ export default {
           'admin-test.xiaomark.com': {
             url: 'http://test.xiaomark.com/beta',
             c_name: 'xiaomark-qr-stage',
-            domain: '.test.xiaomark.com'
+            domain: '.xiaomark.com'
           },
           'admin.xiaomark.com': {
             url: 'https://xiaomark.com/beta',
@@ -333,7 +333,7 @@ export default {
 
         document.cookie = `${encodeURIComponent(c_name)}=${encodeURIComponent(
           token
-        )};domain=${encodeURIComponent(domain)}`
+        )};domain=${domain}`
 
         window.open(`${url}`, '_blank')
       } else {
