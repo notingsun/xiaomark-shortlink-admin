@@ -333,7 +333,7 @@ export default {
 
         document.cookie = `${encodeURIComponent(c_name)}=${encodeURIComponent(
           token
-        )};domain=${encodeURIComponent(domain)}`
+        )};domain=${domain}`
 
         window.open(`${url}`, '_blank')
       } else {
