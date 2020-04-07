@@ -158,10 +158,29 @@
         </div>
       </div>
 
+      <!-- 来源 -->
+      <div class="row">
+        <div class="label">来源</div>
+        <div style="word-break: break-all">{{ data.source || '-' }}</div>
+      </div>
+
       <!-- openid -->
       <div class="row">
         <div class="label">openid</div>
-        <div style="word-break: break-all">{{ data.sa_openid }}</div>
+        <div class="itv-flex--fs">
+          <div style="word-break: break-all;font-size: 12px;">
+            {{ data.sa_openid }}
+          </div>
+          <div title="复制链接" class="ml4" style="flex-shrink:0;">
+            <itv-icon
+              type="i-copy2"
+              class="itv-text--btn"
+              size="20"
+              color=""
+              @click="handleCopy(data.sa_openid)"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- 操作 -->
@@ -293,6 +312,14 @@ export default {
         this.page_error = e.message || '获取用户详情失败'
       }
       this.loading = false
+    },
+    handleCopy(data) {
+      this.$PDo.Utils.copy({
+        content: data,
+        success: () => {
+          this.$Message.success('复制成功！')
+        }
+      })
     }
   }
 }
@@ -306,7 +333,7 @@ export default {
     align-items: center;
     margin-top: 16px;
     .label {
-      width: 160px;
+      width: 150px;
       font-weight: 500;
       // text-align: right;
       text-align: left;
