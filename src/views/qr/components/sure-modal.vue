@@ -320,7 +320,7 @@ export default {
           'admin-test.xiaomark.com': {
             url: 'http://test.xiaomark.com/beta',
             c_name: 'xiaomark-qr-stage',
-            domain: 'test.xiaomark.com'
+            domain: 'xiaomark.com'
           },
           'admin.xiaomark.com': {
             url: 'https://xiaomark.com/beta',
@@ -330,6 +330,12 @@ export default {
         }
         const info = info_map[hostname] || info_map.localhost || {}
         const { url, c_name, domain } = info
+
+        console.log(
+          `${encodeURIComponent(c_name)}=${encodeURIComponent(
+            token
+          )};domain=${domain}`
+        )
 
         document.cookie = `${encodeURIComponent(c_name)}=${encodeURIComponent(
           token
