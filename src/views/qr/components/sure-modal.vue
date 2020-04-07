@@ -116,7 +116,7 @@
       <p v-show="modal.type === 'login_user'">
         <span>确认使用</span>
         <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
-        <span>的身份登录小码短链接吗？</span>
+        <span>的身份登录<b>小码渠道码</b>吗？</span>
         <br />
       </p>
 

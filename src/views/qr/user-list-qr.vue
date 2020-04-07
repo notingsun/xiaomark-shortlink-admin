@@ -272,7 +272,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <div>
-                  <span title="登录该用户">
+                  <span title="登录该用户的渠道码">
                     <itv-icon
                       type="i-eye"
                       size="20"
