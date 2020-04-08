@@ -30,7 +30,7 @@ const consoleResponse = function(is_true, response_data, config) {
 
 /* 二、请求实例 */
 const instance = axios.create()
-const TIMEOUT_VALUE = 20000 // 请求超时的时间（后台管理接口比较慢）
+const TIMEOUT_VALUE = 60000 // 请求超时的时间（后台管理接口比较慢）
 
 // 拦截请求
 instance.interceptors.request.use(
