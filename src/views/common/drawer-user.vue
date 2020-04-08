@@ -169,9 +169,14 @@
         <div class="label">openid</div>
         <div class="itv-flex--fs">
           <div style="word-break: break-all;font-size: 12px;">
-            {{ data.sa_openid }}
+            {{ data.sa_openid || '-' }}
           </div>
-          <div title="复制链接" class="ml4" style="flex-shrink:0;">
+          <div
+            title="复制链接"
+            class="ml4"
+            style="flex-shrink:0;"
+            v-if="data.sa_openid"
+          >
             <itv-icon
               type="i-copy2"
               class="itv-text--btn"
