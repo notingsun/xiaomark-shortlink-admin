@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <title>小码短链接</title>
+
+  <!-- 公共：获取url的参数 -->
+  <script>
+    // eslint-disable-next-line no-unused-vars
+    function getUrlQuery() {
+      var search = window.location.search.slice(1).split('&')
+      var query_map = {}
+      var param_arr
+
+      search.forEach(function(param) {
+        if (param && param.indexOf('=') !== -1) {
+          param_arr = param.split('=')
+          query_map[param_arr[0]] = query_map[param_arr[0].toLocaleLowerCase()] = decodeURIComponent(param_arr[1] || '')
+        }
+      })
+
+      console.log({
+        query_map
+      })
+      return query_map
+    }
+  </script>
+
+  <!-- 公共：计算页面 html 的 font-size -->
+  <script>
+    /* 备注：设置html的font-size，用于rem的计算，按照375的设计稿 */
+    var w_document = document.documentElement.clientWidth
+
+    // 备注：乘以10的原因是安卓机上，微信内嵌浏览器的最小字体大小好像不支持1px（具体什么原因不知道）
+    // eslint-disable-next-line prettier/prettier
+    var value_font_size = w_document / 375 * 10
+
+    // 不让字体太小
+    if (value_font_size < 10) {
+      value_font_size = 10
+    }
+    if (value_font_size > 20) {
+      value_font_size = 20
+    }
+    document.documentElement.style.fontSize = value_font_size + 'px'
+  </script>
+
+  <!-- 公共：XMLHttpRequest 的 GET 和 POST 的封装 -->
+  <script type="text/javascript">
+    /* eslint-disable vars-on-top */
+    // eslint-disable-next-line no-unused-vars
+    function request(option) {
+      if (String(option) !== '[object Object]') {
+        return false
+      }
+
+      option.method = option.method ? option.method.toUpperCase() : 'GET'
+      option.data = option.data || {}
+
+      // GET 的参数
+      var formData = []
+
+      for (var key in option.data) {
+        formData.push(''.concat(key, '=', encodeURIComponent(option.data[key])))
+      }
+      option.data = formData.join('&')
+
+      if (option.method === 'GET') {
+        option.url += location.search.length === 0 ? ''.concat(option.data ? '?' : '', option.data) : ''.concat('&', option.data)
+      }
+
+      // 新建一个请求
+      var xhr = new XMLHttpRequest()
+
+      xhr.responseType = option.responseType || 'json'
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            if (option.success && typeof option.success === 'function') {
+              typeof option.success === 'function' && option.success(xhr.response)
+            }
+          } else if (option.error && typeof option.error === 'function') {
+            typeof option.error === 'function' && option.error()
+          }
+        }
+      }
+
+      xhr.open(option.method, option.url, true)
+
+      if (option.method === 'POST') {
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      }
+
+      xhr.send(option.method === 'POST' ? option.data : null)
+    }
+  </script>
+
+  <!-- 公共：判断用户设备 -->
+  <script>
+    // eslint-disable-next-line no-unused-vars
+    function getDeviceInfo() {
+      var userAgent = window.navigator.userAgent.toLowerCase()
+      var is_android = /(android)/.test(userAgent)
+      var is_iphone = /(iphone|ipod|ipad|ios)/.test(userAgent) // 抖音ipad可以直接打开
+      var is_mobile = is_android || is_iphone
+      var is_weixin_browser = /micromessenger/.test(userAgent)
+
+      return {
+        is_mobile,
+        is_android,
+        is_iphone,
+        is_weixin_browser
+      }
+    }
+  </script>
+
+  <!-- 业务：测试数据 -->
+  <script>
+    /*
+        字段含义
+          remark            备注
+          short_url         抖音分享出来的短链接（备注：ios中会重定向为通用链接universal_link，所以universal_link就也直接用短链接，不然太长了）
+          universal_link    抖音app对应的通用链接（注意：抖音APP没有直播、和特效的通用链接，所以值为空）
+          scheme_url        对应的scheme协议地址，需要ly去获取对应的参数
+     */
+    // eslint-disable-next-line no-unused-vars
+    var test_data = {
+      live: {
+        remark: '直播',
+        short_url: 'https://v.douyin.com/cyjNPg/',
+        universal_link: '',
+        scheme_url: 'snssdk1128://live?room_id=6812904627495766797&user_id=3491662970758743&from=webview&refer=web'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：(这个地址实际上就是universal_link)
+        // 'https://www.iesdouyin.com/share/live/6812904627495766797?u_code=13mdb8ick&anchor_id=3491662970758743&utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=copy&utm_source=copy'
+      },
+      video: {
+        remark: '视频链接',
+        short_url: 'https://v.douyin.com/cyUhhP/',
+        universal_link: 'https://v.douyin.com/cyUhhP/'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：(这个地址实际上就是universal_link)
+        // https://www.iesdouyin.com/share/video/6770511227228540168/?region=CN&mid=6770451162412911373&u_code=13mdb8ick&titleType=title&timestamp=1585888768&utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=copy&utm_source=copy'
+      },
+      user: {
+        remark: '个人主页',
+        short_url: 'https://v.douyin.com/cyQ3MA/',
+        universal_link: 'https://v.douyin.com/cyQ3MA/',
+        scheme_url: 'snssdk1128://user/profile/91869109044'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：(这个地址实际上就是universal_link)
+        // https://www.iesdouyin.com/share/user/91869109044?u_code=13mdb8ick&sec_uid=MS4wLjABAAAA_Fzez5ORDHYv1XAQ56lYM4BYBdNzWEOWxAvo5qSSQ5A&utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=copy&utm_source=copy'
+      },
+      sticker: {
+        remark: '特效页',
+        short_url: 'https://v.douyin.com/cyhj2A/',
+        universal_link: '',
+        scheme_url: 'snssdk1128://stickers/detail/532821'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：(这个地址实际上就是universal_link)
+        // https://www.iesdouyin.com/share/sticker/detail/532821/?schema_type=17&object_id=532821&utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=copy&utm_source=copy'
+      },
+      challenge: {
+        remark: '话题',
+        short_url: 'https://v.douyin.com/cyxXV7/',
+        universal_link: 'https://v.douyin.com/cyxXV7/',
+        scheme_url: 'snssdk1128://challenge/detail/1642037698569228'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：(这个地址实际上就是universal_link)
+        // https://www.iesdouyin.com/share/challenge/1642037698569228/?u_code=14h9923ec&utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=copy&utm_source=copy
+      },
+      music: {
+        remark: '音乐',
+        short_url: 'https://v.douyin.com/cyju8K/',
+        universal_link: 'https://v.douyin.com/cyju8K/',
+        scheme_url: 'snssdk1128://music/detail/6763092917251754760'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：(这个地址实际上就是universal_link)
+        // https://www.iesdouyin.com/share/music/6763092917251754760?utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=copy&utm_source=copy
+      }
+    }
+  </script>
+
+  <!-- 业务：获取抖音短链对应的目标链接 -->
+  <script>
+    // eslint-disable-next-line no-unused-vars
+    function getUrlInfo(url) {
+      // eslint-disable-next-line no-undef
+      const query_map = getUrlQuery()
+      const type = query_map.type || 'video'
+
+      // eslint-disable-next-line no-undef
+      return test_data[type]
+    }
+  </script>
+
+  <!-- 业务：获取抖音链接对应的scheme协议 -->
+  <script></script>
+
+  <!-- 业务：是否是微信浏览器的处理 -->
+  <script>
+    // eslint-disable-next-line no-undef
+    var device_info = getDeviceInfo()
+    // eslint-disable-next-line no-undef
+    var url_info = getUrlInfo('https://v.douyin.com/vqW629/')
+
+    console.log(device_info)
+    console.log(url_info)
+
+    window.addEventListener('load', function() {
+      var block__top = document.getElementById('block__top')
+      var block__bottom = document.getElementById('block__bottom')
+      var div__test = document.getElementById('div__test')
+      var test_center = document.getElementById('test_center')
+      var rem = document.documentElement.style.fontSize
+
+      rem = rem.split('px')[0] || 10
+    
+      function getHTML() {
+        // eslint-disable-next-line no-undef
+        var arr = Object.keys(test_data)
+        var res = document.createElement('div')
+
+        var remark = document.createElement('div')
+
+        remark.innerHTML = '点击后，再打开'
+        res.appendChild(remark)
+
+        arr.forEach(function(item) {
+          var temp = document.createElement('div')
+
+          temp.className = 'btn btn-margin'
+          // eslint-disable-next-line no-undef
+          temp.innerHTML = test_data[item].remark
+          temp.addEventListener('click', function() {
+            window.location.replace(window.location.origin + window.location.pathname + '?type=' + item)
+          })
+          res.appendChild(temp)
+        })
+        return res
+      }
+
+      if (device_info.is_mobile) {
+        if (device_info.is_weixin_browser) {
+          // 在移动端.微信浏览器中打开
+          block__top.style.paddingRight = (device_info.is_iphone ? 31.5 : 28.5) - rem + 'px' // 适配三个点点的位置
+          block__top.style.display = 'flex'
+          block__bottom.style.display = 'flex'
+
+          test_center.appendChild(getHTML())
+          test_center.style.display = 'flex'
+        } else {
+          // if (device_info.is_iphone && url_info.universal_link) {
+          //   // eslint-disable-next-line vars-on-top
+          //   var iframe = document.createElement('iframe')
+
+          //   iframe.className = 'iframe-ios-show'
+          //   iframe.style = ''
+          //   iframe.src = url_info.short_url
+          //   document.body.appendChild(iframe)
+          // }
+          // 在移动端.非微信浏览器中打开
+          window.location.href = device_info.is_android ? url_info.scheme_url : url_info.short_url || url_info.scheme_url
+
+          div__test.textContent = '移动端准备跳转：' + (device_info.is_android ? url_info.scheme_url : url_info.short_url || url_info.scheme_url)
+          // 安卓，默认打开目标页（备注：当用户没有app，则直接显示h5页面）
+          // ios，没有配置通用链接的，页默认打开目标页，防止用户没有下载app
+          // eslint-disable-next-line no-extra-parens
+          if (device_info.is_android || (device_info.is_iphone && !url_info.universal_link)) {
+            setTimeout(function() {
+              window.location.href = url_info.short_url
+            }, 300)
+          }
+          // ios修改url为对应的短链接（即通用链接），（如果有对应的APP）浏览器的url不会变化，会默认打开app。
+          // 所以，ios的浏览器会显示打开app前的页面，即我们的中间页（是否需要美化？），或者一个iframe嵌套了一个(效果不好，无法打开通用链接)
+        }
+      } else {
+        // 在pc端打开
+        window.location.href = url_info.short_url
+        div__test.textContent = 'pc准备跳转：' + url_info.short_url
+      }
+    })
+  </script>
+
+  <!-- 业务：接口请求 -->
+  <script>
+    // 测试接口的请求
+    // eslint-disable-next-line no-undef
+    // request({
+    //   url: 'https://xiaomark.com/api/slmp/links/aseh7loi/',
+    //   method: 'GET',
+    //   data: {},
+    //   success: function(res) {
+    //     console.log({
+    //       res
+    //     })
+    //   },
+    //   error: function(err) {
+    //     console.log({
+    //       err
+    //     })
+    //   }
+    // })
+  </script>
+
+  <!-- 页面样式 -->
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    /* html {
+      font-size: 4%;
+    } */
+    #container {
+      width: 100vw;
+      height: 100vh;
+      font-size: calc(14rem/10);
+      line-height: calc(20rem/10);
+      position: relative;
+      background: pink;
+      overflow: hidden;
+    }
+
+    #block__top {
+      width: 100vw;
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      background: lightblue;
+      padding-top: calc(4rem/10);
+      /* padding-right: calc(31.5px - 10rem/10); */
+    }
+
+    #block__bottom {
+      width: 100vw;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: lightblue;
+      padding-bottom: calc(80rem/10);
+    }
+
+    #test_center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      z-index: 99;
+      top: calc(100rem/10);
+      bottom: calc(110rem/10);
+      /* height: calc(300rem/10); */
+      width: 100vw;
+      background: rgba(0, 0, 0, 0.2);
+      overflow-y: auto;
+    }
+
+    #img--arrow {
+      display: block;
+      width: calc(20rem/10);
+      height: calc(20rem/10);
+      margin-bottom: calc(4rem/10);
+    }
+
+    #block__btns {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 80%;
+    }
+
+    .btn {
+      width: calc(120rem/10);
+      height: calc(40rem/10);
+      font-size: calc(14rem/10);
+      border-radius: calc(4rem/10);
+      border: 1px solid #a8a8a8;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      background: lightgoldenrodyellow;
+    }
+
+    .btn-margin {
+      margin-bottom: calc(12rem/10);
+      margin-top: calc(12rem/10);
+    }
+
+    .iframe-ios-show {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 99;
+      border: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <div id="div__test"></div>
+    <!-- 微信内打开 -->
+    <div id="block__top">
+      <img id="img--arrow"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACIUlEQVRYR+2VMUwTURjHv68p0sLGRJTEVVlkgqFtil4lpl0lEBJWlh4JBB3A2S5KNKG3sJIYCK4Qg5zScB1kggVYScA4sUGLNv3IUQ8uvXv37n0dWNqt7Xf3+73/vfc/hHv+4D3zoS3ATiD1cjpN9fqK/QgxEpnc/b5U4jxOlkAyow8T0QYQdN1AES4RMWdtF3dUJZQFPHCHyJRQEhDCW5AILeALRyjcsAkWbqNXTCKUgAheNo13Njih5d9zJaQCMrizcq5EoEBYeCsSQgFVOFfCV4AL50h4BNLadKoG9W+3JdMomoKz4RzI6Ohs/Pf53xn7+8OeB5/X1z9V3CWU0vRCnWjefTqiEHlVMpd23XMegaSWPySCp64LPfCRkTfdl7XqBgGlG35Y6orGcltbHy+CJBDhyDKNfomA/ouIBv9XrBR+10H+Eu7TgYh7llkcChR4kZ17fHVVzSPivrVd/OIebl55c++Lkkhm9AkiGujsjBk/NhdPAgVELxN/OB435umJLAnRfaVFZF8ognfE4s/t//9VKz+5ElKBIPjO5oc/tsBw9m0vVyJQIAzciZYrIRRQgbci4SvAgXMlPAKtwDkSHoGEpq8C0djdscFje7c7G050nJp/99sTgLhWNovjgT2Q0PKnQPCoMcSDC5NAOCubRp/sXTAFBIsAeBCNxV+rrtwviVq18hWAngHCnGUay6wmDBu96py0iFRvqDrfFrgG79ChMILMl3sAAAAASUVORK5CYII="
+        alt="向上的箭头" />
+      <div>点击右上角</div>
+      <div>选择在浏览器中打开</div>
+      <div>😊自动打开抖音</div>
+    </div>
+    <div id="block__bottom">
+      <div>在 Safari 中打开</div>
+    </div>
+    <div id="test_center">
+    </div>
+  </div>
+</body>
+
+</html>
