@@ -68,6 +68,7 @@ export default {
         content = obj.text_html
           .replace(/(<a [^>]+>)([^<]*)([^]*?)(<\/a *>)/g, '$1$2$4')
           .replace(/(<a )([^]*?)([^>]*?)(>)/g, '$1$4')
+        content = obj.text_html.replace(/(<span )([^]*?)([^>]*?)(>)/g, '$1$4')
         links = this.$global.utils.formatEditorLinkArray(obj.text_html)
           .links_arr
       }
