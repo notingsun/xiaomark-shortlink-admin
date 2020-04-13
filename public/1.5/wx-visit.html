@@ -4,78 +4,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1">
-  <title>小码短链接</title>
+  <title>小码短链接-微信</title>
 
-  <!-- 公共：获取url的参数 -->
+  <!-- 公共函数 -->
+  <script src="./common.js"></script>
+
+  <!-- 业务：获得微信授权的地址 -->
   <script>
-    // eslint-disable-next-line no-unused-vars
-    function getUrlQuery() {
-      var search = window.location.search.slice(1).split('&')
-      var query_map = {}
-      var param_arr
-
-      search.forEach(function(param) {
-        if (param && param.indexOf('=') !== -1) {
-          param_arr = param.split('=')
-          query_map[param_arr[0]] = query_map[param_arr[0].toLocaleLowerCase()] = decodeURIComponent(param_arr[1] || '')
-        }
-      })
-
-      console.log({
-        query_map
-      })
-      return query_map
-    }
-  </script>
-
-  <!-- 跳转用户授权 url -->
-  <script>
+    // 微信授权及公众号信息
     /* eslint-disable no-unused-vars */
     var wx_info = {
-      appid: 'wxc8f356adb367c7b6',
+      appid: 'wxc8f356adb367c7b6', // 公众号的url
       // redirect_uri: 'http://192.168.3.27:8081/public/wx-visit.html',
-      redirect_uri: 'http://admin-test.xiaomark.com/wx-visit.html',
+      redirect_uri: 'http://admin-test.xiaomark.com/1.5/wx-visit.html', // 成功后回调的地址（需要配置）
       response_type: 'code',
-      // scope: 'snsapi_base', // 静默授权
-      scope: 'snsapi_userinfo',
-      state: 'lijing'
+      scope: 'snsapi_userinfo', // 授权方式 snsapi_base:静默授权 snsapi_userinfo:需要用户确认
+      state: 'lijing' // 其他参数
     }
     var wx_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?'
 
+    // 获得：微信授权的地址
     Object.keys(wx_info).forEach(function(key, i) {
-      if (i !== 0) {
-        wx_url += '&'
-      }
+      i !== 0 && (wx_url += '&')
       wx_url = wx_url + key + '=' + encodeURIComponent(wx_info[key])
     })
-
     wx_url = wx_url + '#wechat_redirect'
-
     console.log('wx_url:', wx_url)
-  </script>
-
-  <!-- 立即执行防抖函数 -->
-  <script>
-    // eslint-disable-next-line no-unused-vars
-    function debounce({ delay, successCb }) {
-      var timer_target = null
-
-      return function() {
-        // eslint-disable-next-line no-underscore-dangle
-        var _delay = delay || 1000
-
-        if (!timer_target) {
-          typeof successCb === 'function' && successCb()
-        }
-        if (timer_target) {
-          clearTimeout(timer_target)
-        }
-        timer_target = setTimeout(function() {
-          // eslint-disable-next-line no-undefined
-          timer_target = undefined
-        }, _delay)
-      }
-    }
   </script>
 
   <!-- 业务：是否是微信浏览器的处理 -->
@@ -154,65 +108,6 @@
     })
   </script>
 
-  <!-- 公共：计算页面 html 的 font-size -->
-  <script>
-    /* 备注：设置html的font-size，用于rem的计算，按照375的设计稿 */
-    var w_document = document.documentElement.clientWidth
-
-    document.documentElement.style.fontSize = w_document / 375 + 'px'
-  </script>
-
-  <!-- 公共：XMLHttpRequest 的 GET 和 POST 的封装 -->
-  <script type="text/javascript">
-    /* eslint-disable vars-on-top */
-    // eslint-disable-next-line no-unused-vars
-    function request(option) {
-      if (String(option) !== '[object Object]') {
-        return false
-      }
-
-      option.method = option.method ? option.method.toUpperCase() : 'GET'
-      option.data = option.data || {}
-
-      // GET 的参数
-      var formData = []
-
-      for (var key in option.data) {
-        formData.push(''.concat(key, '=', encodeURIComponent(option.data[key])))
-      }
-      option.data = formData.join('&')
-
-      if (option.method === 'GET') {
-        option.url += location.search.length === 0 ? ''.concat(option.data ? '?' : '', option.data) : ''.concat('&', option.data)
-      }
-
-      // 新建一个请求
-      var xhr = new XMLHttpRequest()
-
-      xhr.responseType = option.responseType || 'json'
-
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            if (option.success && typeof option.success === 'function') {
-              typeof option.success === 'function' && option.success(xhr.response)
-            }
-          } else if (option.error && typeof option.error === 'function') {
-            typeof option.error === 'function' && option.error()
-          }
-        }
-      }
-
-      xhr.open(option.method, option.url, true)
-
-      if (option.method === 'POST') {
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-      }
-
-      xhr.send(option.method === 'POST' ? option.data : null)
-    }
-  </script>
-
   <!-- 业务：接口请求 -->
   <script>
     // 测试接口的请求
@@ -235,40 +130,11 @@
   </script>
 
   <!-- 页面样式 -->
+  <link rel="stylesheet" href="common.css">
   <style>
-    html,
-    body {
-      padding: 0;
-      margin: 0;
-    }
-
-    /* html {
-      font-size: 4%;
-    } */
     #container {
-      width: 100vw;
-      height: 100vh;
-      font-size: 14rem;
-      line-height: 20rem;
-      position: relative;
-      background: pink;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      overflow-y: auto;
     }
-
-    .btn {
-      width: 120rem;
-      height: 40rem;
-      font-size: 14rem;
-      border-radius: 4rem;
-      border: 1px solid #a8a8a8;
-      align-items: center;
-      justify-content: center;
-      display: none;
-    }
-
     #btn__target {
       margin-top: 12rem;
       margin-bottom: 12rem;

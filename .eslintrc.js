@@ -8,8 +8,7 @@ module.exports = {
   },
   extends: ["plugin:vue/essential", "@vue/prettier"],
   rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "plugins": ['vue', 'html'],
     "prettier/prettier": [
       "error",
       {
@@ -44,6 +43,8 @@ module.exports = {
         "arrowParens": 'always'
       }
     ],
+    "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-alert": 0, //禁止使用alert confirm prompt
     "no-array-constructor": 2, //禁止使用数组构造器
     "no-bitwise": 0, //禁止使用按位运算符
@@ -146,7 +147,7 @@ module.exports = {
     "no-use-before-define": 2, //未定义前不能使用
     "no-useless-call": 2, //禁止不必要的call和apply
     "no-void": 2, //禁用void操作符
-    "no-var": 2, //禁用var，用let和const代替
+    'no-var': 0, // 禁用var，用let和const代替
     "no-warning-comments": [1, {
       "terms": ["xxx"],
       "location": "start"

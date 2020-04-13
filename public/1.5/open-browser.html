@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <title>小码短链接-强制浏览器打开</title>
+
+  <!-- 公共函数 -->
+  <script src="./common.js"></script>
+
+
+  <!-- 业务：是否是微信浏览器的处理 -->
+  <script>
+    var target_url = 'https://www.baidu.com'
+    // eslint-disable-next-line no-undef
+    var device_info = getDeviceInfo()
+
+    window.addEventListener('load', function() {
+      var block__top = document.getElementById('block__top')
+      var block__bottom = document.getElementById('block__bottom')
+      var block__center = document.getElementById('block__center')
+      var rem = document.documentElement.style.fontSize
+
+      rem = rem.split('px')[0] || 10
+
+      if (device_info.is_weixin_browser) {
+        // TODO pc端的微信浏览器样式
+        // 在移动端.微信浏览器中打开
+        block__top.style.paddingRight = (device_info.is_iphone ? 31.5 : 28.5) - rem + 'px' // 适配三个点点的位置
+        block__top.style.display = 'flex'
+        block__bottom.style.display = 'flex'
+      } else {
+        block__center.textContent = '准备跳转：' + target_url
+        setTimeout(() => {
+          // window.location.href = target_url
+        }, 1000)
+      }
+    })
+  </script>
+
+  <!-- 业务：接口请求 -->
+  <script>
+    // 测试接口的请求
+    // eslint-disable-next-line no-undef
+    request({
+      url: 'https://xiaomark.com/api/slmp/links/aseh7loi/',
+      method: 'GET',
+      data: {},
+      success: function(res) {
+        console.log({
+          res
+        })
+      },
+      error: function(err) {
+        console.log({
+          err
+        })
+      }
+    })
+  </script>
+
+  <!-- 页面样式 -->
+  <link rel="stylesheet" href="common.css">
+  <style></style>
+</head>
+
+<body>
+  <div id="container">
+    <!-- 不是微信内打开 -->
+    <div id="block__center">
+    </div>
+
+    <!-- 微信内打开 -->
+    <div id="block__top">
+      <img id="img--arrow"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACIUlEQVRYR+2VMUwTURjHv68p0sLGRJTEVVlkgqFtil4lpl0lEBJWlh4JBB3A2S5KNKG3sJIYCK4Qg5zScB1kggVYScA4sUGLNv3IUQ8uvXv37n0dWNqt7Xf3+73/vfc/hHv+4D3zoS3ATiD1cjpN9fqK/QgxEpnc/b5U4jxOlkAyow8T0QYQdN1AES4RMWdtF3dUJZQFPHCHyJRQEhDCW5AILeALRyjcsAkWbqNXTCKUgAheNo13Njih5d9zJaQCMrizcq5EoEBYeCsSQgFVOFfCV4AL50h4BNLadKoG9W+3JdMomoKz4RzI6Ohs/Pf53xn7+8OeB5/X1z9V3CWU0vRCnWjefTqiEHlVMpd23XMegaSWPySCp64LPfCRkTfdl7XqBgGlG35Y6orGcltbHy+CJBDhyDKNfomA/ouIBv9XrBR+10H+Eu7TgYh7llkcChR4kZ17fHVVzSPivrVd/OIebl55c++Lkkhm9AkiGujsjBk/NhdPAgVELxN/OB435umJLAnRfaVFZF8ognfE4s/t//9VKz+5ElKBIPjO5oc/tsBw9m0vVyJQIAzciZYrIRRQgbci4SvAgXMlPAKtwDkSHoGEpq8C0djdscFje7c7G050nJp/99sTgLhWNovjgT2Q0PKnQPCoMcSDC5NAOCubRp/sXTAFBIsAeBCNxV+rrtwviVq18hWAngHCnGUay6wmDBu96py0iFRvqDrfFrgG79ChMILMl3sAAAAASUVORK5CYII="
+        alt="向上的箭头" />
+      <div>点击右上角</div>
+      <div>选择在浏览器中打开</div>
+    </div>
+    <div id="block__bottom">
+      <div>在 Safari 中打开</div>
+    </div>
+  </div>
+
+</body>
+
+</html>
