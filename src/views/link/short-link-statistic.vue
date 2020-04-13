@@ -18,22 +18,10 @@
     </div>
     <!-- 图表的 -->
     <div>
-      <itv-chart-line
-        :width="chartWidth"
-        :legendOptions="legendOptions"
-        :chartData="chartData"
-        :settings="chartSettings"
-        :unSelectedArr="chartData.unSelectedArr"
-      />
+      <itv-chart-line :width="chartWidth" :legendOptions="legendOptions" :chartData="chartData" :settings="chartSettings" :unSelectedArr="chartData.unSelectedArr" />
     </div>
     <!-- 表格 -->
-    <Table
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
   </div>
 </template>
 
@@ -122,34 +110,15 @@ export default {
       // legendOptions: legendOptions,
       chartData: {
         // 注意：这个顺序需要和legendOptions顺序保持一致
-        columns: [
-          'date',
-          'n_clicks',
-          'n_visitors',
-          'n_ips',
-          'n_links',
-          'n_urls',
-          'n_users_active',
-          'n_users_new',
-          'n_groups'
-        ],
+        columns: ['date', 'n_clicks', 'n_visitors', 'n_ips', 'n_links', 'n_urls', 'n_users_active', 'n_users_new', 'n_groups'],
         rows: [],
-        unSelectedArr: [
-          '注册用户数',
-          '登录用户数',
-          '新建短链数',
-          '新建跳转链接数',
-          '新建分组数'
-        ]
+        unSelectedArr: ['注册用户数', '登录用户数', '新建短链数', '新建跳转链接数', '新建分组数']
       },
 
       loading: true,
       // 获取表格数据的参数
       form: {
-        date: [
-          this.$PDo.Date.getTimeCalculation(-6, 'y/m/d'),
-          this.$PDo.Date.getTimeCalculation(0, 'y/m/d')
-        ]
+        date: [this.$PDo.Date.getTimeCalculation(-6, 'y/m/d'), this.$PDo.Date.getTimeCalculation(0, 'y/m/d')]
       },
       options: {
         shortcuts: [
@@ -219,11 +188,7 @@ export default {
             minWidth: 120,
             // key: 'n_visitors',
             render: (h, { row }) => {
-              return (
-                <span>
-                  {this.$global.utils.countFormat.three(row.n_visitors)}
-                </span>
-              )
+              return <span>{this.$global.utils.countFormat.three(row.n_visitors)}</span>
             }
           },
           {
@@ -231,11 +196,7 @@ export default {
             minWidth: 120,
             // key: 'n_clicks',
             render: (h, { row }) => {
-              return (
-                <span>
-                  {this.$global.utils.countFormat.three(row.n_clicks)}
-                </span>
-              )
+              return <span>{this.$global.utils.countFormat.three(row.n_clicks)}</span>
             }
           },
           {
@@ -243,9 +204,7 @@ export default {
             minWidth: 120,
             // key: 'n_clicks',
             render: (h, { row }) => {
-              return (
-                <span>{this.$global.utils.countFormat.three(row.n_ips)}</span>
-              )
+              return <span>{this.$global.utils.countFormat.three(row.n_ips)}</span>
             }
           },
           {
@@ -277,9 +236,7 @@ export default {
     async doGetTableData() {
       this.loading = true
       try {
-        const stats_date = this.form.date
-          .map((v) => this.$PDo.Date.format(v.toJSON(), 'y-m-d'))
-          .join('~')
+        const stats_date = this.form.date.map((v) => this.$PDo.Date.format(v.toJSON(), 'y-m-d')).join('~')
 
         const res = await this.$api.Link.getShortLinkStatistic({
           stats_date

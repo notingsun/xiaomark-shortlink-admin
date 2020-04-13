@@ -43,13 +43,7 @@ export default {
             // key: 'name',
             render: (h, { row }) => {
               return (
-                <Tooltip
-                  placement="bottom"
-                  max-width={300}
-                  theme="light"
-                  content={row.name}
-                  transfer
-                >
+                <Tooltip placement="bottom" max-width={300} theme="light" content={row.name} transfer>
                   <span class="itv-text--2row">{row.name}</span>
                 </Tooltip>
               )
@@ -161,9 +155,7 @@ export default {
                         if (row.mode === 0) {
                           arr = [row.origin_url]
                         } else {
-                          arr = (row.origin_url_list || []).map(
-                            (item) => item.url
-                          )
+                          arr = (row.origin_url_list || []).map((item) => item.url)
                         }
 
                         this.$bus.modal.type = 'link_qr' // 链接的二维码
@@ -184,12 +176,8 @@ export default {
             minWidth: 160,
             format: this.$global.utils.countFormat.three,
             render: (h, { row }) => {
-              const n_clicks = this.$global.utils.countFormat.three(
-                row.n_clicks
-              )
-              const n_visitors = this.$global.utils.countFormat.three(
-                row.n_visitors
-              )
+              const n_clicks = this.$global.utils.countFormat.three(row.n_clicks)
+              const n_visitors = this.$global.utils.countFormat.three(row.n_visitors)
               const n_ips = this.$global.utils.countFormat.three(row.n_ips)
 
               return (
@@ -218,10 +206,7 @@ export default {
             key: 'user.nickname user.headimgurl',
             render: (h, { row }) => {
               return (
-                <div
-                  class="table-cell__nickname table-cell__nickname--click cp"
-                  onClick={this.toUserDetail.bind(null, row)}
-                >
+                <div class="table-cell__nickname table-cell__nickname--click cp" onClick={this.toUserDetail.bind(null, row)}>
                   <img src={row.user.headimgurl} class="img--headimgurl mr8" />
                   <span class="text--nickname">{row.user.nickname}</span>
                 </div>
@@ -261,11 +246,7 @@ export default {
               return (
                 <div>
                   <span class="mr8" title={SOURCE_MAP[row.source].name || '--'}>
-                    <itv-icon
-                      type={SOURCE_MAP[row.source].icon || '--'}
-                      style={{ color: SOURCE_MAP[row.source].color || '--' }}
-                      size="24"
-                    />
+                    <itv-icon type={SOURCE_MAP[row.source].icon || '--'} style={{ color: SOURCE_MAP[row.source].color || '--' }} size="24" />
                   </span>
                 </div>
               )
@@ -454,14 +435,7 @@ export default {
               )
             },
             render: (h, { row }) => {
-              return (
-                <Icon
-                  title={row.archived ? '已归档' : '未归档'}
-                  type="md-checkmark-circle"
-                  color={row.archived ? C_GREEN : C_GREY}
-                  size="20"
-                />
-              )
+              return <Icon title={row.archived ? '已归档' : '未归档'} type="md-checkmark-circle" color={row.archived ? C_GREEN : C_GREY} size="20" />
             }
           }
         ]
@@ -494,21 +468,11 @@ export default {
     // 2 是否可用
     // 3 协作空间
     if (this.$route.name === 'ShortLinkListSpace') {
-      this.table.columns = [
-        ...this.tableColumns[0],
-        ...this.tableColumns[1],
-        ...this.tableColumns[2],
-        ...this.tableColumns[4]
-      ]
+      this.table.columns = [...this.tableColumns[0], ...this.tableColumns[1], ...this.tableColumns[2], ...this.tableColumns[4]]
       return
     }
     if (this.$route.name === 'ShortLinkListCustomDomain') {
-      this.table.columns = [
-        ...this.tableColumns[0],
-        ...this.tableColumns[2],
-        ...this.tableColumns[3],
-        ...this.tableColumns[4]
-      ]
+      this.table.columns = [...this.tableColumns[0], ...this.tableColumns[2], ...this.tableColumns[3], ...this.tableColumns[4]]
       return
     }
     /* eslint-disable */

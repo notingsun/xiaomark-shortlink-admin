@@ -7,28 +7,13 @@
           <Input size="large" v-model="form.username" placeholder="账户" />
         </FormItem>
         <FormItem prop="password" class="mb16">
-          <Input
-            size="large"
-            type="password"
-            v-model="form.password"
-            placeholder="密码"
-            @keyup.enter.native="handleLogin"
-          />
+          <Input size="large" type="password" v-model="form.password" placeholder="密码" @keyup.enter.native="handleLogin" />
         </FormItem>
         <FormItem style="text-align: left;" class="mb16">
-          <Checkbox v-model="$bus.auto_login" @on-change="handleSiwtchAutoLogin"
-            >自动登录</Checkbox
-          >
+          <Checkbox v-model="$bus.auto_login" @on-change="handleSiwtchAutoLogin">自动登录</Checkbox>
         </FormItem>
         <FormItem class="mb32">
-          <Button
-            type="primary"
-            long
-            class="mb4 content__btn"
-            :loading="loading"
-            @click="handleLogin"
-            >登录</Button
-          >
+          <Button type="primary" long class="mb4 content__btn" :loading="loading" @click="handleLogin">登录</Button>
         </FormItem>
       </Form>
     </div>
@@ -99,11 +84,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(
-    to bottom right,
-    @primary-color,
-    @primary-color-30
-  );
+  background: linear-gradient(to bottom right, @primary-color, @primary-color-30);
   .content {
     width: 300px;
     text-align: center;

@@ -4,16 +4,7 @@
     <div class="mb16 itv-flex--sb top">
       <div class="itv-flex--fs--fs">
         <p class="itv-title--14 mr16">请选择要上传的图片：</p>
-        <itv-upload-image
-          v-model="image"
-          :accept="'image/png, image/jpeg'"
-          limitText=""
-          :multiple="true"
-          :max="30"
-          clearable
-          :multipleOneReturn="true"
-          @on-change="handleImg"
-        />
+        <itv-upload-image v-model="image" :accept="'image/png, image/jpeg'" limitText="" :multiple="true" :max="30" clearable :multipleOneReturn="true" @on-change="handleImg" />
       </div>
       <div>
         <Button type="error" @click="deleteAll">删除全部（本地缓存）</Button>
@@ -60,32 +51,14 @@ export default {
           title: '复制',
           width: 80,
           render: (h, { row }) => {
-            return (
-              <itv-icon
-                type="i-copy2"
-                title="复制链接"
-                class="cp"
-                size="20"
-                color=""
-                onClick={this.copy.bind(null, row)}
-              />
-            )
+            return <itv-icon type="i-copy2" title="复制链接" class="cp" size="20" color="" onClick={this.copy.bind(null, row)} />
           }
         },
         {
           title: '删除',
           width: 80,
           render: (h, { row, index }) => {
-            return (
-              <itv-icon
-                type="i-delete"
-                title="删除"
-                class="cp"
-                size="20"
-                color=""
-                onClick={this.delete.bind(null, { row, index })}
-              />
-            )
+            return <itv-icon type="i-delete" title="删除" class="cp" size="20" color="" onClick={this.delete.bind(null, { row, index })} />
           }
         }
       ],

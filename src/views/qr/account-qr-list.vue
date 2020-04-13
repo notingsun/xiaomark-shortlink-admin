@@ -4,34 +4,15 @@
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <Breadcrumb>
-        <BreadcrumbItem class="cp" @click.native="$router.go(-1)"
-          >公众号列表</BreadcrumbItem
-        >
+        <BreadcrumbItem class="cp" @click.native="$router.go(-1)">公众号列表</BreadcrumbItem>
         <BreadcrumbItem>{{ $route.query.name }} 创建的二维码</BreadcrumbItem>
       </Breadcrumb>
-      <Select
-        v-model="form.sort"
-        style="width:150px"
-        @on-change="doGetData"
-        placement="bottom-end"
-      >
-        <Option
-          v-for="(item, index) in options.sort"
-          :value="item.value"
-          :key="index"
-          >{{ item.label }}</Option
-        >
+      <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
+        <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
       </Select>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
@@ -84,10 +65,7 @@ export default {
               const reply_status = arr_reply_status_map[row.reply_status] || {}
 
               return (
-                <div
-                  class="itv-flex--fs"
-                  title={'自动回复状态:' + (reply_status.text || '-')}
-                >
+                <div class="itv-flex--fs" title={'自动回复状态:' + (reply_status.text || '-')}>
                   <div
                     style={{
                       background: reply_status.color,

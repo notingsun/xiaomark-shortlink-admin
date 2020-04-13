@@ -19,30 +19,15 @@
       <span class="ml32 itv-text--vip">点击图标，可以复制icon的名称</span>
     </div>
     <div class="itv-flex--fs svgs-wrap">
-      <div
-        class="svg-wrap mb32 ml16 mr16"
-        v-for="(item, i) in list"
-        :key="i"
-        :title="name_map[item.type]"
-      >
-        <itv-icon
-          :type="item.type"
-          width="32px"
-          height="32px"
-          :color="color"
-          ref="ref"
-          :size="size"
-          class="svg-item"
-        />
+      <div class="svg-wrap mb32 ml16 mr16" v-for="(item, i) in list" :key="i" :title="name_map[item.type]">
+        <itv-icon :type="item.type" width="32px" height="32px" :color="color" ref="ref" :size="size" class="svg-item" />
         <p class="mt16 svg__title">
           {{ item.type }}
           <br />
           {{ name_map[item.type] }}
         </p>
         <div class="itv-flex--fs button-wrap mt8">
-          <Button class="mr16" size="small" @click="handleCopy(item.type, 0)"
-            >名称</Button
-          >
+          <Button class="mr16" size="small" @click="handleCopy(item.type, 0)">名称</Button>
           <Button size="small" @click="handleCopy(item.type, 1)">代码</Button>
         </div>
       </div>
@@ -68,9 +53,7 @@ export default {
       let res = {}
 
       this.list.forEach((item) => {
-        let v = document
-          .getElementById(`icon-${item.type}`)
-          .getElementsByTagName('desc')[0].innerHTML
+        let v = document.getElementById(`icon-${item.type}`).getElementsByTagName('desc')[0].innerHTML
 
         v = v
           .split('')

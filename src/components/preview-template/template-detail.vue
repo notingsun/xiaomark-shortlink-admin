@@ -124,8 +124,7 @@ export default {
     },
     calValue() {
       return (this.content.msg_data || []).map((item) => {
-        let value =
-          (item.value || '').replace(/\$\$NICKNAME\$\$/g, '#关注者昵称#') || ' '
+        let value = (item.value || '').replace(/\$\$NICKNAME\$\$/g, '#关注者昵称#') || ' '
 
         return { ...item, value }
       })

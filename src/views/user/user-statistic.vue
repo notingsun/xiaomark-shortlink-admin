@@ -5,36 +5,18 @@
       <div class="card__title">{{ overview.name }}</div>
       <!-- 一行数据 -->
       <div>
-        <div
-          v-for="(row, index) in overview.map"
-          :key="`row-${index}`"
-          class="overview--wrap mb16"
-        >
-          <div
-            class="overview__cell"
-            v-for="(item, i) in row"
-            :key="`item-${i}`"
-          >
+        <div v-for="(row, index) in overview.map" :key="`row-${index}`" class="overview--wrap mb16">
+          <div class="overview__cell" v-for="(item, i) in row" :key="`item-${i}`">
             <!-- 历史总的数据 -->
             <div class="overview__cell__value">
-              <Tooltip
-                :disabled="
-                  config[overview.key].data[item.key] < 1000 || item.noShort
-                "
-                placement="top"
-                theme="light"
-              >
+              <Tooltip :disabled="config[overview.key].data[item.key] < 1000 || item.noShort" placement="top" theme="light">
                 <div slot="content" style="font-size: 16px;">
                   {{ config[overview.key].data[item.key] | countThree }}
                 </div>
                 <div class="pr minh38">
                   <Spin fix v-if="config[overview.key].loading"></Spin>
-                  <span v-if="item.noShort">{{
-                    config[overview.key].data[item.key]
-                  }}</span>
-                  <span v-else>{{
-                    config[overview.key].data[item.key] | countShort
-                  }}</span>
+                  <span v-if="item.noShort">{{ config[overview.key].data[item.key] }}</span>
+                  <span v-else>{{ config[overview.key].data[item.key] | countShort }}</span>
                 </div>
               </Tooltip>
             </div>
@@ -43,17 +25,11 @@
               {{ config[overview.key].name_map[item.key] }}
             </p>
             <!-- 今日数据 -->
-            <div
-              class="text-today pr"
-              v-if="item.today"
-              :title="config[overview.key].name_map[item.today]"
-            >
+            <div class="text-today pr" v-if="item.today" :title="config[overview.key].name_map[item.today]">
               <div v-show="!config[overview.key].loading" class="itv-flex--fs">
                 <!-- <span style="font-size: 12px;">今日</span> -->
                 <itv-icon type="i-increase" size="14" color="" />
-                <span class="ml4">{{
-                  config[overview.key].data[item.today] | countThree
-                }}</span>
+                <span class="ml4">{{ config[overview.key].data[item.today] | countThree }}</span>
               </div>
             </div>
           </div>
@@ -107,11 +83,7 @@ export default {
           name: '小码短链接',
           key: 'overview',
           map: [
-            [
-              { key: 'n_users', noShort: true },
-              { key: 'n_users_new_today' },
-              { key: 'n_users_active_today' }
-            ],
+            [{ key: 'n_users', noShort: true }, { key: 'n_users_new_today' }, { key: 'n_users_active_today' }],
             [
               { key: 'n_groups', today: 'n_groups_today' },
               { key: 'n_links', today: 'n_links_today' },
@@ -127,11 +99,7 @@ export default {
           name: '小码渠道码',
           key: 'overview_qr',
           map: [
-            [
-              { key: 'n_users' },
-              { key: 'n_users_new_today' },
-              { key: 'n_users_active_today' }
-            ],
+            [{ key: 'n_users' }, { key: 'n_users_new_today' }, { key: 'n_users_active_today' }],
             [
               { key: 'n_platforms', today: 'n_platforms_today' },
               { key: 'n_qrcodes', today: 'n_qrcodes_today' },

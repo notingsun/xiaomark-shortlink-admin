@@ -3,40 +3,15 @@
   <div class="qr-list itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">
       <div class="header__search">
-        <Input
-          clearable
-          v-model="form.search"
-          placeholder="请输入"
-          style="width: 300px"
-          @on-enter="doGetData"
-          @on-clear="doGetData"
-          class="mr8"
-        />
+        <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
-      <Select
-        v-model="form.sort"
-        style="width:150px"
-        @on-change="doGetData"
-        placement="bottom-end"
-      >
-        <Option
-          v-for="(item, index) in options.sort"
-          :value="item.value"
-          :key="index"
-          >{{ item.label }}</Option
-        >
+      <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
+        <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
       </Select>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
@@ -112,10 +87,7 @@ export default {
               // </span>
 
               return (
-                <div
-                  class="itv-flex--fs"
-                  title={'自动回复状态:' + (reply_status.text || '-')}
-                >
+                <div class="itv-flex--fs" title={'自动回复状态:' + (reply_status.text || '-')}>
                   <div
                     style={{
                       background: reply_status.color,

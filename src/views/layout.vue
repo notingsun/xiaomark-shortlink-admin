@@ -1,10 +1,6 @@
 <template>
   <div class="layout">
-    <Menu
-      class="layout-menu"
-      :active-name="$route.meta.menuIndex"
-      :open-names="['01', '02']"
-    >
+    <Menu class="layout-menu" :active-name="$route.meta.menuIndex" :open-names="['01', '02']">
       <!-- :open-names="[ '02']" -->
       <!-- 只打开一个 -->
       <!-- :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']" -->
@@ -17,21 +13,11 @@
         <!-- 小码短链接 -->
         <Submenu name="01">
           <div slot="title" class="img-logo-sub">
-            <img
-              src="../assets/logo-link.png"
-              class="img-logo-link"
-              alt="小码短链接"
-            />
+            <img src="../assets/logo-link.png" class="img-logo-link" alt="小码短链接" />
           </div>
           <!-- 菜单 -->
           <div class="flex1 itv-flex-v--fs">
-            <MenuItem
-              v-for="item in menu_link"
-              :name="item.name"
-              :key="`menu_${item.name}`"
-              @click.native="handleToRoute(item.route)"
-              class="menu-item"
-            >
+            <MenuItem v-for="item in menu_link" :name="item.name" :key="`menu_${item.name}`" @click.native="handleToRoute(item.route)" class="menu-item">
               <span class="ib20">{{ item.title }}</span>
             </MenuItem>
           </div>
@@ -40,55 +26,30 @@
         <!-- 小码渠道码 -->
         <Submenu name="02">
           <div slot="title" class="img-logo-sub">
-            <img
-              src="../assets/logo-qr.png"
-              class="img-logo-link"
-              alt="小码渠道码"
-            />
+            <img src="../assets/logo-qr.png" class="img-logo-link" alt="小码渠道码" />
           </div>
-          <MenuItem
-            v-for="item in menu_qr"
-            :name="item.name"
-            :key="`menu_${item.name}`"
-            :to="item.route"
-            class="menu-item"
-          >
+          <MenuItem v-for="item in menu_qr" :name="item.name" :key="`menu_${item.name}`" :to="item.route" class="menu-item">
             <span class="ib20">{{ item.title }}</span>
           </MenuItem>
         </Submenu>
       </div>
 
       <!-- 用户名称 -->
-      <Dropdown
-        class="setting layout_setting"
-        placement="bottom-start"
-        transfer
-      >
+      <Dropdown class="setting layout_setting" placement="bottom-start" transfer>
         <span class="layout_user_name itv-flex--sb">
           {{ $bus.admin.username }}
           <Icon type="md-settings" class="mr16" />
         </span>
         <DropdownMenu slot="list">
-          <DropdownItem style="width: 160px;" @click.native="handleChangePwd"
-            >修改密码</DropdownItem
-          >
-          <DropdownItem style="width: 160px;" @click.native="toUploadImage"
-            >上传图片</DropdownItem
-          >
-          <DropdownItem style="width: 160px;" @click.native="handleSignOut"
-            >退出</DropdownItem
-          >
+          <DropdownItem style="width: 160px;" @click.native="handleChangePwd">修改密码</DropdownItem>
+          <DropdownItem style="width: 160px;" @click.native="toUploadImage">上传图片</DropdownItem>
+          <DropdownItem style="width: 160px;" @click.native="handleSignOut">退出</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </Menu>
 
     <!-- 具体的内容 -->
-    <div
-      :class="[
-        'layout-content-wrap',
-        $route.meta.menuIndex === '1' ? 'bg-none' : ''
-      ]"
-    >
+    <div :class="['layout-content-wrap', $route.meta.menuIndex === '1' ? 'bg-none' : '']">
       <transition name="fade" mode="out-in">
         <router-view class="layout-content" v-if="show_view" />
       </transition>
@@ -98,39 +59,18 @@
     <drawer-user />
 
     <!-- 对话框.修改密码 -->
-    <Modal
-      :mask-closable="false"
-      v-model="modal.show"
-      title="修改密码"
-      @on-visible-change="handleModalShow"
-    >
-      <Form
-        ref="refChangePwdForm"
-        :label-width="168"
-        label-position="left"
-        :model="modal.form"
-        :rules="modal.rules"
-      >
+    <Modal :mask-closable="false" v-model="modal.show" title="修改密码" @on-visible-change="handleModalShow">
+      <Form ref="refChangePwdForm" :label-width="168" label-position="left" :model="modal.form" :rules="modal.rules">
         <FormItem label="新密码" prop="password">
-          <Input
-            v-model="modal.form.password"
-            placeholder="请输入新密码"
-            style="width: 214px;"
-          />
+          <Input v-model="modal.form.password" placeholder="请输入新密码" style="width: 214px;" />
         </FormItem>
         <FormItem label="确认新密码" prop="password2">
-          <Input
-            v-model="modal.form.password2"
-            placeholder="确认新密码"
-            style="width: 214px;"
-          />
+          <Input v-model="modal.form.password2" placeholder="确认新密码" style="width: 214px;" />
         </FormItem>
       </Form>
       <div slot="footer">
         <Button type="text" @click="modal.show = false">取消</Button>
-        <Button type="primary" @click="doChangePwd" :loading="modal.isSubmiting"
-          >确定</Button
-        >
+        <Button type="primary" @click="doChangePwd" :loading="modal.isSubmiting">确定</Button>
       </div>
     </Modal>
   </div>
@@ -153,9 +93,7 @@ export default {
           password2: ''
         },
         rules: {
-          password: [
-            { required: true, message: '请输入新密码', trigger: 'blur' }
-          ],
+          password: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
           password2: [
             {
               required: true,

@@ -1,12 +1,6 @@
 /* 用户详情的抽屉 */
 <template>
-  <Drawer
-    title=""
-    :closable="false"
-    v-model="drawer.show"
-    class="drawer-user"
-    :width="440"
-  >
+  <Drawer title="" :closable="false" v-model="drawer.show" class="drawer-user" :width="440">
     <Spin fix v-show="loading" />
     <div class="pl16" v-show="show_page">
       <!-- 头像 -->
@@ -40,12 +34,7 @@
       <!-- API 权限 -->
       <div class="row">
         <div class="label">API 权限</div>
-        <Icon
-          :title="data.api_auth ? '有API权限' : '没有API权限'"
-          type="md-checkmark-circle"
-          :color="data.api_auth ? C_GREEN : C_GREY"
-          size="20"
-        />
+        <Icon :title="data.api_auth ? '有API权限' : '没有API权限'" type="md-checkmark-circle" :color="data.api_auth ? C_GREEN : C_GREY" size="20" />
       </div>
 
       <!-- API 创建上限 -->
@@ -103,12 +92,7 @@
       <div class="row">
         <div class="label">协作空间权限</div>
         <div>
-          <Icon
-            :title="data.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'"
-            type="md-checkmark-circle"
-            :color="data.ws_creator ? C_GREEN : C_GREY"
-            size="20"
-          />
+          <Icon :title="data.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'" type="md-checkmark-circle" :color="data.ws_creator ? C_GREEN : C_GREY" size="20" />
           <!-- <span>（创建: {{ data.n_ws_created }}、</span> -->
           <!-- <span>加入: {{ data.n_ws_joined }}）</span> -->
         </div>
@@ -135,25 +119,13 @@
         <div class="label">其他</div>
         <div>
           <span class="mr8" title="是否关注服务号">
-            <itv-icon
-              type="i-attention"
-              :style="{ color: data.subscribe ? C_GREEN : C_GREY }"
-              size="24"
-            />
+            <itv-icon type="i-attention" :style="{ color: data.subscribe ? C_GREEN : C_GREY }" size="24" />
           </span>
           <span class="mr8" title="是否网页登录">
-            <itv-icon
-              type="i-pc"
-              :style="{ color: data.sa_openid ? C_ORANGE : C_GREY }"
-              size="24"
-            />
+            <itv-icon type="i-pc" :style="{ color: data.sa_openid ? C_ORANGE : C_GREY }" size="24" />
           </span>
           <span title="是否小程序登录">
-            <itv-icon
-              type="i-wx"
-              :style="{ color: data.mp_openid ? C_BLUE : C_GREY }"
-              size="24"
-            />
+            <itv-icon type="i-wx" :style="{ color: data.mp_openid ? C_BLUE : C_GREY }" size="24" />
           </span>
         </div>
       </div>
@@ -171,19 +143,8 @@
           <div style="word-break: break-all;font-size: 12px;">
             {{ data.sa_openid || '-' }}
           </div>
-          <div
-            title="复制链接"
-            class="ml4"
-            style="flex-shrink:0;"
-            v-if="data.sa_openid"
-          >
-            <itv-icon
-              type="i-copy2"
-              class="itv-text--btn"
-              size="20"
-              color=""
-              @click="handleCopy(data.sa_openid)"
-            />
+          <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.sa_openid">
+            <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.sa_openid)" />
           </div>
         </div>
       </div>

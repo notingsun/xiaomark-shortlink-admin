@@ -2,14 +2,7 @@
 <template>
   <div class="custom-domain-list itv-flex-v--fs">
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
@@ -49,17 +42,9 @@ export default {
             key: 'user.nickname user.headimgurl',
             render: (h, { row }) => {
               return (
-                <div
-                  class="table-cell__nickname big cp"
-                  onClick={this.toUserDetail.bind(null, row)}
-                >
-                  <img
-                    src={(row.user || {}).headimgurl}
-                    class="img--headimgurl mr8"
-                  />
-                  <span class="text--nickname">
-                    {(row.user || {}).nickname}
-                  </span>
+                <div class="table-cell__nickname big cp" onClick={this.toUserDetail.bind(null, row)}>
+                  <img src={(row.user || {}).headimgurl} class="img--headimgurl mr8" />
+                  <span class="text--nickname">{(row.user || {}).nickname}</span>
                 </div>
               )
             }
@@ -138,10 +123,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <div>
-                  <span
-                    class="itv-btn__text"
-                    onClick={this.handleShowLinks.bind(null, row)}
-                  >
+                  <span class="itv-btn__text" onClick={this.handleShowLinks.bind(null, row)}>
                     查看短链
                   </span>
                 </div>

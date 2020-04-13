@@ -4,13 +4,7 @@
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <div class="itv-flex--fs">
-        <itv-icon
-          type="i-back"
-          title="返回"
-          size="20"
-          class="itv-btn__icon mr16"
-          @click="$router.go(-1)"
-        />
+        <itv-icon type="i-back" title="返回" size="20" class="itv-btn__icon mr16" @click="$router.go(-1)" />
         <Breadcrumb>
           <BreadcrumbItem>协作空间成员列表</BreadcrumbItem>
           <BreadcrumbItem>{{ $route.query.name }}</BreadcrumbItem>
@@ -18,14 +12,7 @@
       </div>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
   </div>
 </template>
 
@@ -64,11 +51,7 @@ export default {
                     this.$bus.drawer_user.id = row.id
                   }}
                 >
-                  <div
-                    class={`img--headimgurl__wrap ${
-                      row.creator ? 'creator' : ''
-                    }`}
-                  >
+                  <div class={`img--headimgurl__wrap ${row.creator ? 'creator' : ''}`}>
                     <img src={row.headimgurl} class={'img--headimgurl mr8'} />
                   </div>
                   {/* onError={this.handleImgError.bind(null, row, index)} */}
@@ -80,12 +63,7 @@ export default {
                     : <itv-icon class="fs0" type="i-man" size="20" />
                     /* eslint-enable*/
                   }
-                  <Tooltip
-                    content={row.nickname}
-                    placement="top"
-                    transfer
-                    class="df"
-                  >
+                  <Tooltip content={row.nickname} placement="top" transfer class="df">
                     <div class="text--nickname">{row.nickname}</div>
                   </Tooltip>
                 </div>
@@ -149,9 +127,7 @@ export default {
                 <div class="itv-flex--fs">
                   <Icon
                     class="cp"
-                    title={
-                      row.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'
-                    }
+                    title={row.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'}
                     type="md-checkmark-circle"
                     color={row.ws_creator ? C_GREEN : C_GREY}
                     size="20"
@@ -167,17 +143,11 @@ export default {
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
-                  <span
-                    class="ml8 cp"
-                    title={`已创建 ${row.n_ws_created} 个协作空间`}
-                  >
+                  <span class="ml8 cp" title={`已创建 ${row.n_ws_created} 个协作空间`}>
                     {row.n_ws_created}
                   </span>
                   <span class="ml8">/</span>
-                  <span
-                    class="ml8 cp"
-                    title={`已加入 ${row.n_ws_joined} 个协作空间`}
-                  >
+                  <span class="ml8 cp" title={`已加入 ${row.n_ws_joined} 个协作空间`}>
                     {row.n_ws_joined}
                   </span>
                 </div>
@@ -241,25 +211,13 @@ export default {
               return (
                 <div>
                   <span class="mr8" title="是否关注服务号">
-                    <itv-icon
-                      type="i-attention"
-                      style={{ color: row.subscribe ? C_GREEN : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-attention" style={{ color: row.subscribe ? C_GREEN : C_GREY }} size="24" />
                   </span>
                   <span class="mr8" title="是否网页登录">
-                    <itv-icon
-                      type="i-pc"
-                      style={{ color: row.sa_openid ? C_ORANGE : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-pc" style={{ color: row.sa_openid ? C_ORANGE : C_GREY }} size="24" />
                   </span>
                   <span title="是否小程序登录">
-                    <itv-icon
-                      type="i-wx"
-                      style={{ color: row.mp_openid ? C_BLUE : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-wx" style={{ color: row.mp_openid ? C_BLUE : C_GREY }} size="24" />
                   </span>
                 </div>
               )
@@ -270,17 +228,10 @@ export default {
             width: 146,
             key: 'country province city',
             render: (h, { row }) => {
-              const string = [row.country, row.province, row.city]
-                .filter((item) => item)
-                .join('-')
+              const string = [row.country, row.province, row.city].filter((item) => item).join('-')
 
               return (
-                <Tooltip
-                  content={string}
-                  placement="top-start"
-                  transfer
-                  class="df"
-                >
+                <Tooltip content={string} placement="top-start" transfer class="df">
                   <div class="text-area">{string}</div>
                 </Tooltip>
               )
@@ -293,12 +244,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <span title="查看短链">
-                  <itv-icon
-                    type="i-detail"
-                    size="20"
-                    class="itv-btn__icon"
-                    onClick={this.toUserDetail.bind(null, row)}
-                  />
+                  <itv-icon type="i-detail" size="20" class="itv-btn__icon" onClick={this.toUserDetail.bind(null, row)} />
                 </span>
               )
             }
@@ -319,9 +265,7 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        const res = await this.$api.Space.getSpaceDetail(
-          this.$route.params.space_id
-        )
+        const res = await this.$api.Space.getSpaceDetail(this.$route.params.space_id)
 
         this.table.data = res.users || []
         this.table.total = this.table.data.length

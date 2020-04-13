@@ -1,14 +1,7 @@
 /* 预览.内容.模版消息 */
 <template>
   <!-- 内容.模版消息 -->
-  <div
-    :class="[
-      'cnt__wrap--template',
-      onlyView ? 'style-only-view' : '',
-      isOldStyle ? '' : 'new_style'
-    ]"
-    v-if="data.template"
-  >
+  <div :class="['cnt__wrap--template', onlyView ? 'style-only-view' : '', isOldStyle ? '' : 'new_style']" v-if="data.template">
     <!-- 1、标题 -->
     <div class="itv-flex--sb" style="width: 100%">
       <div class="template__title">
@@ -23,18 +16,13 @@
       {{ today }}
     </div>
     <!-- 3、字段们 -->
-    <div
-      :class="['template__row', isOldStyle ? 'text--scale' : 'text--scale2']"
-      v-for="(row, i) in data.template.rows"
-      :key="`row-${i}`"
-    >
+    <div :class="['template__row', isOldStyle ? 'text--scale' : 'text--scale2']" v-for="(row, i) in data.template.rows" :key="`row-${i}`">
       <span
         v-for="(cell, j) in row"
         :key="`row-${i}-cell-${j}`"
         :class="{
           'label-style': cell.type === 'text' && j === 1,
-          'remark-style':
-            !isOldStyle && cell.key === 'remark' && styleRowRemark(cell),
+          'remark-style': !isOldStyle && cell.key === 'remark' && styleRowRemark(cell),
           'value-style': cell.last && !isOldStyle,
           'row-cell': !isOldStyle && cell.type !== 'br'
         }"
@@ -50,15 +38,9 @@
           :isOldStyle="isOldStyle"
         />
         <!-- 类型：文本 -->
-        <span class="span--text" v-if="cell.type === 'text'">{{
-          cell.value
-        }}</span>
+        <span class="span--text" v-if="cell.type === 'text'">{{ cell.value }}</span>
         <!-- 类型：换行 -->
-        <div
-          class="span--br"
-          style="height: 2px;width: 100%"
-          v-if="cell.type === 'br'"
-        />
+        <div class="span--br" style="height: 2px;width: 100%" v-if="cell.type === 'br'" />
       </span>
     </div>
     <!-- 4、详情 -->
@@ -70,14 +52,8 @@
     </div>
 
     <div class="btn-wrap" v-if="!onlyView">
-      <div class="itv-btn__text mr4 cp" @click="isOldStyle = !isOldStyle">
-        切换为{{ isOldStyle ? '新' : '老' }}样式
-      </div>
-      <Tooltip
-        content="微信模版样式正在调整中，具体效果请通过发送预览查看～"
-        placement="bottom"
-        :max-width="130"
-      >
+      <div class="itv-btn__text mr4 cp" @click="isOldStyle = !isOldStyle">切换为{{ isOldStyle ? '新' : '老' }}样式</div>
+      <Tooltip content="微信模版样式正在调整中，具体效果请通过发送预览查看～" placement="bottom" :max-width="130">
         <Icon type="md-help-circle" :size="15" />
       </Tooltip>
     </div>
@@ -136,11 +112,7 @@ export default {
 
         data_arr.forEach((item, i) => {
           i !== 0 && res.push(<br />)
-          res.push(
-            <span style={{ color: this.color, ...this.other_style }}>
-              {item}
-            </span>
-          )
+          res.push(<span style={{ color: this.color, ...this.other_style }}>{item}</span>)
         })
 
         return (
@@ -197,11 +169,7 @@ export default {
   },
   methods: {
     styleRowRemark(cell) {
-      return !(
-        !this.isOldStyle &&
-        cell.key === 'remark' &&
-        (this.data_data[cell.key] || {})['input'] === ''
-      )
+      return !(!this.isOldStyle && cell.key === 'remark' && (this.data_data[cell.key] || {})['input'] === '')
     }
   }
 }

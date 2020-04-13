@@ -69,8 +69,7 @@ export default {
      */
     pageChange(page) {
       this.current_page = page
-      this.routeSave &&
-        this.$global.utils.pagination.set(this.current_page, this.page_size)
+      this.routeSave && this.$global.utils.pagination.set(this.current_page, this.page_size)
       // console.log(this.current_page, this.page_size)
 
       this.$emit('on-change', {
@@ -86,8 +85,7 @@ export default {
       if (v) {
         this.current_page = 1
         // this.page_size = this.page_size // 不重置每页显示条数
-        this.routeSave &&
-          this.$global.utils.pagination.set(this.current_page, this.page_size)
+        this.routeSave && this.$global.utils.pagination.set(this.current_page, this.page_size)
       }
     }
   }

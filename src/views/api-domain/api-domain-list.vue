@@ -3,28 +3,13 @@
   <div class="api-domain-list itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">
       <div class="header__search">
-        <Input
-          clearable
-          v-model="form.search"
-          placeholder="请输入"
-          style="width: 300px"
-          @on-enter="doGetData"
-          @on-clear="doGetData"
-          class="mr8"
-        />
+        <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
       <div></div>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
@@ -65,17 +50,9 @@ export default {
             key: 'user.nickname user.headimgurl',
             render: (h, { row }) => {
               return (
-                <div
-                  class="table-cell__nickname big cp"
-                  onClick={this.toUserDetail.bind(null, row)}
-                >
-                  <img
-                    src={(row.user || {}).headimgurl}
-                    class="img--headimgurl mr8"
-                  />
-                  <span class="text--nickname">
-                    {(row.user || {}).nickname}
-                  </span>
+                <div class="table-cell__nickname big cp" onClick={this.toUserDetail.bind(null, row)}>
+                  <img src={(row.user || {}).headimgurl} class="img--headimgurl mr8" />
+                  <span class="text--nickname">{(row.user || {}).nickname}</span>
                 </div>
               )
             }
@@ -84,14 +61,7 @@ export default {
             title: '是否可用',
             minWidth: 120,
             render: (h, { row }) => {
-              return (
-                <Icon
-                  title={row.enabled ? '已归档' : '未归档'}
-                  type="md-checkmark-circle"
-                  color={row.enabled ? C_GREEN : C_GREY}
-                  size="20"
-                />
-              )
+              return <Icon title={row.enabled ? '已归档' : '未归档'} type="md-checkmark-circle" color={row.enabled ? C_GREEN : C_GREY} size="20" />
             }
           },
           {
@@ -108,10 +78,7 @@ export default {
             render: (h, { row }) => {
               return (
                 <div>
-                  <span
-                    class="itv-btn__text"
-                    onClick={this.handleStop.bind(null, row)}
-                  >
+                  <span class="itv-btn__text" onClick={this.handleStop.bind(null, row)}>
                     屏蔽
                   </span>
                 </div>

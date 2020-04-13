@@ -19,13 +19,7 @@
     2、mb 底部的边距，默认是mb0
   -->
   <Breadcrumb :class="mb">
-    <BreadcrumbItem
-      v-for="(item, i) in cal_data"
-      :key="i"
-      :class="i + 1 === cal_data.length ? '' : 'itv-breadcrumb-item--small'"
-      :replace="item.replace"
-      :to="item.to"
-    >
+    <BreadcrumbItem v-for="(item, i) in cal_data" :key="i" :class="i + 1 === cal_data.length ? '' : 'itv-breadcrumb-item--small'" :replace="item.replace" :to="item.to">
       {{ item.title }}
     </BreadcrumbItem>
   </Breadcrumb>

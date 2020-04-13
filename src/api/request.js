@@ -37,9 +37,7 @@ instance.interceptors.request.use(
   (config) => {
     // 请求头加上Authorization字段（用户的cookie信息）
     if (that.$PDo.Cookies.get(process.env.VUE_APP_COOKIE)) {
-      config.headers.Authorization = that.$PDo.Cookies.get(
-        process.env.VUE_APP_COOKIE
-      )
+      config.headers.Authorization = that.$PDo.Cookies.get(process.env.VUE_APP_COOKIE)
     }
     // 请求超时 timeout
     return { ...config, timeout: TIMEOUT_VALUE }

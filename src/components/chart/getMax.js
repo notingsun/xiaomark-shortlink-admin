@@ -101,10 +101,7 @@ const getIntervalPrecision = function(interval) {
 }
 
 const clamp = function(niceTickExtent, idx, extent) {
-  niceTickExtent[idx] = Math.max(
-    Math.min(niceTickExtent[idx], extent[1]),
-    extent[0]
-  )
+  niceTickExtent[idx] = Math.max(Math.min(niceTickExtent[idx], extent[1]), extent[0])
 }
 
 const fixExtent = function(niceTickExtent, extent) {
@@ -118,12 +115,7 @@ const fixExtent = function(niceTickExtent, extent) {
 }
 
 // 官网的
-export function intervalScaleNiceTicks(
-  extent,
-  splitNumber,
-  minInterval,
-  maxInterval
-) {
+export function intervalScaleNiceTicks(extent, splitNumber, minInterval, maxInterval) {
   let result = {}
 
   let span = extent[1] - extent[0]
@@ -145,10 +137,7 @@ export function intervalScaleNiceTicks(
   result.intervalPrecision = precision
 
   // Niced extent inside original extent
-  let niceTickExtent = [
-    numberUtil.round(Math.ceil(extent[0] / interval) * interval, precision),
-    numberUtil.round(Math.floor(extent[1] / interval) * interval, precision)
-  ]
+  let niceTickExtent = [numberUtil.round(Math.ceil(extent[0] / interval) * interval, precision), numberUtil.round(Math.floor(extent[1] / interval) * interval, precision)]
 
   result.niceTickExtent = niceTickExtent
 

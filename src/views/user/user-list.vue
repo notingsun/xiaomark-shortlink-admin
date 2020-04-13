@@ -3,61 +3,27 @@
   <div class="user-list itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">
       <div class="header__search">
-        <Input
-          clearable
-          v-model="form.search"
-          placeholder="请输入"
-          style="width: 300px"
-          @on-enter="doGetData"
-          @on-clear="doGetData"
-          class="mr8"
-        />
+        <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
       <div>
         <!-- 筛选 -->
-        <Dropdown
-          trigger="custom"
-          :visible="show_drawer"
-          placement="bottom-end"
-          @on-clickoutside="show_drawer = false"
-        >
-          <Button
-            class="mr16"
-            @click="show_drawer = true"
-            style="width: 90px;"
-            :loading="loading"
-            >筛选</Button
-          >
+        <Dropdown trigger="custom" :visible="show_drawer" placement="bottom-end" @on-clickoutside="show_drawer = false">
+          <Button class="mr16" @click="show_drawer = true" style="width: 90px;" :loading="loading">筛选</Button>
           <DropdownMenu slot="list">
             <div class="form-filter">
-              <div
-                class="itv-flex--fs mb8"
-                v-for="(item, i) in form_filter"
-                :key="i"
-              >
+              <div class="itv-flex--fs mb8" v-for="(item, i) in form_filter" :key="i">
                 <div class="label">{{ item.name }}</div>
-                <i-input
-                  v-model="item.value"
-                  type="number"
-                  style="width: 150px;"
-                >
+                <i-input v-model="item.value" type="number" style="width: 150px;">
                   <Select v-model="item.type" style="width:60px" slot="prepend">
-                    <Option
-                      v-for="item in options.filter"
-                      :value="item.value"
-                      :key="item.value"
-                      >{{ item.label }}</Option
-                    >
+                    <Option v-for="item in options.filter" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </i-input>
               </div>
               <div class="itv-flex--sb mt24">
                 <Button class="mr16" @click="handleFilterReset">清空</Button>
                 <div>
-                  <Button class="mr16" @click="show_drawer = false"
-                    >取消</Button
-                  >
+                  <Button class="mr16" @click="show_drawer = false">取消</Button>
                   <Button type="primary" @click="handleFilter">确认</Button>
                 </div>
               </div>
@@ -65,30 +31,13 @@
           </DropdownMenu>
         </Dropdown>
         <!-- 排序 -->
-        <Select
-          v-model="form.sort"
-          style="width:150px"
-          @on-change="doGetData"
-          placement="bottom-end"
-        >
-          <Option
-            v-for="(item, index) in options.sort"
-            :value="item.value"
-            :key="index"
-            >{{ item.label }}</Option
-          >
+        <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
+          <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
         </Select>
       </div>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
@@ -174,10 +123,7 @@ export default {
             // minWidth: 160,
             render: (h, { row }) => {
               return (
-                <div
-                  class="table-cell__nickname cp"
-                  onClick={this.openUserDetail.bind(null, row)}
-                >
+                <div class="table-cell__nickname cp" onClick={this.openUserDetail.bind(null, row)}>
                   <img src={row.headimgurl} class="img--headimgurl mr8" />
                   {/* onError={this.handleImgError.bind(null, row, index)} */}
                   {/* eslint-disable */
@@ -188,12 +134,7 @@ export default {
                     : <itv-icon class="fs0" type="i-man" size="20" />
                     /* eslint-enable*/
                   }
-                  <Tooltip
-                    content={row.nickname}
-                    placement="top"
-                    transfer
-                    class="df"
-                  >
+                  <Tooltip content={row.nickname} placement="top" transfer class="df">
                     <div class="text--nickname">{row.nickname}</div>
                   </Tooltip>
                 </div>
@@ -316,9 +257,7 @@ export default {
                 <div class="itv-flex--fs">
                   <itv-icon
                     class="cp"
-                    title={
-                      row.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'
-                    }
+                    title={row.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'}
                     type={row.ws_creator ? 'i-stop' : 'i-start'}
                     size="20"
                     style={`color: ${row.ws_creator ? C_GREEN : C_GREY}`}
@@ -329,21 +268,12 @@ export default {
                       this.$bus.modal.success_cb = this.doGetData
                     }}
                   />
-                  <div
-                    class="itv-flex--v ml8"
-                    style={`color: ${row.ws_creator ? '' : '#afafaf'}`}
-                  >
-                    <p
-                      class="ml8 cp"
-                      title={`已创建 ${row.n_ws_created} 个协作空间`}
-                    >
+                  <div class="itv-flex--v ml8" style={`color: ${row.ws_creator ? '' : '#afafaf'}`}>
+                    <p class="ml8 cp" title={`已创建 ${row.n_ws_created} 个协作空间`}>
                       <span style="color: #afafaf;">创建：</span>
                       {row.n_ws_created}
                     </p>
-                    <p
-                      class="ml8 cp"
-                      title={`已加入 ${row.n_ws_joined} 个协作空间`}
-                    >
+                    <p class="ml8 cp" title={`已加入 ${row.n_ws_joined} 个协作空间`}>
                       <span style="color: #afafaf;">加入：</span>
                       {row.n_ws_joined}
                     </p>
@@ -485,25 +415,13 @@ export default {
               return (
                 <div>
                   <span class="mr8" title="是否关注服务号">
-                    <itv-icon
-                      type="i-attention"
-                      style={{ color: row.subscribe ? C_GREEN : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-attention" style={{ color: row.subscribe ? C_GREEN : C_GREY }} size="24" />
                   </span>
                   <span class="mr8" title="是否网页登录">
-                    <itv-icon
-                      type="i-pc"
-                      style={{ color: row.sa_openid ? C_ORANGE : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-pc" style={{ color: row.sa_openid ? C_ORANGE : C_GREY }} size="24" />
                   </span>
                   <span title="是否小程序登录">
-                    <itv-icon
-                      type="i-wx"
-                      style={{ color: row.mp_openid ? C_BLUE : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-wx" style={{ color: row.mp_openid ? C_BLUE : C_GREY }} size="24" />
                   </span>
                 </div>
               )
@@ -519,17 +437,10 @@ export default {
             width: 146,
             key: 'country province city',
             render: (h, { row }) => {
-              const string = [row.country, row.province, row.city]
-                .filter((item) => item)
-                .join('-')
+              const string = [row.country, row.province, row.city].filter((item) => item).join('-')
 
               return (
-                <Tooltip
-                  content={string}
-                  placement="top-start"
-                  transfer
-                  class="df"
-                >
+                <Tooltip content={string} placement="top-start" transfer class="df">
                   <div class="text-area">{string}</div>
                 </Tooltip>
               )
@@ -549,36 +460,16 @@ export default {
               return (
                 <div>
                   <span title="查看短链">
-                    <itv-icon
-                      type="i-detail"
-                      size="20"
-                      class="itv-btn__icon mr8"
-                      onClick={this.toUserDetail.bind(null, row)}
-                    />
+                    <itv-icon type="i-detail" size="20" class="itv-btn__icon mr8" onClick={this.toUserDetail.bind(null, row)} />
                   </span>
                   <span title="查看协作空间">
-                    <itv-icon
-                      type="i-member"
-                      size="20"
-                      class="itv-btn__icon mr8"
-                      onClick={this.toUserSpaceList.bind(null, row)}
-                    />
+                    <itv-icon type="i-member" size="20" class="itv-btn__icon mr8" onClick={this.toUserSpaceList.bind(null, row)} />
                   </span>
                   <span title="登录该用户">
-                    <itv-icon
-                      type="i-eye"
-                      size="20"
-                      class="itv-btn__icon mr8"
-                      onClick={this.toUserLogin.bind(null, row)}
-                    />
+                    <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" onClick={this.toUserLogin.bind(null, row)} />
                   </span>
                   <span title="给用户打标签">
-                    <itv-icon
-                      type="i-tag"
-                      size="20"
-                      class="itv-btn__icon"
-                      onClick={this.handleUserTags.bind(null, row)}
-                    />
+                    <itv-icon type="i-tag" size="20" class="itv-btn__icon" onClick={this.handleUserTags.bind(null, row)} />
                   </span>
                 </div>
               )
@@ -649,8 +540,7 @@ export default {
       let filter = {}
 
       this.form_filter.forEach((item) => {
-        filter[item.key] =
-          item.type === '*' ? null : `${item.type}${item.value}`
+        filter[item.key] = item.type === '*' ? null : `${item.type}${item.value}`
       })
       this.filter = filter
       this.doGetData()

@@ -144,10 +144,7 @@ export default {
         // key: 'n_sub',
         render: (h, { row }) => {
           return (
-            <span
-              class="itv-btn__text"
-              onClick={this.handleDetail.bind(null, row)}
-            >
+            <span class="itv-btn__text" onClick={this.handleDetail.bind(null, row)}>
               查看推送详情
             </span>
           )
@@ -173,10 +170,7 @@ export default {
         // key: 'n_sub',
         render: (h, { row }) => {
           return (
-            <span
-              class="itv-btn__text"
-              onClick={this.handleDetail.bind(null, row)}
-            >
+            <span class="itv-btn__text" onClick={this.handleDetail.bind(null, row)}>
               查看推送详情
             </span>
           )

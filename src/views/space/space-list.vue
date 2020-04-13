@@ -6,30 +6,13 @@
       <div class="header__search"></div>
       <div>
         <!-- 排序 -->
-        <Select
-          v-model="form.sort"
-          style="width:150px"
-          @on-change="doGetData"
-          placement="bottom-end"
-        >
-          <Option
-            v-for="(item, index) in options.sort"
-            :value="item.value"
-            :key="index"
-            >{{ item.label }}</Option
-          >
+        <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
+          <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
         </Select>
       </div>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>

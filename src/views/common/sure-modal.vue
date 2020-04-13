@@ -1,21 +1,17 @@
 /* 确认对话框 */
 <template>
   <div>
-    <Modal
-      class="sure-modal"
-      v-model="modal.show"
-      :title="titleMap[modal.type]"
-      :mask-closable="false"
-    >
+    <Modal class="sure-modal" v-model="modal.show" :title="titleMap[modal.type]" :mask-closable="false">
       <!-- 1、设置创建协作空间权限 -->
       <p v-show="modal.type === 'ws_creator'">
-        <span>确认 </span>
+        <span>确认</span>
         <span
           :style="{
             color: (modal.obj || {}).ws_creator ? 'red' : 'green',
             'font-weight': 'bold'
           }"
-          >{{ (modal.obj || {}).ws_creator ? '关闭' : '开启' }}
+        >
+          {{ (modal.obj || {}).ws_creator ? '关闭' : '开启' }}
         </span>
         <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
         <span>创建协作空间的权限吗？</span>
@@ -23,13 +19,14 @@
 
       <!-- 2、设置用户登录权限 -->
       <p v-show="modal.type === 'enabled'">
-        <span>确认 </span>
+        <span>确认</span>
         <span
           :style="{
             color: (modal.obj || {}).enabled ? 'red' : 'green',
             'font-weight': 'bold'
           }"
-          >{{ (modal.obj || {}).enabled ? '不允许' : '允许' }}
+        >
+          {{ (modal.obj || {}).enabled ? '不允许' : '允许' }}
         </span>
         <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
         <span>登录吗？</span>
@@ -37,13 +34,14 @@
 
       <!-- 3、设置短链是否可用 -->
       <p v-show="modal.type === 'enabled_short_link'">
-        <span>确认 </span>
+        <span>确认</span>
         <span
           :style="{
             color: (modal.obj || {}).enabled ? 'red' : 'green',
             'font-weight': 'bold'
           }"
-          >{{ (modal.obj || {}).enabled ? '禁用' : '启用' }}
+        >
+          {{ (modal.obj || {}).enabled ? '禁用' : '启用' }}
         </span>
         <span>【{{ (modal.obj || {}).name || '-' }}】</span>
         <span>吗？</span>
@@ -52,20 +50,19 @@
       <!-- 4、设置网站是否可用 -->
       <div v-show="modal.type === 'enabled_target_link'">
         <p class="mb16">
-          <span>确认 </span>
+          <span>确认</span>
           <span
             :style="{
               color: (modal.obj || {}).enabled ? 'red' : 'green',
               'font-weight': 'bold'
             }"
-            >{{ (modal.obj || {}).enabled ? '禁用' : '启用' }}
+          >
+            {{ (modal.obj || {}).enabled ? '禁用' : '启用' }}
           </span>
           <span>【{{ (modal.obj || {}).hostname || '-' }}】</span>
           <span>吗？</span>
         </p>
-        <Checkbox v-model="form.enabled_target_link.recursive" size="large"
-          >设置相关联的链接</Checkbox
-        >
+        <Checkbox v-model="form.enabled_target_link.recursive" size="large">设置相关联的链接</Checkbox>
       </div>
 
       <!-- 5、屏蔽API域名 -->
@@ -74,19 +71,14 @@
           <!-- 屏蔽后该域名会从当前列表消失， -->
           确认屏蔽【{{ (modal.obj || {}).netloc || '-' }}】吗？
         </p>
-        <Checkbox v-model="form.stop_api_domain.recursive" size="large"
-          >设置相关联的链接</Checkbox
-        >
+        <Checkbox v-model="form.stop_api_domain.recursive" size="large">设置相关联的链接</Checkbox>
       </div>
 
       <!-- 6、设置API权限 -->
       <div v-show="modal.type === 'open_api_domain'">
         <!-- 用户 -->
         <div class="table-cell__nickname mb24">
-          <img
-            :src="(modal.obj || {}).headimgurl"
-            class="img--headimgurl mr8"
-          />
+          <img :src="(modal.obj || {}).headimgurl" class="img--headimgurl mr8" />
           <div class="itv-div__text--nowrap text_one_line">
             {{ (modal.obj || {}).nickname }}
           </div>
@@ -94,11 +86,7 @@
         <!-- 开关 -->
         <div class="itv-flex--fs mb24">
           <p class="mr16 itv-title--16">API 权限</p>
-          <i-switch
-            :loading="is_change.open_api_domain"
-            v-model="form.open_api_domain._switch"
-            :before-change="handleOpenApi"
-          >
+          <i-switch :loading="is_change.open_api_domain" v-model="form.open_api_domain._switch" :before-change="handleOpenApi">
             <span slot="open">开</span>
             <span slot="close">关</span>
           </i-switch>
@@ -126,34 +114,16 @@
               color="primary"
               @click="
                 form.open_api_domain.isEditing = true
-                form.open_api_domain._count =
-                  form.open_api_domain._count_default
+                form.open_api_domain._count = form.open_api_domain._count_default
               "
             />
           </div>
           <div class="itv-flex--fs" v-show="form.open_api_domain.isEditing">
-            <Input
-              type="number"
-              v-model="form.open_api_domain._count"
-              style="width: 100px"
-              class="mr16"
-            />
-            <Button
-              style="width: 60px;"
-              size="small"
-              type="primary"
-              @click="handleApiLimits"
-            >
+            <Input type="number" v-model="form.open_api_domain._count" style="width: 100px" class="mr16" />
+            <Button style="width: 60px;" size="small" type="primary" @click="handleApiLimits">
               确认
             </Button>
-            <Button
-              type="text"
-              class="mr16"
-              style="width: 60px;"
-              size="small"
-              @click="form.open_api_domain.isEditing = false"
-              >取消</Button
-            >
+            <Button type="text" class="mr16" style="width: 60px;" size="small" @click="form.open_api_domain.isEditing = false">取消</Button>
           </div>
         </div>
       </div>
@@ -162,10 +132,7 @@
       <div v-show="modal.type === 'check_api_domain'">
         <!-- 用户 -->
         <div class="table-cell__nickname mb24">
-          <img
-            :src="((modal.obj || {}).user || {}).headimgurl"
-            class="img--headimgurl mr8"
-          />
+          <img :src="((modal.obj || {}).user || {}).headimgurl" class="img--headimgurl mr8" />
           <div class="itv-div__text--nowrap text_one_line">
             {{ ((modal.obj || {}).user || {}).nickname }}
           </div>
@@ -173,15 +140,8 @@
         <!-- 域名列表 -->
         <div class="mb24">
           <p class="mr16 itv-title--16 mb8">域名列表</p>
-          <div
-            class="itv-flex--sb mb8"
-            v-for="(item, index) in (modal.obj || {}).netloc_list || []"
-            :key="index"
-          >
-            <p
-              class="itv-div__text--nowrap itv-text--a2 text_one_line"
-              @click="handleOpenNewTag(item)"
-            >
+          <div class="itv-flex--sb mb8" v-for="(item, index) in (modal.obj || {}).netloc_list || []" :key="index">
+            <p class="itv-div__text--nowrap itv-text--a2 text_one_line" @click="handleOpenNewTag(item)">
               {{ item }}
             </p>
             <!-- <i-switch
@@ -203,18 +163,14 @@
           <div class="label">封面图</div>
           <div class="value">
             <img
-              :src="
-                calImgUrl(((modal.obj || {}).wx_share_params || {}).image_url)
-              "
+              :src="calImgUrl(((modal.obj || {}).wx_share_params || {}).image_url)"
               style="width: 80px;height: 80px;object-fit: cover;"
               alt="fmt"
               class="cp"
               title="点击查看大图"
               @click="
                 img_model.show = true
-                img_model.url = calImgUrl(
-                  ((modal.obj || {}).wx_share_params || {}).image_url
-                )
+                img_model.url = calImgUrl(((modal.obj || {}).wx_share_params || {}).image_url)
               "
             />
           </div>
@@ -237,12 +193,7 @@
         <div class="row">
           <div class="label">审核</div>
           <div class="value">
-            <i-switch
-              :before-change="handleWxShare"
-              :loading="form.wx_share.loading"
-              v-model="form.wx_share._switch"
-              class="mr16"
-            >
+            <i-switch :before-change="handleWxShare" :loading="form.wx_share.loading" v-model="form.wx_share._switch" class="mr16">
               <span slot="open">开</span>
               <span slot="close">关</span>
             </i-switch>
@@ -260,19 +211,8 @@
 
       <!-- 10、查看二维码 -->
       <div v-show="modal.type === 'link_qr'">
-        <div
-          v-for="(item, i) in (modal.obj || {}).list || []"
-          :key="i"
-          class="mb16"
-        >
-          <vue-qr
-            class="mt16"
-            style="width:130px;display:block;"
-            :text="item"
-            :margin="0"
-            :dotScale="1"
-            :size="500"
-          />
+        <div v-for="(item, i) in (modal.obj || {}).list || []" :key="i" class="mb16">
+          <vue-qr class="mt16" style="width:130px;display:block;" :text="item" :margin="0" :dotScale="1" :size="500" />
           <p style="word-break: break-all;">{{ item }}</p>
         </div>
       </div>
@@ -280,24 +220,15 @@
       <!-- 11、用户打标签 user_tags -->
       <div v-show="modal.type === 'user_tags'">
         <Select v-model="form.user_tags.tagids">
-          <Option
-            v-for="item in options.user_tags || []"
-            :value="item.id"
-            :key="item.id"
-            >{{ item.name }}</Option
-          >
+          <Option v-for="item in options.user_tags || []" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
       </div>
 
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
-          <Button type="text" class="mr16" @click="modal.show = false"
-            >取消</Button
-          >
-          <Button type="primary" @click="handleModal" :loading="loading"
-            >确认</Button
-          >
+          <Button type="text" class="mr16" @click="modal.show = false">取消</Button>
+          <Button type="primary" @click="handleModal" :loading="loading">确认</Button>
         </div>
       </template>
     </Modal>
@@ -373,12 +304,7 @@ export default {
       return this.$bus.modal
     },
     show_footer() {
-      const arr_no_show = [
-        'open_api_domain',
-        'wx_share',
-        'check_api_domain',
-        'link_qr'
-      ]
+      const arr_no_show = ['open_api_domain', 'wx_share', 'check_api_domain', 'link_qr']
 
       return !arr_no_show.includes(this.modal.type)
     }
@@ -401,20 +327,14 @@ export default {
         this.form.open_api_domain['_count_default'] = this.modal.obj.api_n_links_d_limit
       } else if (v && this.modal.type === 'check_api_domain') {
         // 初始化.审核API域名
-        this.form.check_api_domain['_switch'] = this.modal.obj.netloc_list.map(
-          () => true
-        )
+        this.form.check_api_domain['_switch'] = this.modal.obj.netloc_list.map(() => true)
       } else if (v && this.modal.type === 'wx_share') {
         // 初始化.微信分享是否开启
         this.form.wx_share['_switch'] = this.modal.obj.wx_share
       } else if (v && this.modal.type === 'login_user') {
         // 初始化.获取用户token
         this.doGetUserToken()
-      } else if (
-        v &&
-        this.modal.type === 'user_tags' &&
-        !this.options.user_tags
-      ) {
+      } else if (v && this.modal.type === 'user_tags' && !this.options.user_tags) {
         // 初始化.微信标签
         this.doGetUserTags()
       }
@@ -530,9 +450,7 @@ export default {
         this.modal.show = false
         this.modal.success_cb({ page: 'now' })
         setTimeout(() => {
-          this.$Message.success(
-            (this.modal.obj || {}).ws_creator ? '关闭成功' : '开启成功'
-          )
+          this.$Message.success((this.modal.obj || {}).ws_creator ? '关闭成功' : '开启成功')
         }, 300)
       } catch (e) {
         console.error(e)

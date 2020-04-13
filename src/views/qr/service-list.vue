@@ -4,33 +4,16 @@
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <Breadcrumb v-show="$route.query.name">
-        <BreadcrumbItem class="cp" @click.native="$router.go(-1)"
-          >公众号列表</BreadcrumbItem
-        >
+        <BreadcrumbItem class="cp" @click.native="$router.go(-1)">公众号列表</BreadcrumbItem>
         <BreadcrumbItem>{{ $route.query.name }} 推送的客服消息</BreadcrumbItem>
       </Breadcrumb>
       <div class="header__search">
-        <Input
-          clearable
-          v-model="form.search"
-          placeholder="请输入"
-          style="width: 300px"
-          @on-enter="doGetData"
-          @on-clear="doGetData"
-          class="mr8"
-        />
+        <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
     <!-- 对话框.详情 -->

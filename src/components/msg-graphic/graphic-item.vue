@@ -2,37 +2,18 @@
 <template>
   <div
     v-if="data"
-    :class="[
-      'itv-msg-graphic-item--wrap',
-      { 'itv-msg-graphic-item--wrap--checked': isChecked },
-      { 'itv-msg-graphic-item--wrap--disabled': disabled }
-    ]"
+    :class="['itv-msg-graphic-item--wrap', { 'itv-msg-graphic-item--wrap--checked': isChecked }, { 'itv-msg-graphic-item--wrap--disabled': disabled }]"
     :title="disabled ? '图文消息条数限制在1条以内' : ''"
     @click="handleClick"
   >
     <div v-for="(item, i) in data" :key="i" :class="calItemClass(i, item)">
-      <img
-        class="itv-msg-graphic-item__img"
-        v-if="item.thumb_url !== ''"
-        :src="
-          isdev
-            ? `${item.thumb_url}`
-            : `https://wx-open.interval.im/ext/wx/bridge/?url=${item.thumb_url}`
-        "
-      />
+      <img class="itv-msg-graphic-item__img" v-if="item.thumb_url !== ''" :src="isdev ? `${item.thumb_url}` : `https://wx-open.interval.im/ext/wx/bridge/?url=${item.thumb_url}`" />
       <div class="itv-msg-graphic-item__text">
         <div class="itv-msg-graphic-item__text--title">{{ item.title }}</div>
         <div class="itv-msg-graphic-item__text--detail">{{ item.digest }}</div>
       </div>
     </div>
-    <Icon
-      :class="[
-        'itv-msg-graphic-item--wrap__icon--checked animated',
-        { bounceIn: isChecked }
-      ]"
-      type="md-checkmark"
-      v-show="isChecked"
-    />
+    <Icon :class="['itv-msg-graphic-item--wrap__icon--checked animated', { bounceIn: isChecked }]" type="md-checkmark" v-show="isChecked" />
   </div>
 </template>
 

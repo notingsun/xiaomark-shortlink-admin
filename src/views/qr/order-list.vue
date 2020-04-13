@@ -6,14 +6,7 @@
       <TabPane label="推送" name="push"></TabPane>
     </Tabs>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
@@ -244,11 +237,7 @@ export default {
             minWidth: 120,
             // key: 'start_date',
             render: (h, { row }) => {
-              return (
-                <span>
-                  {this.order_type === 'qr' ? row.start_date : row.begin_date}
-                </span>
-              )
+              return <span>{this.order_type === 'qr' ? row.start_date : row.begin_date}</span>
             }
           },
           {
@@ -256,11 +245,7 @@ export default {
             minWidth: 120,
             // key: 'stop_date',
             render: (h, { row }) => {
-              return (
-                <span>
-                  {this.order_type === 'qr' ? row.stop_date : row.over_date}
-                </span>
-              )
+              return <span>{this.order_type === 'qr' ? row.stop_date : row.over_date}</span>
             }
           },
           {

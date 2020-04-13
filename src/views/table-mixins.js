@@ -13,9 +13,7 @@ export default {
   methods: {
     domTableScrollTop() {
       // 表格回滚到顶部
-      this.$refs.refTable &&
-        this.$refs.refTable.$refs.body &&
-        (this.$refs.refTable.$refs.body.scrollTop = 0)
+      this.$refs.refTable && this.$refs.refTable.$refs.body && (this.$refs.refTable.$refs.body.scrollTop = 0)
     }
   }
 }

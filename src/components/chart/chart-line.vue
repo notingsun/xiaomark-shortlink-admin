@@ -3,54 +3,25 @@
   <div class="chart-line itv-flex--fs">
     <!-- 图表 -->
     <div :style="{ height: '230px', width: width }">
-      <ve-line
-        v-if="showLine"
-        :data="chartData"
-        :legend="chartLegend"
-        :extend="chartExtend"
-        height="230px"
-        :width="width"
-        :settings="settings"
-      />
+      <ve-line v-if="showLine" :data="chartData" :legend="chartLegend" :extend="chartExtend" height="230px" :width="width" :settings="settings" />
     </div>
     <div class="btns--wrap">
-      <div
-        class="itv-flex--fs btns--group--wrap"
-        v-for="(group, i_g) in legendOptions"
-        :key="i_g"
-      >
+      <div class="itv-flex--fs btns--group--wrap" v-for="(group, i_g) in legendOptions" :key="i_g">
         <div
           class="btn mb16 mr8"
           @click="handleChangeLegend(o)"
           v-for="(o, i) in group.data"
           :key="i"
           :style="{
-            'background-color': unSelected.includes(o.name)
-              ? 'transparent'
-              : o.bg
+            'background-color': unSelected.includes(o.name) ? 'transparent' : o.bg
           }"
         >
-          <div
-            :style="{ 'background-color': o.color }"
-            class="btn__square mr8"
-          />
+          <div :style="{ 'background-color': o.color }" class="btn__square mr8" />
           <span>{{ o.name }}</span>
         </div>
         <div v-if="group.isGroup">
-          <Button
-            @click="handleSelectGroup(group)"
-            type="dashed"
-            class="mb16 mr8"
-            size="small"
-            >只显示</Button
-          >
-          <Button
-            @click="handleHideGroup(group)"
-            size="small"
-            type="dashed"
-            class="mb16"
-            >隐藏</Button
-          >
+          <Button @click="handleSelectGroup(group)" type="dashed" class="mb16 mr8" size="small">只显示</Button>
+          <Button @click="handleHideGroup(group)" size="small" type="dashed" class="mb16">隐藏</Button>
         </div>
       </div>
     </div>

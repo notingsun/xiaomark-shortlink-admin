@@ -1,12 +1,5 @@
 // 渠道码的状态
-export const arr_reply = [
-  '无',
-  '文本消息',
-  '图片消息',
-  '图文消息',
-  '网页链接',
-  '小程序卡片'
-]
+export const arr_reply = ['无', '文本消息', '图片消息', '图文消息', '网页链接', '小程序卡片']
 export const arr_reply_status_map = {
   0: {
     text: '未开始',

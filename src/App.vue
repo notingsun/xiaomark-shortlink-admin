@@ -39,16 +39,10 @@ export default {
     })
 
     // 获取Cookies，并保存在this.$bus.token中
-    this.$bus.$emit(
-      this.$bus.EVENTS.LOGIN,
-      this.$PDo.Cookies.get(process.env.VUE_APP_COOKIE)
-    )
+    this.$bus.$emit(this.$bus.EVENTS.LOGIN, this.$PDo.Cookies.get(process.env.VUE_APP_COOKIE))
 
     // 获取是否自动登陆
-    this.$bus.$emit(
-      this.$bus.EVENTS.AUTO_LOGIN,
-      JSON.parse(localStorage.getItem('SCRM_ADMIN_AUTO_LOGIN') || 'false')
-    )
+    this.$bus.$emit(this.$bus.EVENTS.AUTO_LOGIN, JSON.parse(localStorage.getItem('SCRM_ADMIN_AUTO_LOGIN') || 'false'))
 
     // 如果没有token，跳转到登陆页
     if (!this.$bus.token && this.$route.name !== 'Login') {

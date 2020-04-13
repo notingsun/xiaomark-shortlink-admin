@@ -1,11 +1,6 @@
 /* 组件.图标 */
 <template>
-  <svg
-    :class="svgClass"
-    aria-hidden="true"
-    :style="styles"
-    @click="handleClick"
-  >
+  <svg :class="svgClass" aria-hidden="true" :style="styles" @click="handleClick">
     <use :xlink:href="iconClass" />
   </svg>
 </template>

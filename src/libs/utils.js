@@ -46,10 +46,7 @@ const downloadBase64Img = (b64, file_name) => {
  */
 const pagination = {
   params: () => {
-    return (
-      that.$global.utils.pagination.get() ||
-      that.$global.consts.PAGINATION_DEFAULT
-    )
+    return that.$global.utils.pagination.get() || that.$global.consts.PAGINATION_DEFAULT
   }, // 获取分页参数，给后端的
   /* 注意： reset 后，若要获取最新的 params 值，需要将获取 params 的函数 写在 $nextTick 中，因为 Pagination 中 watch 的执行优先级比较低， 最后才会执行 */
   reset: () => {

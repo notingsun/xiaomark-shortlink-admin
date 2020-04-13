@@ -4,41 +4,18 @@
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <div class="itv-flex--fs">
-        <itv-icon
-          type="i-back"
-          title="返回"
-          size="20"
-          class="itv-btn__icon mr16"
-          @click="$router.go(-1)"
-        />
+        <itv-icon type="i-back" title="返回" size="20" class="itv-btn__icon mr16" @click="$router.go(-1)" />
         <Breadcrumb>
           <BreadcrumbItem>短链列表</BreadcrumbItem>
           <BreadcrumbItem>空间：{{ $route.query.name }}</BreadcrumbItem>
         </Breadcrumb>
       </div>
-      <Select
-        v-model="form.sort"
-        style="width:150px"
-        @on-change="doGetData"
-        placement="bottom-end"
-      >
-        <Option
-          v-for="(item, index) in options.sort"
-          :value="item.value"
-          :key="index"
-          >{{ item.label }}</Option
-        >
+      <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
+        <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
       </Select>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>

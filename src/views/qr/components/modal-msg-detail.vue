@@ -1,12 +1,7 @@
 /* 消息.详情 */
 <template>
   <div class="modal-msg-detail">
-    <Modal
-      v-model="dialog.show"
-      title="推送详情"
-      footer-hide
-      class="itv-modal modal-detail-msg-list"
-    >
+    <Modal v-model="dialog.show" title="推送详情" footer-hide class="itv-modal modal-detail-msg-list">
       <div class="pr" style="min-height: 390px;">
         <Spin fix v-show="dialog.loading" />
         <!-- 一、公共.标题 -->

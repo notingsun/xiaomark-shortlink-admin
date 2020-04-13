@@ -1,36 +1,15 @@
 /* 图片上传组件 使用方法：
-<itv-upload-image
-  multiple="false"
-  :max="15"
-  v-model=""
-  :accept="'image/png, image/jpeg'"
-  limitText="图片仅支持 jpeg、png 格式"
-  clearable
-  @on-change="setImage"
-/>
+<itv-upload-image multiple="false" :max="15" v-model="" :accept="'image/png, image/jpeg'" limitText="图片仅支持 jpeg、png 格式" clearable @on-change="setImage" />
 <template>
   <!-- 组件依赖于iview的上传组件 -->
   <div class="upload-images">
-    <Upload
-      v-show="show_upload"
-      :multiple="max > 1"
-      :disabled="loading"
-      class="upload-images"
-      action=""
-      :show-upload-list="false"
-      :before-upload="uploadToQiniu"
-      :accept="accept"
-    >
+    <Upload v-show="show_upload" :multiple="max > 1" :disabled="loading" class="upload-images" action="" :show-upload-list="false" :before-upload="uploadToQiniu" :accept="accept">
       <!-- 多图片 -->
       <div v-if="multiple">
         <Button class="w88 mb8" :loading="loading" :disabled="disabled_btn">
           {{ loading ? '添加中' : '添加图片' }}
         </Button>
-        <span
-          class="upload-images__hint2"
-          slot="tip"
-          v-show="multiple && limitText"
-        >
+        <span class="upload-images__hint2" slot="tip" v-show="multiple && limitText">
           {{ limitText }}
         </span>
       </div>
@@ -42,33 +21,17 @@
     </Upload>
 
     <!-- 已上传的图片 -->
-    <div
-      v-show="url_arr.length > 0"
-      class="itv-flex--fs"
-      style="flex-wrap: wrap;"
-    >
-      <div
-        class="upload-images__wrap mb8 mr8"
-        v-for="(url, index) in url_arr"
-        :key="index"
-      >
+    <div v-show="url_arr.length > 0" class="itv-flex--fs" style="flex-wrap: wrap;">
+      <div class="upload-images__wrap mb8 mr8" v-for="(url, index) in url_arr" :key="index">
         <Spin fix v-if="loading && !multiple" />
         <img class="upload-images__img" :src="url" />
         <div class="upload-images__img__cover">
           <!-- 按钮.查看大图 -->
-          <span
-            class="itv-btn__icon--wrap upload-images__img__cover__icon mr16"
-            @click="handleShow(url)"
-            title="查看大图"
-          >
+          <span class="itv-btn__icon--wrap upload-images__img__cover__icon mr16" @click="handleShow(url)" title="查看大图">
             <itv-icon type="i-eye" size="20" color="" />
           </span>
           <!-- 按钮.删除 -->
-          <span
-            class="itv-btn__icon--wrap upload-images__img__cover__icon"
-            @click="handleClear(index)"
-            title="删除"
-          >
+          <span class="itv-btn__icon--wrap upload-images__img__cover__icon" @click="handleClear(index)" title="删除">
             <itv-icon type="i-delete" size="20" color="" />
           </span>
         </div>
@@ -203,8 +166,7 @@ export default {
         if (this.max === this.url_arr_temp_length) {
           return
         }
-        !this.url_arr_temp_length &&
-          (this.url_arr_temp_length = this.url_arr.length)
+        !this.url_arr_temp_length && (this.url_arr_temp_length = this.url_arr.length)
         this.url_arr_temp_length += 1
 
         // 上传了多个
@@ -227,16 +189,9 @@ export default {
 
         let token = data.uptoken
 
-        let key = `interval/${this.$PDo.String.random()}.${
-          file.type.split('/')[1]
-        }`
+        let key = `interval/${this.$PDo.String.random()}.${file.type.split('/')[1]}`
 
-        let observable = qiniu.upload(file, key, token, [
-          'image/png',
-          'image/jpeg',
-          'image/jpg',
-          'image/gif'
-        ])
+        let observable = qiniu.upload(file, key, token, ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'])
 
         observable.subscribe({
           next: () => {
@@ -252,13 +207,8 @@ export default {
               if (this.multipleOneReturn && this.configMutiple.isMutiple) {
                 // 一次性返回
                 this.configMutiple.url_arr.push(url)
-                if (
-                  this.configMutiple.url_arr.length === this.url_arr_temp_length
-                ) {
-                  this.url_arr = [
-                    ...this.url_arr,
-                    ...this.configMutiple.url_arr
-                  ]
+                if (this.configMutiple.url_arr.length === this.url_arr_temp_length) {
+                  this.url_arr = [...this.url_arr, ...this.configMutiple.url_arr]
                   this.configMutiple.isMutiple = false
                   this.configMutiple.url_arr = []
                 }

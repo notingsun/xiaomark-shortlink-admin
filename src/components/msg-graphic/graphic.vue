@@ -9,23 +9,13 @@
     <div class="itv-graphic__checked" v-else>
       <itv-graphic-item :data="media_info.news_item" type="seleted" />
       <div class="itv-graphic__checked__cover">
-        <span
-          class="itv-btn__icon--wrap itv-graphic__checked__cover__btn"
-          @click="handleDeleteChecked"
-          title="删除"
-        >
+        <span class="itv-btn__icon--wrap itv-graphic__checked__cover__btn" @click="handleDeleteChecked" title="删除">
           <Icon type="ios-trash-outline" />
         </span>
       </div>
     </div>
     <!-- 弹窗 -->
-    <Modal
-      class="itv-graphic-dialog itv-modal"
-      v-model="dialog.show"
-      title="选择图文"
-      :styles="{ top: '50px' }"
-      width="920"
-    >
+    <Modal class="itv-graphic-dialog itv-modal" v-model="dialog.show" title="选择图文" :styles="{ top: '50px' }" width="920">
       <div class="list">
         <itv-graphic-item
           style="margin-bottom:16px"
@@ -111,10 +101,7 @@ export default {
           })
           if (!this.media_info.news_item) {
             this.media_id = '' // 当前选中图文消息已删除
-          } else if (
-            this.onlySingle &&
-            this.media_info.news_item.length !== 1
-          ) {
+          } else if (this.onlySingle && this.media_info.news_item.length !== 1) {
             this.media_id = '' // 只能选单条图文消息，当前选中图文消息非单条
           }
         }

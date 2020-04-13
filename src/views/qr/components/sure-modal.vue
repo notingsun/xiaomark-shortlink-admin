@@ -1,12 +1,7 @@
 /* 确认对话框 */
 <template>
   <div>
-    <Modal
-      class="sure-modal"
-      v-model="modal.show"
-      :title="titleMap[modal.type]"
-      :mask-closable="false"
-    >
+    <Modal class="sure-modal" v-model="modal.show" :title="titleMap[modal.type]" :mask-closable="false">
       <!-- 修改渠道码套餐到期日 -->
       <div v-if="modal.type === 'package'">
         <div class="mb24">
@@ -27,11 +22,7 @@
             套餐：
           </span>
           <Select v-model="form_package.combo" class="value" size="large">
-            <Option
-              v-for="item in options.combo"
-              :value="item.value"
-              :key="item.value"
-            >
+            <Option v-for="item in options.combo" :value="item.value" :key="item.value">
               {{ item.label }}
             </Option>
           </Select>
@@ -40,14 +31,7 @@
           <span class="itv-title--14 mr16 mb8 label">
             套餐到期日：
           </span>
-          <DatePicker
-            size="large"
-            class="value"
-            type="date"
-            placeholder="请选择"
-            v-model="form_package.stop_date"
-            :options="options.shortcuts_combo"
-          ></DatePicker>
+          <DatePicker size="large" class="value" type="date" placeholder="请选择" v-model="form_package.stop_date" :options="options.shortcuts_combo"></DatePicker>
         </div>
       </div>
 
@@ -77,11 +61,7 @@
             套餐：
           </span>
           <Select v-model="form_package2.meal" class="value" size="large">
-            <Option
-              v-for="item in options.meal"
-              :value="item.value"
-              :key="item.value"
-            >
+            <Option v-for="item in options.meal" :value="item.value" :key="item.value">
               {{ item.label }}
             </Option>
           </Select>
@@ -90,25 +70,13 @@
           <span class="itv-title--14 mr16 mb8 label">
             套餐到期日：
           </span>
-          <DatePicker
-            size="large"
-            class="value"
-            type="date"
-            placeholder="请选择"
-            v-model="form_package2.over_date"
-            :options="options.shortcuts_combo"
-          ></DatePicker>
+          <DatePicker size="large" class="value" type="date" placeholder="请选择" v-model="form_package2.over_date" :options="options.shortcuts_combo"></DatePicker>
         </div>
         <div class="mb24" v-show="form_package2.meal === 1">
           <span class="itv-title--14 mr16 mb8 label">
             可用条数：
           </span>
-          <Input
-            type="number"
-            v-model="form_package2.n_push"
-            class="value"
-            size="large"
-          />
+          <Input type="number" v-model="form_package2.n_push" class="value" size="large" />
         </div>
       </div>
 
@@ -116,19 +84,19 @@
       <p v-show="modal.type === 'login_user'">
         <span>确认使用</span>
         <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
-        <span>的身份登录<b>小码渠道码</b>吗？</span>
+        <span>
+          的身份登录
+          <b>小码渠道码</b>
+          吗？
+        </span>
         <br />
       </p>
 
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
-          <Button type="text" class="mr16" @click="modal.show = false"
-            >取消</Button
-          >
-          <Button type="primary" @click="handleModal" :loading="loading"
-            >确认</Button
-          >
+          <Button type="text" class="mr16" @click="modal.show = false">取消</Button>
+          <Button type="primary" @click="handleModal" :loading="loading">确认</Button>
         </div>
       </template>
     </Modal>
@@ -331,15 +299,9 @@ export default {
         const info = info_map[hostname] || info_map.localhost || {}
         const { url, c_name, domain } = info
 
-        console.log(
-          `${encodeURIComponent(c_name)}=${encodeURIComponent(
-            token
-          )};domain=${domain}`
-        )
+        console.log(`${encodeURIComponent(c_name)}=${encodeURIComponent(token)};domain=${domain}`)
 
-        document.cookie = `${encodeURIComponent(c_name)}=${encodeURIComponent(
-          token
-        )};domain=${domain}`
+        document.cookie = `${encodeURIComponent(c_name)}=${encodeURIComponent(token)};domain=${domain}`
 
         window.open(`${url}`, '_blank')
       } else {

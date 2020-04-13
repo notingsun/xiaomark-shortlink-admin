@@ -92,14 +92,8 @@ export default {
             minWidth: 160,
             render: (h, { row }) => {
               return (
-                <div
-                  class="table-cell__nickname cp"
-                  onClick={this.toUserSpaceList.bind(null, row)}
-                >
-                  <img
-                    src={(row.user || {}).headimgurl}
-                    class="img--headimgurl mr8"
-                  />
+                <div class="table-cell__nickname cp" onClick={this.toUserSpaceList.bind(null, row)}>
+                  <img src={(row.user || {}).headimgurl} class="img--headimgurl mr8" />
                   <div class="text--nickname">{(row.user || {}).nickname}</div>
                 </div>
               )
@@ -115,20 +109,10 @@ export default {
               return (
                 <div>
                   <span title="查看成员">
-                    <itv-icon
-                      type="sub-MemberList"
-                      size="20"
-                      class="itv-btn__icon mr16"
-                      onClick={this.toSpaceDetail.bind(null, row)}
-                    />
+                    <itv-icon type="sub-MemberList" size="20" class="itv-btn__icon mr16" onClick={this.toSpaceDetail.bind(null, row)} />
                   </span>
                   <span title="查看短链">
-                    <itv-icon
-                      type="i-detail"
-                      size="20"
-                      class="itv-btn__icon"
-                      onClick={this.toShortLinkSpace.bind(null, row)}
-                    />
+                    <itv-icon type="i-detail" size="20" class="itv-btn__icon" onClick={this.toShortLinkSpace.bind(null, row)} />
                   </span>
                 </div>
               )

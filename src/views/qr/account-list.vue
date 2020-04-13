@@ -3,42 +3,17 @@
   <div class="account-list itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">
       <div class="header__search">
-        <Input
-          clearable
-          v-model="form.search"
-          placeholder="请输入"
-          style="width: 300px"
-          @on-enter="doGetData"
-          @on-clear="doGetData"
-          class="mr8"
-        />
+        <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
       <div>
-        <Select
-          v-model="form.sort"
-          style="width:150px"
-          @on-change="doGetData"
-          placement="bottom-end"
-        >
-          <Option
-            v-for="(item, index) in options.sort"
-            :value="item.value"
-            :key="index"
-            >{{ item.label }}</Option
-          >
+        <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
+          <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
         </Select>
       </div>
     </div>
     <!-- 表格 -->
-    <Table
-      :loading="loading"
-      style="flex: 1;"
-      ref="refTable"
-      :height="table.height"
-      :columns="table.columns"
-      :data="table.data"
-    />
+    <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
   </div>
@@ -140,14 +115,7 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <p style="width: 70px;">{arr[0] || '-'}</p>
-                  <itv-icon
-                    title="编辑"
-                    type="i-edit"
-                    class="ml16 "
-                    size="18"
-                    color="primary"
-                    onClick={this.handlePackage.bind(this, row)}
-                  />
+                  <itv-icon title="编辑" type="i-edit" class="ml16 " size="18" color="primary" onClick={this.handlePackage.bind(this, row)} />
                 </div>
               )
             }
@@ -195,8 +163,7 @@ export default {
               )
             },
             render: (h, { row }) => {
-              let mealName =
-                row.meal === 1 && row.n_push === 0 ? '-' : mealMap[row.meal]
+              let mealName = row.meal === 1 && row.n_push === 0 ? '-' : mealMap[row.meal]
 
               return (
                 <span>
@@ -216,14 +183,7 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <p style="width: 70px;">{arr[0] || '-'}</p>
-                  <itv-icon
-                    title="编辑"
-                    type="i-edit"
-                    class="ml16 "
-                    size="18"
-                    color="primary"
-                    onClick={this.handlePackage2.bind(this, row)}
-                  />
+                  <itv-icon title="编辑" type="i-edit" class="ml16 " size="18" color="primary" onClick={this.handlePackage2.bind(this, row)} />
                 </div>
               )
             }
@@ -282,10 +242,7 @@ export default {
             minWidth: 120,
             render: (h, { row }) => {
               return (
-                <div
-                  class="table-cell__nickname cp"
-                  onClick={this.toUserDetail.bind(null, row)}
-                >
+                <div class="table-cell__nickname cp" onClick={this.toUserDetail.bind(null, row)}>
                   <img src={row.user.headimgurl} class="img--headimgurl mr8" />
                   <div class="">{row.user.nickname}</div>
                 </div>
@@ -354,25 +311,13 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <span class="mr8" title="是否已授权">
-                    <itv-icon
-                      type="i-user"
-                      style={{ color: row.authorized ? C_GREEN : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-user" style={{ color: row.authorized ? C_GREEN : C_GREY }} size="24" />
                   </span>
                   <span class="mr8" title="是否已授权必要的权限集">
-                    <itv-icon
-                      type="i-key"
-                      style={{ color: row.fully_authorized ? C_GREEN : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="i-key" style={{ color: row.fully_authorized ? C_GREEN : C_GREY }} size="24" />
                   </span>
                   <span title="是否为已认证的服务号">
-                    <itv-icon
-                      type="sub-FansManagement"
-                      style={{ color: row.verified ? C_GREEN : C_GREY }}
-                      size="24"
-                    />
+                    <itv-icon type="sub-FansManagement" style={{ color: row.verified ? C_GREEN : C_GREY }} size="24" />
                   </span>
                 </div>
               )
@@ -396,39 +341,21 @@ export default {
                       type="i-qrcode"
                       size="20"
                       class="itv-btn__icon"
-                      color={
-                        (row.user || {}).last_login_time ? 'primary' : 'sub'
-                      }
-                      onClick={this.toAccountXList.bind(
-                        null,
-                        row,
-                        'AccountQrList'
-                      )}
+                      color={(row.user || {}).last_login_time ? 'primary' : 'sub'}
+                      onClick={this.toAccountXList.bind(null, row, 'AccountQrList')}
                     />
                   </span>
                   <div
-                    class={`itv-text--btn2 mr8 ${
-                      (row.user || {}).final_login_time ? '' : 'sub'
-                    }`}
+                    class={`itv-text--btn2 mr8 ${(row.user || {}).final_login_time ? '' : 'sub'}`}
                     title="查看模版消息"
-                    onClick={this.toAccountXList.bind(
-                      null,
-                      row,
-                      'AccountTemplateList'
-                    )}
+                    onClick={this.toAccountXList.bind(null, row, 'AccountTemplateList')}
                   >
                     模
                   </div>
                   <div
-                    class={`itv-text--btn2 ${
-                      (row.user || {}).final_login_time ? '' : 'sub'
-                    }`}
+                    class={`itv-text--btn2 ${(row.user || {}).final_login_time ? '' : 'sub'}`}
                     title="查看客服消息"
-                    onClick={this.toAccountXList.bind(
-                      null,
-                      row,
-                      'AccountServiceList'
-                    )}
+                    onClick={this.toAccountXList.bind(null, row, 'AccountServiceList')}
                   >
                     客
                   </div>
