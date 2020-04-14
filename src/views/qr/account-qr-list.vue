@@ -28,6 +28,9 @@ export default {
   props: {},
   components: {},
   data() {
+    const C_GREEN = '#47cb89'
+    const C_GREY = '#c5c8ce'
+
     return {
       loading: true,
       table: {
@@ -81,29 +84,96 @@ export default {
             }
           },
           {
-            title: '扫码人数',
-            minWidth: 120,
-            key: 'n_visitors'
+            // title: '开启关注回复',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '开启', value: 1 },
+                { name: '关闭', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.auto_switch === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.auto_switch = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">开启关注回复</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            minWidth: 100,
+            key: 'stay_ratio',
+            render: (h, { row }) => {
+              return <Icon title={row.auto_switch ? '开启关注回复' : '停用关注回复'} type="md-checkmark-circle" color={row.auto_switch ? C_GREEN : C_GREY} size="20" />
+            }
           },
           {
-            title: '扫码新增关注',
-            minWidth: 120,
-            key: 'n_sub'
-          },
-          {
-            title: '当前留存人数',
-            minWidth: 120,
-            key: 'n_stay'
-          },
-          {
-            title: '当前取关人数',
-            minWidth: 120,
-            key: 'n_leave'
+            // title: '扫码 / 扫码新增关注 / 当前留存 / 当前取关',
+            minWidth: 300,
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              return (
+                <div class="itv-flex--fs" style="text-align: center;">
+                  <div class="flex1">扫码</div>
+                  <Divider type="vertical" />
+                  <div style="flex:1.5">扫码新增关注</div>
+                  <Divider type="vertical" />
+                  <div class="flex1">当前留存</div>
+                  <Divider type="vertical" />
+                  <div class="flex1">当前取关</div>
+                </div>
+              )
+            },
+            // key: 'n_visitors n_sub n_stay n_leave',
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs" style="text-align: center;">
+                  <div class="flex1" title="扫码人数">
+                    {row.n_visitors}
+                  </div>
+                  <Divider type="vertical" />
+                  <div style="flex:1.5" title="扫码新增关注">
+                    {row.n_sub}
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title="当前留存人数">
+                    {row.n_stay}
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title="当前取关人数">
+                    {row.n_leave}
+                  </div>
+                </div>
+              )
+            }
           },
           {
             title: '当前留存率',
+            align: 'center',
             minWidth: 120,
-            // key: 'stay_ratio',
+            key: 'stay_ratio',
             render: (h, { row }) => {
               return <span>{((row.stay_ratio || 0) * 100).toFixed(1)}%</span>
             }
@@ -113,6 +183,7 @@ export default {
       },
       // 获取表格数据的参数
       form: {
+        auto_switch: '',
         sort: 'time'
       },
       options: {
@@ -148,6 +219,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          auto_switch: this.form.auto_switch,
           platform_id: this.$route.params.account_id,
           order_by: this.form.sort
         }

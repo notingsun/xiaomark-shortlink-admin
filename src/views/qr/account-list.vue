@@ -16,18 +16,20 @@
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
+    <modal-auto-reply v-model="dialog.show" :data="dialog.data" />
   </div>
 </template>
 
 <script>
 import tableMixins from '../table-mixins'
+import ModalAutoReply from './components/modal-auto-reply'
 import { comboMap, mealMap } from './components/common-data'
 
 export default {
   name: 'AccountList',
   mixins: [tableMixins],
   props: {},
-  components: {},
+  components: { ModalAutoReply },
   data() {
     const C_GREEN = '#47cb89'
     // const C_ORANGE = '#e88986'
@@ -36,6 +38,10 @@ export default {
 
     return {
       loading: true,
+      dialog: {
+        show: false,
+        data: {}
+      },
       table: {
         data: [],
         total: 0,
@@ -115,7 +121,7 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <p style="width: 70px;">{arr[0] || '-'}</p>
-                  <itv-icon title="编辑" type="i-edit" class="ml16 " size="18" color="primary" onClick={this.handlePackage.bind(this, row)} />
+                  <itv-icon title="编辑" type="i-edit" class="ml16 cp" size="18" color="primary" onClick={this.handlePackage.bind(this, row)} />
                 </div>
               )
             }
@@ -183,7 +189,7 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <p style="width: 70px;">{arr[0] || '-'}</p>
-                  <itv-icon title="编辑" type="i-edit" class="ml16 " size="18" color="primary" onClick={this.handlePackage2.bind(this, row)} />
+                  <itv-icon title="编辑" type="i-edit" class="ml16 cp " size="18" color="primary" onClick={this.handlePackage2.bind(this, row)} />
                 </div>
               )
             }
@@ -194,24 +200,60 @@ export default {
             key: 'n_qrcodes'
           },
           {
-            title: '扫码人数',
-            minWidth: 120,
-            key: 'n_visitors'
+            title: '开启关注回复',
+            minWidth: 100,
+            key: 'stay_ratio',
+            render: (h, { row }) => {
+              const is_show = (row.auto_reply || {}).reply !== 0
+
+              return (
+                <div class="itv-flex--fs">
+                  <Icon title={is_show ? '开启关注回复' : '停用关注回复'} type="md-checkmark-circle" color={is_show ? C_GREEN : C_GREY} size="20" />
+                  {/* eslint-disable-next-line prettier/prettier */}
+                  {is_show ? <div class="itv-text--btn ml4" onClick={this.handleShowDialog.bind(this, row)}>查看详情</div> : null}
+                </div>
+              )
+            }
           },
           {
-            title: '扫码新增关注',
-            minWidth: 120,
-            key: 'n_sub'
-          },
-          {
-            title: '当前留存人数',
-            minWidth: 120,
-            key: 'n_stay'
-          },
-          {
-            title: '当前取关人数',
-            minWidth: 120,
-            key: 'n_leave'
+            // title: '扫码 / 扫码新增关注 / 当前留存 / 当前取关',
+            minWidth: 300,
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              return (
+                <div class="itv-flex--fs" style="text-align: center;">
+                  <div class="flex1">扫码</div>
+                  <Divider type="vertical" />
+                  <div style="flex:1.5">扫码新增关注</div>
+                  <Divider type="vertical" />
+                  <div class="flex1">当前留存</div>
+                  <Divider type="vertical" />
+                  <div class="flex1">当前取关</div>
+                </div>
+              )
+            },
+            // key: 'n_visitors n_sub n_stay n_leave',
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs" style="text-align: center;">
+                  <div class="flex1" title="扫码人数">
+                    {row.n_visitors}
+                  </div>
+                  <Divider type="vertical" />
+                  <div style="flex:1.5" title="扫码新增关注">
+                    {row.n_sub}
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title="当前留存人数">
+                    {row.n_stay}
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title="当前取关人数">
+                    {row.n_leave}
+                  </div>
+                </div>
+              )
+            }
           },
           {
             title: '当前留存率',
@@ -460,6 +502,10 @@ export default {
       this.$bus.modal2.show = true
       this.$bus.modal2.obj = row
       this.$bus.modal2.success_cb = this.doGetData
+    },
+    handleShowDialog(row) {
+      this.dialog.show = true
+      this.dialog.data = row.auto_reply || {}
     }
   }
 }
