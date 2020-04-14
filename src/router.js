@@ -118,10 +118,10 @@ const qr = [
     component: () => import('@/views/qr/user-list-qr.vue')
   },
   {
-    path: '/account-qr-list/:account_id',
+    path: '/qr-list/:account_id',
     meta: { menuIndex: '104', title: '公众号列表-二维码' },
     name: 'AccountQrList',
-    component: () => import('@/views/qr/account-qr-list.vue')
+    component: () => import('@/views/qr/qr-list.vue')
   },
   {
     path: '/template-list',
