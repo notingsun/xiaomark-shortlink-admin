@@ -25,7 +25,9 @@
           />
         </div>
         <!-- 3.图文消息 -->
-        <div v-if="item.reply === 3">ID：{{ item.showCnt }}</div>
+        <div v-if="item.reply === 3">
+          <itv-graphic-item :data="item.showCnt" v-if="item.showCnt" />
+        </div>
         <!-- 4.网页链接 -->
         <div v-if="item.reply === 4">
           <div class="row">
@@ -177,7 +179,7 @@ export default {
           showCnt = item.image_url
         } else if (type === 3) {
           // 图文消息
-          showCnt = item.news_media_id
+          showCnt = item.news_item
         } else if (type === 4) {
           // 网页链接
           // description: "没有"
