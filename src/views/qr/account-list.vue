@@ -200,9 +200,47 @@ export default {
             key: 'n_qrcodes'
           },
           {
-            title: '开启关注回复',
-            minWidth: 100,
+            // title: '开启关注回复',
+            minWidth: 120,
             key: 'stay_ratio',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '开启', value: 1 },
+                { name: '关闭', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.auto_reply === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.auto_reply = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">开启关注回复</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
             render: (h, { row }) => {
               const is_show = ((row.auto_reply || {}).reply || 0) !== 0
 
@@ -409,6 +447,7 @@ export default {
         height: null // 表格的高度
       },
       form: {
+        auto_reply: '',
         search: '',
         combo: '',
         meal: '',
@@ -470,6 +509,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          auto_reply: this.form.auto_reply,
           qs: this.form.search,
           meal: this.form.meal,
           combo: this.form.combo,
