@@ -204,7 +204,7 @@ export default {
             minWidth: 100,
             key: 'stay_ratio',
             render: (h, { row }) => {
-              const is_show = (row.auto_reply || {}).reply !== 0
+              const is_show = ((row.auto_reply || {}).reply || 0) !== 0
 
               return (
                 <div class="itv-flex--fs">
