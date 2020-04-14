@@ -62,6 +62,17 @@ export default {
         minWidth: 120,
         // key: 'tag_ids',
         render: (h, { row }) => {
+          if (row.file_url) {
+            return (
+              <div class="itv-flex--fs">
+                <span>按 OpenID</span>
+                <div style="width:1px;height:18px;background:#EBECF3" class="ml8 mr8"></div>
+                <a title="下载 OpenID 列表" href={`${row.file_url}?attname=${row.name}_OpenID列表.xlsx`}>
+                  <itv-icon type="i-download" size="16" />
+                </a>
+              </div>
+            )
+          }
           return <span>{(row.tag_ids || []).length === 0 ? '全部' : '部分粉丝'}</span>
         }
       },
