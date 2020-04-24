@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <title>小码短链接-微信</title>
+
+  <!-- 公共函数 -->
+  <script src="./common.js"></script>
+
+  <!-- 业务：获得微信授权的地址 -->
+  <script>
+    // 微信授权及公众号信息
+    /* eslint-disable no-unused-vars */
+    var wx_info = {
+      appid: 'wxc8f356adb367c7b6', // 公众号的url
+      // redirect_uri: 'http://192.168.3.27:8081/public/wx-visit.html',
+      redirect_uri: 'http://admin-test.xiaomark.com/1.5/wx-visit.html', // 成功后回调的地址（需要配置）
+      response_type: 'code',
+      scope: 'snsapi_userinfo', // 授权方式 snsapi_base:静默授权 snsapi_userinfo:需要用户确认
+      state: 'lijing' // 其他参数
+    }
+    var wx_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?'
+
+    // 获得：微信授权的地址
+    Object.keys(wx_info).forEach(function(key, i) {
+      i !== 0 && (wx_url += '&')
+      wx_url = wx_url + key + '=' + encodeURIComponent(wx_info[key])
+    })
+    wx_url = wx_url + '#wechat_redirect'
+    console.log('wx_url:', wx_url)
+  </script>
+
+  <!-- 业务：是否是微信浏览器的处理 -->
+  <script>
+    var target_url = 'https://www.baidu.com'
+    var is_weixin_browser = /micromessenger/.test(window.navigator.userAgent.toLowerCase())
+
+    window.addEventListener('load', function() {
+      // eslint-disable-next-line no-undef
+      var wx_code = (getUrlQuery() || {}).code // 微信授权成功后会有这个参数
+
+      // 获取页面重的元素
+      var div__test1 = document.getElementById('div__test1')
+      var div__test = document.getElementById('div__test')
+      var btn__target = document.getElementById('btn__target')
+      var btn__wx = document.getElementById('btn__wx')
+
+      var count = 0
+      var auto_sum = 1000
+
+      // x秒后，自动打开目标页
+      var handleAutoToTarget = function() {
+        count++
+        div__test1.textContent = auto_sum - count + ' s 后自动跳转'
+        if (count === auto_sum) {
+          // eslint-disable-next-line no-use-before-define
+          handleToTarget()
+          // eslint-disable-next-line no-use-before-define
+          clearInterval(timer_auto)
+        }
+      }
+      var timer_auto = setInterval(handleAutoToTarget, 1000)
+
+      // 打开目标页
+      var handleToTarget = function() {
+        div__test.innerHTML = '直接跳转:' + target_url
+        window.location.replace(target_url)
+        clearInterval(timer_auto)
+      }
+
+      if (is_weixin_browser && !wx_code) {
+        // 感觉可以先用静默授权，用oppenid去获取用户信息，有的话直接跳转目标，没有的话就跳转授权
+        // 显示在浏览器中打开
+        // eslint-disable-next-line no-undef
+        // window.location.replace(wx_url) // 没有授权，跳转授权（拒绝授权后，不会重定向会本目标页）
+
+
+        // eslint-disable-next-line no-undef
+        // window.location.href = wx_url // 没有授权，跳转授权（拒绝授权后，不会重定向会本目标页）
+
+        // 用ajax的形式请求
+        request({
+          // eslint-disable-next-line no-undef
+          url: 'http://wxd476fc9e2c95a497.wx.interval.im/ext/wx/user/authorize/',
+          method: 'GET',
+          data: {},
+          success: function(res) {
+            div__test.innerHTML = '✅ 当前网页的地址：' + window.location.href
+            console.log({
+              res
+            })
+          },
+          error: function(err) {
+            div__test.innerHTML = '❌ 当前网页的地址：' + window.location.href
+            console.log({
+              err
+            })
+          }
+        })
+
+
+        // 点击跳转防抖
+        // eslint-disable-next-line no-undef,vars-on-top
+        var handleBtnTarget = debounce({
+          successCb: handleToTarget
+        })
+        // 点击重新授权防抖
+        // eslint-disable-next-line no-undef,vars-on-top
+        var handleBtnWx = debounce({
+          successCb: function() {
+            // eslint-disable-next-line no-undef
+            window.location.href = wx_url
+          }
+        })
+
+        // 按钮点击事件绑定
+        btn__target.addEventListener('click', handleBtnTarget)
+        btn__wx.addEventListener('click', handleBtnWx)
+
+        // 显示按钮
+        btn__target.style.display = 'flex'
+        btn__wx.style.display = 'flex'
+      } else {
+        // 直接跳转
+        handleToTarget()
+      }
+    })
+  </script>
+
+  <!-- 业务：接口请求 -->
+  <script>
+    // 测试接口的请求
+    // eslint-disable-next-line no-undef
+    // request({
+    //   url: 'https://xiaomark.com/api/slmp/links/aseh7loi/',
+    //   method: 'GET',
+    //   data: {},
+    //   success: function(res) {
+    //     console.log({
+    //       res
+    //     })
+    //   },
+    //   error: function(err) {
+    //     console.log({
+    //       err
+    //     })
+    //   }
+    // })
+  </script>
+
+  <!-- 页面样式 -->
+  <link rel="stylesheet" href="common.css">
+  <style>
+    #container {
+      overflow-y: auto;
+    }
+    #btn__target {
+      margin-top: 12rem;
+      margin-bottom: 12rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <div id="div__test1">倒计时</div>
+    <div id="div__test"></div>
+    <div id="btn__target" class="btn">跳转到目标页</div>
+    <div id="btn__wx" class="btn">重新授权</div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <title>小码短链接-自动打开淘宝</title>
+
+  <!-- 公共函数 -->
+  <script src="./common.js"></script>
+
+  <!-- 业务：测试数据 -->
+  <script>
+    /*
+        字段含义
+          remark            备注
+          short_url         淘宝分享出来的短链接（这里需要的原因是，淘宝会自动判断配备重定向）
+          scheme_url        对应的协议，需要ly去获取对应的参数
+     */
+    // eslint-disable-next-line no-unused-vars
+    var test_data = {
+      item: {
+        remark: '淘宝商品',
+        short_url: 'https://m.tb.cn/h.VTCHwfH?sm=a25ac4',
+        scheme_url: 'taobao://item.taobao.com/item.htm?id=596435689854'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：
+        // 'https://h5.m.taobao.com/awp/core/detail.htm?ut_sk=1.WnhdnnBc2ecDABRfZBuEDneU_21380790_1586254475671.Copy.1&id=596435689854&sourceType=item&price=33-88&suid=4A44C2AD-B096-4C1F-8E68-399C9B6D08B8&un=b30652abac3f4e2c621065bb730f8a84&share_crt_v=1&spm=a2159r.13376460.0.0&sp_tk=4oK0OUpJeDFRUVNBSjLigrQ=&cpp=1&shareurl=true&short_name=h.VTCHwfH&sm=a25ac4&app=chrome'
+      },
+      item2: {
+        remark: '天猫商品',
+        short_url: 'https://m.tb.cn/h.V61FBKz?sm=613508',
+        scheme_url: 'taobao://item.taobao.com/item.htm?id=599818729301'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：
+        // 'https://detail.m.tmall.com/item.htm?id=599818729301&ut_sk=1.WnhdnnBc2ecDABRfZBuEDneU_21380790_1586317656812.Copy.1&sourceType=item&price=99&origin_price=198&suid=E0DFDF7D-0CC1-4F81-979C-C0E6D8115BBF&un=b30652abac3f4e2c621065bb730f8a84&share_crt_v=1&spm=a2159r.13376460.0.0&sp_tk=4oKzZjlGbTFRcGNFNHLigrM=&cpp=1&shareurl=true&short_name=h.V61FBKz&sm=613508&app=chrome'
+      },
+      shop: {
+        remark: '淘宝店铺',
+        short_url: 'https://m.tb.cn/h.VhWX9DK?sm=bc5d9d',
+        scheme_url: 'taobao://shop503140184.m.taobao.com'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：
+        // 'https://shop503140184.m.taobao.com/?ut_sk=1.WnhdnnBc2ecDABRfZBuEDneU_21380790_1586329128840.Copy.shop&weexShopSubTab=shopindex&sourceType=shop&weexShopTab=shopindexbar&suid=4DA8AAB8-7F3F-4BAE-B455-4EFAE1D42610&un=b30652abac3f4e2c621065bb730f8a84&share_crt_v=1&spm=a2159r.13376460.0.0&sp_tk=77+lN2ZuNjFRSmtoVGXvv6U=&cpp=1&shareurl=true&short_name=h.VhWX9DK&app=chrome'
+      },
+      shop2: {
+        remark: '天猫店铺',
+        short_url: 'https://m.tb.cn/h.Vh3f2o4?sm=7b8d65',
+        scheme_url: 'taobao://xianyouhuiju.m.tmall.com'
+        // 手机端实际跳转，给ly作为scheme协议参数获取的参考：
+        // 'https://xianyouhuiju.m.tmall.com/?ut_sk=1.WnhdnnBc2ecDABRfZBuEDneU_21380790_1586333490933.Copy.shop&weexShopSubTab=shopindex&sourceType=shop&weexShopTab=shopindexbar&suid=B5F26CDC-89D4-4F3B-B433-48654F4BBD44&un=b30652abac3f4e2c621065bb730f8a84&share_crt_v=1&spm=a2159r.13376460.0.0&sp_tk=77+lUWNxZTFRcnV4ak3vv6U%3D&cpp=1&shareurl=true&short_name=h.Vh3f2o4&sm=7b8d65&app=chrome'
+      }
+    }
+  </script>
+
+  <!-- 业务：获取淘宝短链对应的目标链接 -->
+  <script>
+    // eslint-disable-next-line no-unused-vars
+    function getUrlInfo() {
+      // eslint-disable-next-line no-undef
+      const query_map = getUrlQuery()
+      const type = query_map.type || 'item'
+
+      // eslint-disable-next-line no-undef
+      var res = test_data[type] || {}
+    
+      res.ios_url = 'https://t.asczwa.com/taobao?backurl=' + res.short_url
+
+      return res
+    }
+  </script>
+
+  <!-- 业务：是否是微信浏览器的处理 -->
+  <script>
+    // eslint-disable-next-line no-undef
+    var device_info = getDeviceInfo()
+    // eslint-disable-next-line no-undef
+    var url_info = getUrlInfo()
+
+    window.addEventListener('load', function() {
+      var block__top = document.getElementById('block__top')
+      var block__bottom = document.getElementById('block__bottom')
+      var div__test = document.getElementById('div__test')
+      var test_center = document.getElementById('test_center')
+      var rem = document.documentElement.style.fontSize
+
+      rem = rem.split('px')[0] || 10
+    
+      // 测试数据
+      function getHTML() {
+        // eslint-disable-next-line no-undef
+        var arr = Object.keys(test_data)
+        var res = document.createElement('div')
+
+        var remark = document.createElement('div')
+
+        remark.innerHTML = '点击后，再打开'
+        res.appendChild(remark)
+
+        arr.forEach(function(item) {
+          var temp = document.createElement('div')
+
+          temp.className = 'btn btn-margin'
+          // eslint-disable-next-line no-undef
+          temp.innerHTML = test_data[item].remark
+          temp.addEventListener('click', function() {
+            window.location.replace(window.location.origin + window.location.pathname + '?type=' + item)
+          })
+          res.appendChild(temp)
+        })
+        return res
+      }
+
+      if (device_info.is_mobile) {
+        if (device_info.is_weixin_browser) {
+          // 在移动端.微信浏览器中打开
+          block__top.style.paddingRight = (device_info.is_iphone ? 31.5 : 28.5) - rem + 'px' // 适配三个点点的位置
+          block__top.style.display = 'flex'
+          block__bottom.style.display = 'flex'
+
+          test_center.appendChild(getHTML())
+          test_center.style.display = 'flex'
+        } else {
+          // 在移动端.非微信浏览器中打开
+          window.location.href = device_info.is_android ? url_info.scheme_url : url_info.ios_url
+          div__test.textContent = '移动端准备跳转：' + (device_info.is_android ? url_info.scheme_url : url_info.ios_url)
+          // 打开目标页（备注：当用户没有app，则直接显示h5页面）
+          setTimeout(function() {
+            window.location.href = url_info.short_url
+          }, 300)
+        }
+      } else {
+        // 在pc端打开
+        window.location.href = url_info.short_url || url_info.ios_url
+        div__test.textContent = 'pc准备跳转：' + (url_info.short_url || url_info.ios_url)
+      }
+    })
+  </script>
+
+  <!-- 业务：接口请求 -->
+  <script>
+    // 测试接口的请求
+    // eslint-disable-next-line no-undef
+    // request({
+    //   url: 'https://xiaomark.com/api/slmp/links/aseh7loi/',
+    //   method: 'GET',
+    //   data: {},
+    //   success: function(res) {
+    //     console.log({
+    //       res
+    //     })
+    //   },
+    //   error: function(err) {
+    //     console.log({
+    //       err
+    //     })
+    //   }
+    // })
+  </script>
+
+  <!-- 页面样式 -->
+  <link rel="stylesheet" href="common.css">
+  <style></style>
+</head>
+
+<body>
+  <div id="container">
+    <div id="div__test"></div>
+    <!-- 微信内打开 -->
+    <div id="block__top">
+      <img id="img--arrow"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACIUlEQVRYR+2VMUwTURjHv68p0sLGRJTEVVlkgqFtil4lpl0lEBJWlh4JBB3A2S5KNKG3sJIYCK4Qg5zScB1kggVYScA4sUGLNv3IUQ8uvXv37n0dWNqt7Xf3+73/vfc/hHv+4D3zoS3ATiD1cjpN9fqK/QgxEpnc/b5U4jxOlkAyow8T0QYQdN1AES4RMWdtF3dUJZQFPHCHyJRQEhDCW5AILeALRyjcsAkWbqNXTCKUgAheNo13Njih5d9zJaQCMrizcq5EoEBYeCsSQgFVOFfCV4AL50h4BNLadKoG9W+3JdMomoKz4RzI6Ohs/Pf53xn7+8OeB5/X1z9V3CWU0vRCnWjefTqiEHlVMpd23XMegaSWPySCp64LPfCRkTfdl7XqBgGlG35Y6orGcltbHy+CJBDhyDKNfomA/ouIBv9XrBR+10H+Eu7TgYh7llkcChR4kZ17fHVVzSPivrVd/OIebl55c++Lkkhm9AkiGujsjBk/NhdPAgVELxN/OB435umJLAnRfaVFZF8ognfE4s/t//9VKz+5ElKBIPjO5oc/tsBw9m0vVyJQIAzciZYrIRRQgbci4SvAgXMlPAKtwDkSHoGEpq8C0djdscFje7c7G050nJp/99sTgLhWNovjgT2Q0PKnQPCoMcSDC5NAOCubRp/sXTAFBIsAeBCNxV+rrtwviVq18hWAngHCnGUay6wmDBu96py0iFRvqDrfFrgG79ChMILMl3sAAAAASUVORK5CYII="
+        alt="向上的箭头" />
+      <div>点击右上角</div>
+      <div>选择在浏览器中打开</div>
+      <div>😊自动打开淘宝</div>
+    </div>
+    <div id="block__bottom">
+      <div>在 Safari 中打开</div>
+    </div>
+    <div id="test_center">
+    </div>
+  </div>
+</body>
+
+</html>
