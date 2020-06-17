@@ -213,7 +213,7 @@
       <div v-show="modal.type === 'link_qr'">
         <div v-for="(item, i) in (modal.obj || {}).list || []" :key="i" class="mb16">
           <vue-qr class="mt16" style="width:130px;display:block;" :text="item" :margin="0" :dotScale="1" :size="500" />
-          <p style="word-break: break-all;">{{ item }}</p>
+          <p style="word-break: break-all;color: #ccc; margin-top: 10px;">{{ item }}</p>
         </div>
       </div>
 

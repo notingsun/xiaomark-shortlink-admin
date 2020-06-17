@@ -31,6 +31,15 @@
         />
       </div>
 
+      <!-- 插件功能 -->
+      <div class="row">
+        <div class="label">插件功能</div>
+        <div>
+          <!-- TODO -->
+          <img v-for="(item, i) in pluginList" :key="i" class="mr8 img--plugin--icon" :src="appMap[item].icon" :title="appMap[item].title" />
+        </div>
+      </div>
+
       <!-- API 权限 -->
       <div class="row">
         <div class="label">API 权限</div>
@@ -219,6 +228,8 @@
 </template>
 
 <script>
+import { pluginList, appMap } from '../common/plugin-data'
+
 export default {
   name: 'DrawerUser',
   mixins: [],
@@ -229,6 +240,8 @@ export default {
     this.C_ORANGE = '#e88986'
     this.C_BLUE = '#4F87FB'
     this.C_GREY = '#c5c8ce'
+    this.pluginList = pluginList
+    this.appMap = appMap
 
     return {
       page_error: '',

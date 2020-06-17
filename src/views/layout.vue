@@ -151,6 +151,11 @@ export default {
           name: '9',
           title: '自定义域名列表',
           route: { name: 'CustomDomainList' }
+        },
+        {
+          name: '10',
+          title: '插件列表',
+          route: { name: 'PluginList' }
         }
       ],
       menu_qr: [

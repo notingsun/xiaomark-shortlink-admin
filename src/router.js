@@ -106,6 +106,14 @@ const short_link = [
     meta: { menuIndex: '9', title: '自定义域名列表' },
     name: 'CustomDomainList',
     component: () => import('@/views/custom-domain/custom-domain-list.vue')
+  },
+
+  /* 插件列表 */
+  {
+    path: '/plugin-list',
+    meta: { menuIndex: '10', title: '插件列表' },
+    name: 'PluginList',
+    component: () => import('@/views/plugin/plugin-list.vue')
   }
 ]
 

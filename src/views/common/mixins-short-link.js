@@ -1,3 +1,5 @@
+import { pluginList, appMap } from './plugin-data'
+
 export default {
   data() {
     const C_GREEN = '#47cb89'
@@ -214,7 +216,7 @@ export default {
             }
           }
         ],
-        // 2 来源  微信分享 是否可用 是否归档
+        // 2 来源 插件功能  微信分享 是否可用 是否归档
         [
           // 来源
           {
@@ -250,6 +252,20 @@ export default {
                   </span>
                 </div>
               )
+            }
+          },
+          {
+            title: '插件功能',
+            minWidth: 130,
+            key: 'subscribe',
+            // align: 'center',
+            // TODO
+            render: (h, { row }) => {
+              let res = pluginList.map((item) => {
+                return row.source ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
+              })
+
+              return <div>{res}</div>
             }
           },
           // 微信分享

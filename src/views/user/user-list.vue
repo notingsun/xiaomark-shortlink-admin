@@ -45,6 +45,7 @@
 
 <script>
 import tableMixins from '../table-mixins'
+import { appMap, pluginList } from '../common/plugin-data'
 
 export default {
   name: 'UserList',
@@ -404,6 +405,20 @@ export default {
                   />
                 </div>
               )
+            }
+          },
+          {
+            title: '插件功能',
+            minWidth: 130,
+            key: 'subscribe',
+            // align: 'center',
+            // TODO
+            render: (h, { row }) => {
+              let res = pluginList.map((item) => {
+                return row.subscribe ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
+              })
+
+              return <div>{res}</div>
             }
           },
           {
