@@ -48,7 +48,7 @@ export default {
     return {
       method: 'get',
       name: '列出订单(推送)',
-      url: '/api/ps/platforms/indents/',
+      url: '/api/qr/platforms/indents/',
       params
     }
   },
@@ -93,7 +93,7 @@ export default {
     return {
       method: 'put',
       name: '修改公众号推送套餐',
-      url: `/api/ps/platforms/${id}/meal/`,
+      url: `/api/qr/platforms/${id}/meal/`,
       params
     }
   }
