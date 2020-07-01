@@ -1,3 +1,5 @@
+const BASE_URL_LINK = process.env.VUE_APP_LINK_BASE_URL
+
 export default {
   putUserTags(id, params) {
     return {
@@ -12,7 +14,7 @@ export default {
     return {
       method: 'get',
       name: '获取用户标签',
-      url: '/api/sl/tags/',
+      url: `${BASE_URL_LINK}/api/tags/`,
       params
     }
   },
@@ -21,7 +23,7 @@ export default {
     return {
       method: 'get',
       name: '获取用户详情',
-      url: `/api/sl/users/${id}/`,
+      url: `${BASE_URL_LINK}/api/users/${id}/`,
       showError: false,
       params
     }
@@ -31,7 +33,7 @@ export default {
     return {
       method: 'post',
       name: '生成用户的身份令牌',
-      url: `/api/sl/users/${id}/token/`,
+      url: `${BASE_URL_LINK}/api/users/${id}/token/`,
       params
     }
   },

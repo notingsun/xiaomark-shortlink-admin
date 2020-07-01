@@ -110,7 +110,6 @@
       <!-- 创建协作空间数量 -->
       <div class="row">
         <div class="label"></div>
-        <!-- <div class="label">创建协作空间数量</div> -->
         <div class="itv-flex--fs">
           <span>创建：{{ data.n_ws_created }}</span>
         </div>
@@ -119,17 +118,31 @@
       <!-- 加入协作空间数量 -->
       <div class="row">
         <div class="label"></div>
-        <!-- <div class="label">加入协作空间数量</div> -->
-        <div>加入：{{ data.n_ws_joined }}</div>
+        <div class="itv-flex--fs">
+          <span>加入：{{ data.n_ws_joined }}</span>
+        </div>
+      </div>
+
+      <!-- 是否关注服务号 -->
+      <div class="row">
+        <div class="label">是否关注服务号</div>
+        <div>
+          <div class="mb8">
+            <span class="mr8" title="是否关注服务号">
+              <itv-icon type="i-attention" :style="{ color: data.subscribe ? C_GREEN : C_GREY }" size="24" />
+            </span>
+            <span title="最近关注服务号的时间" class="cp">{{ subscribe_time }}</span>
+          </div>
+          <div title="关注服务号的渠道来源" class="cp">
+            {{ subscribe_scene_map[data.subscribe_scene] }}
+          </div>
+        </div>
       </div>
 
       <!-- 其他 -->
       <div class="row">
         <div class="label">其他</div>
         <div>
-          <span class="mr8" title="是否关注服务号">
-            <itv-icon type="i-attention" :style="{ color: data.subscribe ? C_GREEN : C_GREY }" size="24" />
-          </span>
           <span class="mr8" title="是否网页登录">
             <itv-icon type="i-pc" :style="{ color: data.sa_openid ? C_ORANGE : C_GREY }" size="24" />
           </span>
@@ -243,6 +256,17 @@ export default {
     this.pluginList = pluginList
     this.appMap = appMap
 
+    this.subscribe_scene_map = {
+      ADD_SCENE_SEARCH: '公众号搜索',
+      ADD_SCENE_ACCOUNT_MIGRATION: '公众号迁移',
+      ADD_SCENE_PROFILE_CARD: '名片分享',
+      ADD_SCENE_QR_CODE: '扫描二维码',
+      ADD_SCENE_PROFILE_LINK: '图文页内名称点击',
+      ADD_SCENE_PROFILE_ITEM: '图文页右上角菜单',
+      ADD_SCENE_PAID: '支付后关注',
+      ADD_SCENE_OTHERS: '其他'
+    }
+
     return {
       page_error: '',
       show_page: false,
@@ -264,6 +288,11 @@ export default {
     },
     create_time() {
       const time = (this.data || {}).create_time || ''
+
+      return time ? this.$PDo.Date.format(time) : '-'
+    },
+    subscribe_time() {
+      const time = (this.data || {}).subscribe_time || ''
 
       return time ? this.$PDo.Date.format(time) : '-'
     }

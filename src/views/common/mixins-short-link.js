@@ -215,16 +215,8 @@ export default {
             format: this.$global.utils.countFormat.three,
             render: (h, { row }) => {
               const stats = row.stats || {}
-              // 累计
-              const n_clicks = this.$global.utils.countFormat.three(stats.pv)
-              const n_visitors = this.$global.utils.countFormat.three(stats.uv)
-              const n_ips = this.$global.utils.countFormat.three(stats.uip)
-              // 今日
-              const n_clicks_t = this.$global.utils.countFormat.three(stats.pv_today)
-              const n_visitors_t = this.$global.utils.countFormat.three(stats.uv_today)
-              const n_ips_t = this.$global.utils.countFormat.three(stats.uip_today)
-
               // 目标页面
+
               let targetType = ''
 
               row.open_wx_trace && (targetType = 'open_wx_trace')
@@ -236,55 +228,55 @@ export default {
                 show: Boolean(targetType),
                 type: targetType,
                 tooltip: targetInfo.tooltip,
-                pv: targetInfo.pv,
-                uv: targetInfo.uv,
-                uip: targetInfo.uip
+                pv: stats[targetInfo.pv],
+                uv: stats[targetInfo.uv],
+                uip: stats[targetInfo.uip]
               }
 
               return (
                 <div class="cp mt4 mb4">
                   <div>
                     <span class="text-visit-label">今日</span>
-                    <span class="text-visit" title="访问次数">
-                      {n_clicks_t}
+                    <span class="text-visit" title={`访问次数：${this.$global.utils.countFormat.three(stats.pv_today)}`}>
+                      {this.$global.utils.countFormat.short(stats.pv_today)}
                     </span>
                     <span> / </span>
-                    <span class="text-visit" title="访问人数">
-                      {n_visitors_t}
+                    <span class="text-visit" title={`访问人数：${this.$global.utils.countFormat.three(stats.uv_today)}`}>
+                      {this.$global.utils.countFormat.short(stats.uv_today)}
                     </span>
                     <span> / </span>
-                    <span class="text-visit" title="IP数">
-                      {n_ips_t}
+                    <span class="text-visit" title={`IP数：${this.$global.utils.countFormat.three(stats.uip_today)}`}>
+                      {this.$global.utils.countFormat.short(stats.uip_today)}
                     </span>
                   </div>
                   <div class="grey">
                     <span class="text-visit-label">累计</span>
-                    <span class="text-visit" title="访问次数">
-                      {n_clicks}
+                    <span class="text-visit" title={`访问次数：${this.$global.utils.countFormat.three(stats.pv)}`}>
+                      {this.$global.utils.countFormat.short(stats.pv)}
                     </span>
                     <span> / </span>
-                    <span class="text-visit" title="访问人数">
-                      {n_visitors}
+                    <span class="text-visit" title={`访问人数：${this.$global.utils.countFormat.three(stats.uv)}`}>
+                      {this.$global.utils.countFormat.short(stats.uv)}
                     </span>
                     <span> / </span>
-                    <span class="text-visit" title="IP数">
-                      {n_ips}
+                    <span class="text-visit" title={`IP数：${this.$global.utils.countFormat.three(stats.uip)}`}>
+                      {this.$global.utils.countFormat.short(stats.uip)}
                     </span>
                   </div>
                   <div class="grey" style={statsTargetInfo.show ? 'display: block' : 'display: none'}>
                     <span class="text-visit-label" title={statsTargetInfo.tooltip}>
                       目标页面
                     </span>
-                    <span class="text-visit" title="访问次数">
-                      {n_clicks}
+                    <span class="text-visit" title={`访问次数：${this.$global.utils.countFormat.three(statsTargetInfo.pv)}`}>
+                      {this.$global.utils.countFormat.short(statsTargetInfo.pv)}
                     </span>
                     <span> / </span>
-                    <span class="text-visit" title="访问人数">
-                      {n_visitors}
+                    <span class="text-visit" title={`访问人数：${this.$global.utils.countFormat.three(statsTargetInfo.uv)}`}>
+                      {this.$global.utils.countFormat.short(statsTargetInfo.uv)}
                     </span>
                     <span> / </span>
-                    <span class="text-visit" title="IP数">
-                      {n_ips}
+                    <span class="text-visit" title={`IP数：${this.$global.utils.countFormat.three(statsTargetInfo.uip)}`}>
+                      {this.$global.utils.countFormat.short(statsTargetInfo.uip)}
                     </span>
                   </div>
                 </div>
@@ -325,6 +317,7 @@ export default {
               )
             }
           },
+          // 插件功能
           {
             title: '插件功能',
             minWidth: 90,
@@ -335,7 +328,11 @@ export default {
                 return row[apiKeyMap[item]] ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
               })
 
-              return <div>{res}</div>
+              let isNotEpmty = false
+
+              isNotEpmty = res.some((item) => item !== null)
+
+              return <div>{isNotEpmty ? res : '-'}</div>
             }
           },
           // 微信分享

@@ -65,6 +65,7 @@ export default {
         // 列表排序方式
         order_by: [
           { value: 'modify_time', label: '按数据修改时间倒序' },
+          { value: '*', label: '按数据创建时间倒序' },
           { value: 'pv', label: '按访问次数倒序' },
           { value: 'uv', label: '按访问人数倒序' },
           { value: 'uip', label: '按访问IP数倒序' },
@@ -112,7 +113,7 @@ export default {
         {
           name: '列表排序方式',
           key: 'order_by',
-          valueCaclType: 'calcDefault',
+          valueCaclType: 'calcSpecialValue',
           value: 'modify_time',
           type: 'select'
         },
