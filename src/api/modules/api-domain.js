@@ -1,10 +1,12 @@
+const BASE_URL_LINK = process.env.VUE_APP_LINK_BASE_URL
+
 // 这现在等于是一个配置文件
 export default {
   putApiDomainDisable(id, params) {
     return {
       method: 'put',
       name: '禁用API域名',
-      url: `/api/sl/api_domains/${id}/disable/`,
+      url: `${BASE_URL_LINK}/api/api_whitelists/${id}/disable/`,
       params
     }
   },
@@ -12,8 +14,8 @@ export default {
   getApiDomain(params) {
     return {
       method: 'get',
-      name: '列出API域名',
-      url: '/api/sl/api_domains/',
+      name: '列出API网站白名单',
+      url: `${BASE_URL_LINK}/api/api_whitelists/`,
       params
     }
   },

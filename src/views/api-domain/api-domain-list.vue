@@ -144,7 +144,7 @@ export default {
         })
 
         this.table.total = res.total
-        this.table.data = res.domains || []
+        this.table.data = res.api_whitelists || []
       } catch (e) {
         console.error(e)
       }

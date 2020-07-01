@@ -544,7 +544,7 @@ export default {
     async handleStopApiDomain() {
       try {
         await this.$api.ApiDomain.putApiDomainDisable(this.modal.obj.id, {
-          recursive: this.form.enabled_target_link.recursive
+          recurse: this.form.stop_api_domain.recursive
         })
         this.modal.show = false
         this.modal.success_cb({ page: 'now' })
