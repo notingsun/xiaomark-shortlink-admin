@@ -322,11 +322,11 @@ export default {
         }, 300)
       } else if (v && this.modal.type === 'open_api_domain') {
         // 初始化.设置API权限
-        this.form.open_api_domain['_switch'] = this.modal.obj.api_auth
+        this.form.open_api_domain['_switch'] = this.modal.obj.open_api
         this.form.open_api_domain['_list'] = this.modal.obj.api_domains || []
-        this.form.open_api_domain['_count'] = this.modal.obj.api_n_links_d_limit
+        this.form.open_api_domain['_count'] = this.modal.obj.api_max_links_daily
         // eslint-disable-next-line prettier/prettier
-        this.form.open_api_domain['_count_default'] = this.modal.obj.api_n_links_d_limit
+        this.form.open_api_domain['_count_default'] = this.modal.obj.api_max_links_daily
       } else if (v && this.modal.type === 'check_api_domain') {
         // 初始化.审核API域名
         this.form.check_api_domain['_switch'] = this.modal.obj.netloc_list.map(() => true)

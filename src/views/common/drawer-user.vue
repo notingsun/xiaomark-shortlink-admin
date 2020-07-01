@@ -34,16 +34,17 @@
       <!-- 插件功能 -->
       <div class="row">
         <div class="label">插件功能</div>
-        <div>
-          <!-- TODO -->
-          <img v-for="(item, i) in pluginList" :key="i" class="mr8 img--plugin--icon" :src="appMap[item].icon" :title="appMap[item].title" />
+        <div class="itv-flex--fs">
+          <div v-for="(item, i) in pluginList" :key="i" class="mr8">
+            <img class="img--plugin--icon" :src="appMap[item].icon" :title="appMap[item].title" v-if="data[apiKeyMap[item]]" />
+          </div>
         </div>
       </div>
 
       <!-- API 权限 -->
       <div class="row">
         <div class="label">API 权限</div>
-        <Icon :title="data.api_auth ? '有API权限' : '没有API权限'" type="md-checkmark-circle" :color="data.api_auth ? C_GREEN : C_GREY" size="20" />
+        <Icon :title="data.open_api ? '有API权限' : '没有API权限'" type="md-checkmark-circle" :color="data.open_api ? C_GREEN : C_GREY" size="20" />
       </div>
 
       <!-- API 创建上限 -->
@@ -52,7 +53,7 @@
         <!-- <div class="label">API 创建上限</div> -->
 
         <div class="itv-flex--fs">
-          <span title="每日创建短链接上限">{{ data.api_n_links_d_limit }}</span>
+          <span title="每日创建短链接上限">{{ data.api_max_links_daily }}</span>
           <span
             class="itv-text--btn ml8"
             style="margin-top: -2px;"
@@ -73,19 +74,26 @@
       <!-- 最近登录时间 -->
       <div class="row">
         <div class="label">最近登录时间</div>
-        <div>{{ last_login_time }}</div>
-      </div>
-
-      <!-- 注册时间 -->
-      <div class="row">
-        <div class="label">注册时间</div>
-        <div>{{ create_time }}</div>
+        <div>
+          <div class="mb8">
+            <span class="mr8" title="是否网页登录">
+              <itv-icon type="i-pc" :style="{ color: pc_last_login_time ? C_ORANGE : C_GREY }" size="24" />
+            </span>
+            <span title="PC端最近登录时间">{{ pc_last_login_time }}</span>
+          </div>
+          <div>
+            <span class="mr8" title="是否小程序登录">
+              <itv-icon type="i-wx" :style="{ color: mp_last_login_time ? C_BLUE : C_GREY }" size="24" />
+            </span>
+            <span title="小程序最近登录时间">{{ mp_last_login_time }}</span>
+          </div>
+        </div>
       </div>
 
       <!-- 短链访问次数 -->
       <div class="row">
         <div class="label">短链访问次数</div>
-        <div>{{ data.n_clicks }}</div>
+        <div>{{ data.pv }}</div>
       </div>
 
       <!-- 创建短链数量 -->
@@ -101,9 +109,9 @@
       <div class="row">
         <div class="label">协作空间权限</div>
         <div>
-          <Icon :title="data.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'" type="md-checkmark-circle" :color="data.ws_creator ? C_GREEN : C_GREY" size="20" />
-          <!-- <span>（创建: {{ data.n_ws_created }}、</span> -->
-          <!-- <span>加入: {{ data.n_ws_joined }}）</span> -->
+          <Icon :title="data.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'" type="md-checkmark-circle" :color="data.open_workspace ? C_GREEN : C_GREY" size="20" />
+          <!-- <span>（创建: {{ data.n_created_workspaces }}、</span> -->
+          <!-- <span>加入: {{ data.n_joined_workspaces }}）</span> -->
         </div>
       </div>
 
@@ -111,7 +119,7 @@
       <div class="row">
         <div class="label"></div>
         <div class="itv-flex--fs">
-          <span>创建：{{ data.n_ws_created }}</span>
+          <span>创建：{{ data.n_created_workspaces }}</span>
         </div>
       </div>
 
@@ -119,8 +127,14 @@
       <div class="row">
         <div class="label"></div>
         <div class="itv-flex--fs">
-          <span>加入：{{ data.n_ws_joined }}</span>
+          <span>加入：{{ data.n_joined_workspaces }}</span>
         </div>
+      </div>
+
+      <!-- 注册时间 -->
+      <div class="row">
+        <div class="label">注册时间</div>
+        <div>{{ create_time }}</div>
       </div>
 
       <!-- 是否关注服务号 -->
@@ -147,16 +161,11 @@
         </div>
       </div>
 
-      <!-- 其他 -->
+      <!-- 电子邮箱 -->
       <div class="row">
-        <div class="label">其他</div>
+        <div class="label">电子邮箱</div>
         <div>
-          <span class="mr8" title="是否网页登录">
-            <itv-icon type="i-pc" :style="{ color: data.sa_openid ? C_ORANGE : C_GREY }" size="24" />
-          </span>
-          <span title="是否小程序登录">
-            <itv-icon type="i-wx" :style="{ color: data.mp_openid ? C_BLUE : C_GREY }" size="24" />
-          </span>
+          {{ data.email || '-' }}
         </div>
       </div>
 
@@ -166,15 +175,28 @@
         <div style="word-break: break-all">{{ data.source || '-' }}</div>
       </div>
 
-      <!-- openid -->
+      <!-- 服务号openid -->
       <div class="row">
-        <div class="label">openid</div>
+        <div class="label">服务号openid</div>
         <div class="itv-flex--fs">
           <div style="word-break: break-all;font-size: 12px;">
             {{ data.sa_openid || '-' }}
           </div>
           <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.sa_openid">
             <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.sa_openid)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 小程序openid -->
+      <div class="row">
+        <div class="label">小程序openid</div>
+        <div class="itv-flex--fs">
+          <div style="word-break: break-all;font-size: 12px;">
+            {{ data.mp_openid || '-' }}
+          </div>
+          <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.mp_openid">
+            <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.mp_openid)" />
           </div>
         </div>
       </div>
@@ -249,7 +271,7 @@
 </template>
 
 <script>
-import { pluginList, appMap } from '../common/plugin-data'
+import { pluginListUser as pluginList, appMap, apiKeyMap } from '../common/plugin-data'
 
 export default {
   name: 'DrawerUser',
@@ -263,6 +285,7 @@ export default {
     this.C_GREY = '#c5c8ce'
     this.pluginList = pluginList
     this.appMap = appMap
+    this.apiKeyMap = apiKeyMap
 
     this.subscribe_scene_map = {
       ADD_SCENE_SEARCH: '公众号搜索',
@@ -289,8 +312,13 @@ export default {
     user_id() {
       return (this.$bus.drawer_user || {}).id
     },
-    last_login_time() {
-      const time = (this.data || {}).last_login_time || ''
+    pc_last_login_time() {
+      const time = (this.data || {}).pc_last_login_time || ''
+
+      return time ? this.$PDo.Date.format(time) : '-'
+    },
+    mp_last_login_time() {
+      const time = (this.data || {}).mp_last_login_time || ''
 
       return time ? this.$PDo.Date.format(time) : '-'
     },

@@ -1,6 +1,7 @@
 /* 插件的静态信息 */
 
-export const pluginList = ['wx-visit', 'wx-browser', 'wx-auto-open', 'wx-auto-open-tb']
+export const pluginList = ['wx-visit', 'wx-browser', 'wx-auto-open', 'wx-auto-open-tb'] // 链接需要显示的
+export const pluginListUser = ['wx-share', 'wx-visit', 'wx-browser', 'wx-auto-open', 'wx-auto-open-tb'] // 用户
 
 /*
     获取微信内访问记录    wx-visit
