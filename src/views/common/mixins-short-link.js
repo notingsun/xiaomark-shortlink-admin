@@ -211,7 +211,7 @@ export default {
           },
           {
             title: '访问次数 / 人数 / IP数',
-            minWidth: 200,
+            minWidth: 230,
             format: this.$global.utils.countFormat.three,
             render: (h, { row }) => {
               const stats = row.stats || {}
