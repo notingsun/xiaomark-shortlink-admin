@@ -1,3 +1,5 @@
+const baseUrl = process.env.VUE_APP_LINK_BASE_URL
+
 export default {
   putWebsiteEnabled(id, params) {
     return {
@@ -12,7 +14,7 @@ export default {
     return {
       method: 'put',
       name: '设置是否可以微信分享',
-      url: `/api/sl/links/${id}/wx_share/`,
+      url: `${baseUrl}/api/links/${id}/open_wx_share/`,
       params
     }
   },
@@ -21,7 +23,7 @@ export default {
     return {
       method: 'put',
       name: '设置链接是否可用',
-      url: `/api/sl/links/${id}/enabled/`,
+      url: `${baseUrl}/api/links/${id}/enabled/`,
       params
     }
   },
@@ -39,7 +41,7 @@ export default {
     return {
       method: 'get',
       name: `列出${params.user_id ? ` 用户${params.user_id} ` : ''}短链列表`,
-      url: '/api/sl/links/',
+      url: `${baseUrl}/api/links/`,
       params
     }
   },
