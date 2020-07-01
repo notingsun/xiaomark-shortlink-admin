@@ -1,6 +1,6 @@
 /* 短链列表 */
 <template>
-  <div class="short-link-list itv-flex-v--fs">
+  <div class="short-link-list itv-flex-v--fs link-list">
     <div class="header mb16 itv-flex--sb">
       <div class="header__search">
         <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
@@ -33,7 +33,7 @@ export default {
         archived: '',
         enabled: '',
         search: '',
-        sort: 'time'
+        sort: 'modify_time'
       }
     }
   },
@@ -72,7 +72,9 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
-          api: this.form.api ? 1 : 0, // 是否为开放API创建
+          modes: '0,1,2', // 链接类型
+          sources: '1,2,3,4', // 创建来源
+          // api: this.form.api ? 1 : 0, // 是否为开放API创建
           has_params: this.form.has_params,
           archived: this.form.archived,
           enabled: this.form.enabled,
@@ -98,10 +100,6 @@ export default {
 </script>
 
 <style lang="less">
-.short-link-list {
-  .text-visit {
-    white-space: nowrap;
-    display: inline-block;
-  }
-}
+// .short-link-list {
+// }
 </style>

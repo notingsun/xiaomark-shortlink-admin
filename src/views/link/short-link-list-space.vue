@@ -1,6 +1,6 @@
 /* 短链列表 */
 <template>
-  <div class="short-link-list itv-flex-v--fs">
+  <div class="short-link-list itv-flex-v--fs link-list">
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <div class="itv-flex--fs">
@@ -101,10 +101,6 @@ export default {
 </script>
 
 <style lang="less">
-.short-link-list {
-  .text-visit {
-    white-space: nowrap;
-    display: inline-block;
-  }
-}
+// .short-link-list {
+// }
 </style>

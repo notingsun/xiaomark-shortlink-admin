@@ -112,10 +112,6 @@ export default {
 </script>
 
 <style lang="less">
-.plugin-list {
-  .text-visit {
-    white-space: nowrap;
-    display: inline-block;
-  }
-}
+// .plugin-list {
+// }
 </style>

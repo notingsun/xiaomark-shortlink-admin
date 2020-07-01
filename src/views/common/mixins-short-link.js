@@ -1,4 +1,4 @@
-import { pluginList, appMap } from './plugin-data'
+import { pluginList, appMap, apiKeyMap } from './plugin-data'
 
 export default {
   data() {
@@ -31,8 +31,44 @@ export default {
       }
     ]
 
+    // 目标页面的数据键名
+    this.targetMap = {
+      open_wx_trace: {
+        tooltip: '成功访问跳转链接的数据',
+        pv: 'pv_wx_trace',
+        uv: 'uv_wx_trace',
+        uip: 'uip_wx_trace'
+      }, // 是否开启微信内追踪访问记录
+      open_wx_escape: {
+        tooltip: '最终使用手机浏览器打开短链的数据',
+        pv: 'pv_wx_escape',
+        uv: 'uv_wx_escape',
+        uip: 'uip_wx_escape'
+      }, // 是否开启微信内强制浏览器打开
+      open_douyin_app: {
+        tooltip: '最终使用手机浏览器打开短链的数据',
+        pv: 'pv_douyin_app',
+        uv: 'uv_douyin_app',
+        uip: 'uip_douyin_app'
+      }, // 是否开启跳转抖音APP
+      open_taobao_app: {
+        tooltip: '最终使用手机浏览器打开短链的数据',
+        pv: 'pv_taobao_app',
+        uv: 'uv_taobao_app',
+        uip: 'uip_taobao_app'
+      } // 是否开启跳转淘宝APP
+    }
+
     return {
       form: {
+        set_wx_share: '', // 是否设置了微信内分享卡片参数
+        open_wx_share: '', // 是否开启微信内分享卡片
+        open_wx_trace: '', // 是否开启微信内追踪访问记录
+        open_wx_escape: '', // 是否开启微信内强制浏览器打开
+        open_douyin_app: '', // 是否开启跳转抖音APP
+        open_taobao_app: '', // 是否开启跳转淘宝APP
+        modes: [], // 链接类型
+        sources: [], // 创建来源
         api: false // 来源
       },
       loading: true,
@@ -91,6 +127,22 @@ export default {
             }
           },
           {
+            title: '修改时间',
+            minWidth: 90,
+            key: 'modify_time',
+            render: (h, { row }) => {
+              const arr = this.$PDo.Date.format(row.modify_time).split(' ')
+
+              return (
+                <span>
+                  {arr[0]}
+                  {arr[1] && <br />}
+                  {arr[1]}
+                </span>
+              )
+            }
+          },
+          {
             title: '跳转链接',
             width: 166,
             tooltip: true,
@@ -98,15 +150,15 @@ export default {
             render: (h, { row }) => {
               // 随机链接
               /* eslint-disable */
-              const arr_a = row.mode === 0 ? [] : (row.origin_url_list || []).map((item, index) => (
+              const arr_a = ((row.origin_url || '').split('\n') || []).map((item, index) => (
                 <p>
                   <span>【{index + 1}】</span>
                   <a
                     target="_blank"
-                    href={item.url}
+                    href={item}
                     rel="noreferrer"
                     >
-                    {item.url}
+                    {item}
                   </a>
                 </p>
               ))
@@ -152,13 +204,7 @@ export default {
                       color="sub"
                       onClick={() => {
                         // eslint-disable-next-line prettier/prettier
-                        let arr
-
-                        if (row.mode === 0) {
-                          arr = [row.origin_url]
-                        } else {
-                          arr = (row.origin_url_list || []).map((item) => item.url)
-                        }
+                        const arr = (row.origin_url || '').split('\n') || []
 
                         this.$bus.modal.type = 'link_qr' // 链接的二维码
                         this.$bus.modal.show = true
@@ -178,23 +224,79 @@ export default {
             minWidth: 160,
             format: this.$global.utils.countFormat.three,
             render: (h, { row }) => {
-              const n_clicks = this.$global.utils.countFormat.three(row.n_clicks)
-              const n_visitors = this.$global.utils.countFormat.three(row.n_visitors)
-              const n_ips = this.$global.utils.countFormat.three(row.n_ips)
+              const stats = row.stats || {}
+              // 累计
+              const n_clicks = this.$global.utils.countFormat.three(stats.pv)
+              const n_visitors = this.$global.utils.countFormat.three(stats.uv)
+              const n_ips = this.$global.utils.countFormat.three(stats.uip)
+              // 今日
+              const n_clicks_t = this.$global.utils.countFormat.three(stats.pv_today)
+              const n_visitors_t = this.$global.utils.countFormat.three(stats.uv_today)
+              const n_ips_t = this.$global.utils.countFormat.three(stats.uip_today)
+
+              // 目标页面
+              let targetType = ''
+
+              row.open_wx_trace && (targetType = 'open_wx_trace')
+              row.open_wx_escape && (targetType = 'open_wx_escape')
+              row.open_douyin_app && (targetType = 'open_douyin_app')
+              row.open_taobao_app && (targetType = 'open_taobao_app')
+              const targetInfo = this.targetMap[targetType] || {}
+              const statsTargetInfo = {
+                show: Boolean(targetType),
+                type: targetType,
+                tooltip: targetInfo.tooltip,
+                pv: targetInfo.pv,
+                uv: targetInfo.uv,
+                uip: targetInfo.uip
+              }
 
               return (
-                <div class="cp">
-                  <span class="text-visit" title="次数">
-                    {n_clicks}
-                  </span>
-                  <span> / </span>
-                  <span class="text-visit" title="人数">
-                    {n_visitors}
-                  </span>
-                  <span> / </span>
-                  <span class="text-visit" title="IP数">
-                    {n_ips}
-                  </span>
+                <div class="cp mt4 mb4">
+                  <div>
+                    <span class="text-visit-label">今日</span>
+                    <span class="text-visit" title="访问次数">
+                      {n_clicks_t}
+                    </span>
+                    <span> / </span>
+                    <span class="text-visit" title="访问人数">
+                      {n_visitors_t}
+                    </span>
+                    <span> / </span>
+                    <span class="text-visit" title="IP数">
+                      {n_ips_t}
+                    </span>
+                  </div>
+                  <div class="grey">
+                    <span class="text-visit-label">累计</span>
+                    <span class="text-visit" title="访问次数">
+                      {n_clicks}
+                    </span>
+                    <span> / </span>
+                    <span class="text-visit" title="访问人数">
+                      {n_visitors}
+                    </span>
+                    <span> / </span>
+                    <span class="text-visit" title="IP数">
+                      {n_ips}
+                    </span>
+                  </div>
+                  <div class="grey" style={statsTargetInfo.show ? 'display: block' : 'display: none'}>
+                    <span class="text-visit-label" title={statsTargetInfo.tooltip}>
+                      目标页面
+                    </span>
+                    <span class="text-visit" title="访问次数">
+                      {n_clicks}
+                    </span>
+                    <span> / </span>
+                    <span class="text-visit" title="访问人数">
+                      {n_visitors}
+                    </span>
+                    <span> / </span>
+                    <span class="text-visit" title="IP数">
+                      {n_ips}
+                    </span>
+                  </div>
                 </div>
               )
             }
@@ -220,30 +322,9 @@ export default {
         [
           // 来源
           {
-            // title: '来源',
+            title: '来源',
             minWidth: 136,
             key: 'source',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              return (
-                <div class="itv-flex--fs">
-                  <span class="mr8">来源</span>
-                  <Button
-                    size="small"
-                    style="width: 60px;"
-                    type="dashed"
-                    class="mr16"
-                    onClick={() => {
-                      this.form.api = !this.form.api
-                      this.doGetData()
-                    }}
-                  >
-                    <Icon type="md-swap" />
-                    {this.form.api ? '用户' : 'API'}
-                  </Button>
-                </div>
-              )
-            },
             render: (h, { row }) => {
               return (
                 <div>
@@ -259,10 +340,9 @@ export default {
             minWidth: 130,
             key: 'subscribe',
             // align: 'center',
-            // TODO
             render: (h, { row }) => {
               let res = pluginList.map((item) => {
-                return row.source ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
+                return row[apiKeyMap[item]] ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
               })
 
               return <div>{res}</div>
@@ -317,8 +397,8 @@ export default {
                 return (
                   <img
                     style="width: 20px;"
-                    title={row.wx_share ? '通过审核' : '未通过审核'}
-                    class={row.wx_share ? 'cp' : 'cp img--grey'}
+                    title={row.open_wx_share ? '通过审核' : '未通过审核'}
+                    class={row.open_wx_share ? 'cp' : 'cp img--grey'}
                     src={require('../../assets/report/b_wechat.png')}
                     onClick={() => {
                       this.$bus.modal.type = 'wx_share'
@@ -464,10 +544,17 @@ export default {
       },
       options: {
         sort: [
-          { value: 'time', label: '按创建时间倒序' },
-          { value: 'click', label: '按访问次数倒序' },
-          { value: 'visitor', label: '按访问人数倒序' },
-          { value: 'ip', label: '按访问IP数倒序' }
+          { value: 'modify_time', label: '按数据修改时间倒序' },
+          { value: 'pv', label: '按访问次数倒序' },
+          { value: 'uv', label: '按访问人数倒序' },
+          { value: 'uip', label: '按访问IP数倒序' },
+          { value: 'pv_today', label: '按今日访问次数倒序' },
+          { value: 'uv_today', label: '按今日访问人数倒序' },
+          { value: 'uip_today', label: '按今日访问IP数倒序' }
+          // { value: 'time', label: '按创建时间倒序' },
+          // { value: 'click', label: '按访问次数倒序' },
+          // { value: 'visitor', label: '按访问人数倒序' },
+          // { value: 'ip', label: '按访问IP数倒序' }
         ]
       }
     }
@@ -475,9 +562,6 @@ export default {
   computed: {},
   created() {},
   mounted() {
-    this.$nextTick(() => {
-      this.table.height = this.$refs.refTable.$el.clientHeight
-    })
     console.log(this.$route.name)
     // 0 基本
     // 1 创建者

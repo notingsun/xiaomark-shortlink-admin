@@ -1,6 +1,6 @@
 /* 自定义域名列表 */
 <template>
-  <div class="custom-domain-list itv-flex-v--fs">
+  <div class="custom-domain-list itv-flex-v--fs link-list">
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
@@ -200,10 +200,6 @@ export default {
 </script>
 
 <style lang="less">
-.custom-domain-list {
-  .text-visit {
-    white-space: nowrap;
-    display: inline-block;
-  }
-}
+// .custom-domain-list {
+// }
 </style>

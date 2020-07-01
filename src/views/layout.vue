@@ -111,53 +111,55 @@ export default {
           ]
         }
       },
+      // 短链接.菜单
       menu_link: [
-        {
-          name: '2',
-          title: '用户列表',
-          route: { name: 'UserList' }
-        },
-        {
-          name: '3',
-          title: '短链数据',
-          route: { name: 'ShortLinkStatistic' }
-        },
+        // {
+        //   name: '2',
+        //   title: '用户列表',
+        //   route: { name: 'UserList' }
+        // },
+        // {
+        //   name: '3',
+        //   title: '短链数据',
+        //   route: { name: 'ShortLinkStatistic' }
+        // },
         {
           name: '4',
           title: '短链列表',
           route: { name: 'ShortLinkList' }
-        },
-        {
-          name: '5',
-          title: '跳转链接数据',
-          route: { name: 'TargetLinkStatistic' }
-        },
-        {
-          name: '6',
-          title: '协作空间列表',
-          route: { name: 'SpaceList' }
-        },
-        {
-          name: '7',
-          title: 'API域名列表',
-          route: { name: 'ApiDomainList' }
-        },
+        }
+        // {
+        //   name: '5',
+        //   title: '跳转链接数据',
+        //   route: { name: 'TargetLinkStatistic' }
+        // },
+        // {
+        //   name: '6',
+        //   title: '协作空间列表',
+        //   route: { name: 'SpaceList' }
+        // },
+        // {
+        //   name: '7',
+        //   title: 'API域名列表',
+        //   route: { name: 'ApiDomainList' }
+        // },
         // {
         //   name: '8',
         //   title: 'API待审核域名',
         //   route: { name: 'ApiDomainCheck' }
         // },
-        {
-          name: '9',
-          title: '自定义域名列表',
-          route: { name: 'CustomDomainList' }
-        },
-        {
-          name: '10',
-          title: '插件列表',
-          route: { name: 'PluginList' }
-        }
+        // {
+        //   name: '9',
+        //   title: '自定义域名列表',
+        //   route: { name: 'CustomDomainList' }
+        // },
+        // {
+        //   name: '10',
+        //   title: '插件列表',
+        //   route: { name: 'PluginList' }
+        // }
       ],
+      // 渠道码.菜单
       menu_qr: [
         {
           name: '101',
