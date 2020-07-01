@@ -1,11 +1,21 @@
 const BASE_URL_LINK = process.env.VUE_APP_LINK_BASE_URL
 
 export default {
-  putWebsiteEnabled(id, params) {
+  // TODO
+  getWebsiteBlackList(params) {
     return {
-      method: 'put',
-      name: '设置网站是否可用',
-      url: `/api/sl/websites/${id}/enabled/`,
+      method: 'get',
+      name: '列出网站黑名单',
+      url: `${BASE_URL_LINK}/api/blacklists/`,
+      params
+    }
+  },
+
+  putWebsiteBlack(params) {
+    return {
+      method: 'POST',
+      name: '将域名添加到黑名单',
+      url: `${BASE_URL_LINK}/api/blacklists/`,
       params
     }
   },
@@ -32,7 +42,7 @@ export default {
     return {
       method: 'put',
       name: '更新网站图标',
-      url: `/api/sl/websites/${id}/favicon/`,
+      url: `${BASE_URL_LINK}/api/websites/${id}/favicon/`,
       params
     }
   },
@@ -59,7 +69,7 @@ export default {
     return {
       method: 'get',
       name: '跳转链接数据',
-      url: '/api/sl/websites/',
+      url: `${BASE_URL_LINK}/api/websites/`,
       params
     }
   },

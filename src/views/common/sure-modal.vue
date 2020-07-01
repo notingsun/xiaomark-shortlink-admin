@@ -49,20 +49,16 @@
 
       <!-- 4、设置网站是否可用 -->
       <div v-show="modal.type === 'enabled_target_link'">
-        <p class="mb16">
-          <span>确认</span>
-          <span
-            :style="{
-              color: (modal.obj || {}).enabled ? 'red' : 'green',
-              'font-weight': 'bold'
-            }"
-          >
-            {{ (modal.obj || {}).enabled ? '禁用' : '启用' }}
-          </span>
-          <span>【{{ (modal.obj || {}).hostname || '-' }}】</span>
-          <span>吗？</span>
-        </p>
-        <Checkbox v-model="form.enabled_target_link.recursive" size="large">设置相关联的链接</Checkbox>
+        <div class="mb16 itv-flex--fs">
+          <span class="mr16 fs0">域名</span>
+          <Input v-model="form.enabled_target_link.domain" :disabled="!form.enabled_target_link.editable" />
+        </div>
+        <div class="mb8">
+          <Checkbox v-model="form.enabled_target_link.block_sub" size="large">封禁子域名</Checkbox>
+        </div>
+        <div>
+          <Checkbox v-model="form.enabled_target_link.recursive" size="large">设置相关联的链接</Checkbox>
+        </div>
       </div>
 
       <!-- 5、屏蔽API域名 -->
@@ -260,7 +256,7 @@ export default {
         check_api_domain: '查看API域名',
         open_api_domain: '设置API权限',
         stop_api_domain: '屏蔽API域名',
-        enabled_target_link: '设置网站是否可用',
+        enabled_target_link: '将域名添加到黑名单',
         enabled_short_link: '设置短链是否可用',
         ws_creator: '设置创建协作空间权限',
         enabled: '设置用户登录权限',
@@ -268,6 +264,9 @@ export default {
       },
       form: {
         enabled_target_link: {
+          editable: false, // 是否可编辑
+          domain: '', // 域名
+          block_sub: true, // 是否封禁子域名
           recursive: true // 是否设置相关联的链接
         },
         stop_api_domain: {
@@ -320,6 +319,12 @@ export default {
         setTimeout(() => {
           this.form = this.$options.data().form
         }, 300)
+      } else if (v && this.modal.type === 'enabled_target_link') {
+        // 初始化.设置网站是否可用
+        this.form.enabled_target_link['editable'] = this.modal.obj.editable
+        this.form.enabled_target_link['domain'] = this.modal.obj.netloc
+        this.form.enabled_target_link['block_sub'] = true
+        this.form.enabled_target_link['recursive'] = true
       } else if (v && this.modal.type === 'open_api_domain') {
         // 初始化.设置API权限
         this.form.open_api_domain['_switch'] = this.modal.obj.open_api
@@ -503,9 +508,10 @@ export default {
     // 网站是否可用
     async handleWebsiteEnabled() {
       try {
-        await this.$api.Link.putWebsiteEnabled(this.modal.obj.id, {
-          enabled: !this.modal.obj.enabled,
-          recursive: this.form.enabled_target_link.recursive
+        await this.$api.Link.putWebsiteBlack({
+          domain: this.form.enabled_target_link.domain,
+          block_sub: this.form.enabled_target_link.block_sub,
+          recurse: this.form.enabled_target_link.recursive
         })
         this.modal.show = false
         this.modal.success_cb({ page: 'now' })

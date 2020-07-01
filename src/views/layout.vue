@@ -127,32 +127,32 @@ export default {
           name: '4',
           title: '短链列表',
           route: { name: 'ShortLinkList' }
-        }
-        // {
-        //   name: '5',
-        //   title: '跳转链接数据',
-        //   route: { name: 'TargetLinkStatistic' }
-        // },
+        },
+        {
+          name: '5',
+          title: '列出网站',
+          route: { name: 'TargetLinkStatistic' }
+        },
         // {
         //   name: '6',
         //   title: '协作空间列表',
         //   route: { name: 'SpaceList' }
         // },
-        // {
-        //   name: '7',
-        //   title: 'API域名列表',
-        //   route: { name: 'ApiDomainList' }
-        // },
+        {
+          name: '7',
+          title: 'API域名列表',
+          route: { name: 'ApiDomainList' }
+        }
         // {
         //   name: '8',
         //   title: 'API待审核域名',
         //   route: { name: 'ApiDomainCheck' }
-        // },
+        // }
         // {
         //   name: '9',
         //   title: '自定义域名列表',
         //   route: { name: 'CustomDomainList' }
-        // },
+        // }
         // {
         //   name: '10',
         //   title: '插件列表',

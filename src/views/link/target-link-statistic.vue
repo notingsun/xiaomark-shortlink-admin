@@ -113,7 +113,7 @@ export default {
           {
             title: '访问次数',
             minWidth: 120,
-            key: 'n_clicks'
+            key: 'pv'
           },
           {
             title: '是否可用',
@@ -164,11 +164,11 @@ export default {
                   title={row.enabled ? '可用' : '不可用'}
                   type={row.enabled ? 'i-stop' : 'i-start'}
                   size="20"
-                  style={`color: ${row.enabled ? C_GREEN : C_GREY}`}
+                  style={{ color: `${row.enabled ? C_GREEN : C_GREY}`, display: row.enabled ? 'block' : 'none' }}
                   onClick={() => {
                     this.$bus.modal.type = 'enabled_target_link'
                     this.$bus.modal.show = true
-                    this.$bus.modal.obj = row
+                    this.$bus.modal.obj = { ...row, editable: false }
                     this.$bus.modal.success_cb = this.doGetData
                   }}
                 />
@@ -200,8 +200,8 @@ export default {
       options: {
         sort: [
           { value: 'time', label: '按创建时间排序' },
-          { value: 'link', label: '按链接数量倒序' },
-          { value: 'click', label: '按链接访问次数倒序' }
+          { value: 'n_links', label: '按链接数量倒序' },
+          { value: 'pv', label: '按链接访问次数倒序' }
         ]
       }
     }
