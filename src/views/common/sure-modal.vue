@@ -310,7 +310,9 @@ export default {
     }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.doGetUserTags()
+  },
   watch: {
     // 重置表单
     'modal.show'(v) {
@@ -344,11 +346,13 @@ export default {
     // 获取用户标签
     async doGetUserTags() {
       try {
-        const res = await this.$api.User.getUserTags()
+        let res = await this.$api.User.getUserTags()
 
-        console.log({ res })
+        res = (res || {}).tags || []
 
-        this.options.user_tags = (res || {}).tags || []
+        this.options.user_tags = res
+
+        this.$bus.updateUserTags(res)
       } catch (e) {
         console.error(e)
       }

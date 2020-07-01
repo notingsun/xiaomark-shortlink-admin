@@ -131,11 +131,19 @@
             <span class="mr8" title="是否关注服务号">
               <itv-icon type="i-attention" :style="{ color: data.subscribe ? C_GREEN : C_GREY }" size="24" />
             </span>
-            <span title="最近关注服务号的时间" class="cp">{{ subscribe_time }}</span>
+            <span :title="data.subscribe ? '最近关注服务号的时间' : '最近取消关注服务号的时间'" class="cp">{{ subscribe_time }}</span>
           </div>
           <div title="关注服务号的渠道来源" class="cp">
             {{ subscribe_scene_map[data.subscribe_scene] }}
           </div>
+        </div>
+      </div>
+
+      <!-- 用户标签 -->
+      <div class="row">
+        <div class="label">用户标签</div>
+        <div>
+          {{ tagid_list }}
         </div>
       </div>
 
@@ -292,9 +300,15 @@ export default {
       return time ? this.$PDo.Date.format(time) : '-'
     },
     subscribe_time() {
-      const time = (this.data || {}).subscribe_time || ''
+      const time1 = (this.data || {}).subscribe_time || ''
+      const time0 = (this.data || {}).unsubscribe_time || ''
+
+      const time = (this.data || {}).subscribe ? time1 : time0
 
       return time ? this.$PDo.Date.format(time) : '-'
+    },
+    tagid_list() {
+      return ((this.data || {}).tagid_list || []).map((id) => this.$bus.userTags[id] || '-').join('、') || '-'
     }
   },
   created() {},

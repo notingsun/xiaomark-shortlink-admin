@@ -24,10 +24,23 @@ export default new Vue({
         show: false, // 是否显示
         id: '' // 用户的id
       },
+      // 用户的标签列表
+      userTags: {},
       EVENTS: {
         LOGIN: 'LOGIN',
         AUTO_LOGIN: 'AUTO_LOGIN'
       } // 需要监听的事件
+    }
+  },
+  methods: {
+    // 获取用户标签
+    updateUserTags(v) {
+      let res = {}
+
+      v.forEach((item) => {
+        res[item.id] = item.name
+      })
+      this.userTags = res
     }
   }
 })
