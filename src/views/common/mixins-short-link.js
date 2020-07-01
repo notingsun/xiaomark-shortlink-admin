@@ -60,17 +60,7 @@ export default {
     }
 
     return {
-      form: {
-        set_wx_share: '', // 是否设置了微信内分享卡片参数
-        open_wx_share: '', // 是否开启微信内分享卡片
-        open_wx_trace: '', // 是否开启微信内追踪访问记录
-        open_wx_escape: '', // 是否开启微信内强制浏览器打开
-        open_douyin_app: '', // 是否开启跳转抖音APP
-        open_taobao_app: '', // 是否开启跳转淘宝APP
-        modes: [], // 链接类型
-        sources: [], // 创建来源
-        api: false // 来源
-      },
+      form_short_link_filter: {}, // 筛选内容
       loading: true,
       tableColumns: [
         // 0 基本
@@ -81,7 +71,7 @@ export default {
             // key: 'name',
             render: (h, { row }) => {
               return (
-                <Tooltip placement="bottom" max-width={300} theme="light" content={row.name} transfer>
+                <Tooltip class="mt4" placement="bottom" max-width={300} theme="light" content={row.name} transfer>
                   <span class="itv-text--2row">{row.name}</span>
                 </Tooltip>
               )
@@ -89,7 +79,7 @@ export default {
           },
           {
             title: '短链',
-            minWidth: 180,
+            minWidth: 190,
             // key: 'url',
             render: (h, { row }) => {
               return (
@@ -323,7 +313,7 @@ export default {
           // 来源
           {
             title: '来源',
-            minWidth: 136,
+            minWidth: 80,
             key: 'source',
             render: (h, { row }) => {
               return (
@@ -337,7 +327,7 @@ export default {
           },
           {
             title: '插件功能',
-            minWidth: 130,
+            minWidth: 90,
             key: 'subscribe',
             // align: 'center',
             render: (h, { row }) => {
@@ -350,47 +340,9 @@ export default {
           },
           // 微信分享
           {
-            title: ' ',
-            minWidth: 120,
+            title: '微信分享',
+            minWidth: 90,
             key: 'wx_share',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '已设置分享参数', value: 1 },
-                { name: '未设置分享参数', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.has_params === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.has_params = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">微信分享</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
             // eslint-disable-next-line no-unused-vars
             render: (h, { row }) => {
               if (row.wx_share_params) {
@@ -415,46 +367,8 @@ export default {
           // 是否可用
           {
             title: '是否可用',
-            minWidth: 120,
+            minWidth: 90,
             key: 'enabled',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '可用', value: 1 },
-                { name: '不可用', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.enabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.enabled = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">是否可用</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
             render: (h, { row }) => {
               return (
                 <itv-icon
@@ -490,46 +404,8 @@ export default {
           // 是否归档
           {
             title: '是否归档',
-            minWidth: 120,
+            minWidth: 90,
             key: '',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '已归档', value: 1 },
-                { name: '未归档', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.archived === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.archived = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">是否归档</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
             render: (h, { row }) => {
               return <Icon title={row.archived ? '已归档' : '未归档'} type="md-checkmark-circle" color={row.archived ? C_GREEN : C_GREY} size="20" />
             }
@@ -541,21 +417,6 @@ export default {
         total: 0,
         columns: [],
         height: null // 表格的高度
-      },
-      options: {
-        sort: [
-          { value: 'modify_time', label: '按数据修改时间倒序' },
-          { value: 'pv', label: '按访问次数倒序' },
-          { value: 'uv', label: '按访问人数倒序' },
-          { value: 'uip', label: '按访问IP数倒序' },
-          { value: 'pv_today', label: '按今日访问次数倒序' },
-          { value: 'uv_today', label: '按今日访问人数倒序' },
-          { value: 'uip_today', label: '按今日访问IP数倒序' }
-          // { value: 'time', label: '按创建时间倒序' },
-          // { value: 'click', label: '按访问次数倒序' },
-          // { value: 'visitor', label: '按访问人数倒序' },
-          // { value: 'ip', label: '按访问IP数倒序' }
-        ]
       }
     }
   },

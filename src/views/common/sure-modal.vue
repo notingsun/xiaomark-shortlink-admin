@@ -330,7 +330,7 @@ export default {
         this.form.check_api_domain['_switch'] = this.modal.obj.netloc_list.map(() => true)
       } else if (v && this.modal.type === 'wx_share') {
         // 初始化.微信分享是否开启
-        this.form.wx_share['_switch'] = this.modal.obj.wx_share
+        this.form.wx_share['_switch'] = this.modal.obj.open_wx_share
       } else if (v && this.modal.type === 'login_user') {
         // 初始化.获取用户token
         this.doGetUserToken()
@@ -522,7 +522,7 @@ export default {
         let v = !this.form.wx_share['_switch']
 
         await this.$api.Link.putWxShareEnabled(this.modal.obj.id, {
-          wx_share: v
+          enabled: v
         })
         this.modal.show = false
         this.modal.success_cb({ page: 'now' })
