@@ -27,10 +27,9 @@ export default {
   components: { ShortLinkFilter },
   data() {
     return {
+      form_short_link_filter: {},
       form: {
-        has_params: '',
-        search: '',
-        sort: 'modify_time'
+        search: ''
       }
     }
   },

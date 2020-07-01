@@ -6,9 +6,12 @@
         <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
-      <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
-        <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
-      </Select>
+      <div>
+        <Button class="mr16" @click="$router.push({ name: 'TargetLinkBlack' })">查看网站黑名单</Button>
+        <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
+          <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
+        </Select>
+      </div>
     </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />

@@ -65,6 +65,12 @@ const short_link = [
     name: 'TargetLinkStatistic',
     component: () => import('@/views/link/target-link-statistic.vue')
   },
+  {
+    path: '/target-link-black',
+    meta: { menuIndex: '5', title: '网站黑名单' },
+    name: 'TargetLinkBlack',
+    component: () => import('@/views/link/target-link-black.vue')
+  },
 
   /* 协作空间列表 */
   {

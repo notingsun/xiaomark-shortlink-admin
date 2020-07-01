@@ -1,7 +1,6 @@
 const BASE_URL_LINK = process.env.VUE_APP_LINK_BASE_URL
 
 export default {
-  // TODO
   getWebsiteBlackList(params) {
     return {
       method: 'get',
