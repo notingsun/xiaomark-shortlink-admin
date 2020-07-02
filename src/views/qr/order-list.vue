@@ -1,10 +1,11 @@
 /* 订单列表 */
 <template>
   <div class="order-list itv-flex-v--fs">
-    <Tabs v-model="order_type">
-      <TabPane label="渠道码" name="qr"></TabPane>
-      <TabPane label="推送" name="push"></TabPane>
-    </Tabs>
+    <div class="header mb16 itv-flex--sb">
+      <div></div>
+      <itv-filter v-model="form_order_filter" @submit="doGetData" :loading="loading" />
+      <!-- <order-filter v-model="form_order_filter" @submit="doGetData" :loading="loading" /> -->
+    </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
@@ -14,13 +15,12 @@
 
 <script>
 import tableMixins from '../table-mixins'
-import { comboMap, mealMap } from './components/common-data'
+// import { comboMap, mealMap } from './components/common-data'
 
 export default {
   name: 'QrderList',
   mixins: [tableMixins],
   props: {},
-  components: {},
   data() {
     const C_GREEN = '#47cb89'
     const C_ORANGE = '#e88986'
@@ -47,8 +47,9 @@ export default {
     }
 
     return {
+      form_order_filter: {},
       loading: true,
-      order_type: 'qr',
+      // order_type: 'qr',
       table: {
         data: [],
         total: 0,
@@ -72,60 +73,14 @@ export default {
             }
           },
           {
-            // title: '所选套餐',
+            title: '所选套餐',
             minWidth: 100,
-            // key: 'combo',
-            // eslint-disable-next-line
-            renderHeader: (h) => {
-              const optionsMap = {
-                qr: [
-                  { name: '全部', value: '' },
-                  { name: '入门版', value: 1 },
-                  { name: '专业版', value: 2 }
-                ],
-                push: [
-                  { name: '全部', value: '' },
-                  { name: '付费版', value: 2 },
-                  { name: '单条额度', value: 1 }
-                ]
-              }
-              const options = optionsMap[this.order_type] || []
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.combo === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.combo = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">所选套餐</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
             render: (h, { row }) => {
               return (
                 <div>
+                  {/* TODO 套餐 */}
                   {/* eslint-disable-next-line prettier/prettier */}
-                  <span>{this.order_type === 'qr' ? comboMap[row.combo] : this.order_type === 'push' ? mealMap[row.meal] : '' }</span>
+                  <span>TODO {row.combo}</span>
                 </div>
               )
             }
@@ -146,47 +101,8 @@ export default {
             key: 'real_prize'
           },
           {
-            // title: '支付结果',
+            title: '支付结果',
             minWidth: 100,
-            // key: 'pay',
-            // eslint-disable-next-line
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '已支付', value: 'SUCCESS' },
-                { name: '未支付', value: 'NOTPAY' }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.result === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.result = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">支付结果</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
             render: (h, { row }) => {
               const icon = resMap[row.result] || {}
 
@@ -277,30 +193,14 @@ export default {
         combo: '', // 套餐
         result: '' // 支付结果
       }
-      // options: {
-      //   sort: [
-      //     { value: 'time', label: '按创建时间倒序' },
-      //     { value: 'visitor', label: '按扫码人数倒序' },
-      //     { value: 'sub', label: '按扫码新增关注人数倒序' },
-      //     { value: 'stay', label: '按当前留存人数倒序' },
-      //     { value: 'leave', label: '按当前取关人数倒序' }
-      //   ]
-      // }
     }
   },
   computed: {},
   created() {},
   mounted() {
-    this.doGetData()
+    // this.doGetData()
   },
-  watch: {
-    order_type() {
-      // 重置初始化星系
-      this.form.combo = ''
-      this.form.result = ''
-      this.doGetData()
-    }
-  },
+  watch: {},
   methods: {
     doGetData(page = {}) {
       if (!page.page) {
@@ -316,23 +216,12 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        let res = {}
+        let res = await this.$api.Qr.getQrderList({
+          ...this.form_order_filter,
+          ...this.$global.utils.pagination.params()
+        })
 
-        if (this.order_type === 'qr') {
-          res = await this.$api.Qr.getQrderList({
-            combo: this.form.combo,
-            result: this.form.result,
-            ...this.$global.utils.pagination.params()
-          })
-          this.table.data = res.orders || []
-        } else if (this.order_type === 'push') {
-          res = await this.$api.Qr.getPushQrderList({
-            meal: this.form.combo,
-            result: this.form.result,
-            ...this.$global.utils.pagination.params()
-          })
-          this.table.data = res.indents || []
-        }
+        this.table.data = res.orders || []
 
         this.table.total = res.total
       } catch (e) {

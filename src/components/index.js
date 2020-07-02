@@ -14,8 +14,10 @@ import ItvModelImg from './upload-images/model-img'
 import ItvGraphic from './msg-graphic/graphic'
 import ItvGraphicItem from './msg-graphic/graphic-item'
 import ItvPreviewTemplate from './preview-template/template-detail'
+import ItvFilter from './filter/filter'
 
 const COMPONENTS = {
+  ItvFilter,
   ItvPreviewTemplate,
   ItvGraphic,
   ItvGraphicItem,

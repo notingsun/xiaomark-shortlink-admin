@@ -56,12 +56,6 @@ export default {
     return {
       show_drawer: false,
       options: {
-        filter: [
-          { value: '*', label: '不限' },
-          { value: 'eq', label: '等于' },
-          { value: 'lt', label: '小于' },
-          { value: 'gt', label: '大于' }
-        ],
         // 列表排序方式
         order_by: [
           { value: 'modify_time', label: '按数据修改时间倒序' },
