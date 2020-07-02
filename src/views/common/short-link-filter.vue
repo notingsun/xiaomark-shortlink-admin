@@ -211,7 +211,10 @@ export default {
         if (t === 'calcSpecialValue') {
           res[formItem.key] = v === '*' ? '' : v
         } else if (t === 'calcArr') {
-          res[formItem.key] = v.join(',')
+          const isSelectAll = (this.options[formItem.key] || []).length === v.length
+
+          // 全部选中表示不限，传给后端空，提高查询效率
+          res[formItem.key] = isSelectAll ? '' : v.join(',')
         } else if (t === 'calcDefault') {
           res[formItem.key] = v
         } else if (t === 'calcPlugin') {
