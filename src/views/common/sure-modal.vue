@@ -59,6 +59,9 @@
         <div>
           <Checkbox v-model="form.enabled_target_link.recursive" size="large">设置相关联的链接</Checkbox>
         </div>
+        <div class="itv-text--red mt16">
+          注意：此操作不可逆，即暂时没有取消禁用某个域名的功能。
+        </div>
       </div>
 
       <!-- 5、屏蔽API域名 -->

@@ -6,7 +6,7 @@
       <div class="itv-flex--fs">
         <itv-icon type="i-back" title="返回" size="20" class="itv-btn__icon mr16" @click="$router.go(-1)" />
         <Breadcrumb>
-          <BreadcrumbItem>列出网站</BreadcrumbItem>
+          <BreadcrumbItem>跳转域名列表</BreadcrumbItem>
         </Breadcrumb>
         <Button class="ml32" @click="handleAdd">添加黑名单域名</Button>
       </div>

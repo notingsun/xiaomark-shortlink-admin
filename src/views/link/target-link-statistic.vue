@@ -7,7 +7,7 @@
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
       <div>
-        <Button class="mr16" @click="$router.push({ name: 'TargetLinkBlack' })">查看网站黑名单</Button>
+        <Button class="mr16" @click="$router.push({ name: 'TargetLinkBlack' })">查看跳转域名黑名单列表</Button>
         <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
           <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
         </Select>
@@ -30,7 +30,7 @@ export default {
   components: {},
   data() {
     const C_GREEN = '#47cb89'
-    const C_GREY = '#c5c8ce'
+    // const C_GREY = '#c5c8ce'
 
     return {
       loading: true,
@@ -161,21 +161,23 @@ export default {
               )
             },
             render: (h, { row }) => {
-              return (
-                <itv-icon
-                  class="cp"
-                  title={row.enabled ? '可用' : '不可用'}
-                  type={row.enabled ? 'i-stop' : 'i-start'}
-                  size="20"
-                  style={{ color: `${row.enabled ? C_GREEN : C_GREY}`, display: row.enabled ? 'block' : 'none' }}
-                  onClick={() => {
-                    this.$bus.modal.type = 'enabled_target_link'
-                    this.$bus.modal.show = true
-                    this.$bus.modal.obj = { ...row, editable: false }
-                    this.$bus.modal.success_cb = this.doGetData
-                  }}
-                />
-              )
+              /* eslint-disable */
+              return row.enabled ?
+              <itv-icon
+                class="cp"
+                title='不可用'
+                type='i-stop'
+                size="20"
+                style={{ color: C_GREEN}}
+                onClick={() => {
+                  this.$bus.modal.type = 'enabled_target_link'
+                  this.$bus.modal.show = true
+                  this.$bus.modal.obj = { ...row, editable: false }
+                  this.$bus.modal.success_cb = this.doGetData
+                }}
+              />:
+              <span>{row.enabled ? '' : '不可用'}</span>
+              /* eslint-enable */
             }
           },
           {

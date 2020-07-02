@@ -130,7 +130,7 @@ export default {
         },
         {
           name: '5',
-          title: '列出网站',
+          title: '跳转域名列表',
           route: { name: 'TargetLinkStatistic' }
         },
         // {

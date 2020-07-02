@@ -215,8 +215,8 @@ export default {
             format: this.$global.utils.countFormat.three,
             render: (h, { row }) => {
               const stats = row.stats || {}
-              // 目标页面
 
+              // 目标页面
               let targetType = ''
 
               row.open_wx_trace && (targetType = 'open_wx_trace')
@@ -228,58 +228,64 @@ export default {
                 show: Boolean(targetType),
                 type: targetType,
                 tooltip: targetInfo.tooltip,
-                pv: stats[targetInfo.pv],
-                uv: stats[targetInfo.uv],
-                uip: stats[targetInfo.uip]
+                pv: targetInfo.pv,
+                uv: targetInfo.uv,
+                uip: targetInfo.uip
               }
 
+              const rowArr = [
+                {
+                  label: '今日',
+                  pv: 'pv_today',
+                  uv: 'uv_today',
+                  uip: 'uip_today'
+                },
+                {
+                  label: '累计',
+                  pv: 'pv',
+                  uv: 'uv',
+                  uip: 'uip'
+                },
+                {
+                  label: '目标页面',
+                  pv: statsTargetInfo.pv,
+                  uv: statsTargetInfo.uv,
+                  uip: statsTargetInfo.uip
+                }
+              ]
+
+              const getContent = (methodName) => {
+                return rowArr.map((item) => {
+                  if (item.label === '目标页面' && !statsTargetInfo.show) {
+                    return null
+                  }
+                  return (
+                    <div class="cp">
+                      <span class="text-visit-label">{item.label}</span>
+                      <span class="text-visit" title="访问次数">
+                        {this.$global.utils.countFormat[methodName](stats[item.pv])}
+                      </span>
+                      <span> / </span>
+                      <span class="text-visit" title="访问人数">
+                        {this.$global.utils.countFormat[methodName](stats[item.uv])}
+                      </span>
+                      <span> / </span>
+                      <span class="text-visit" title="IP数">
+                        {this.$global.utils.countFormat[methodName](stats[item.uip])}
+                      </span>
+                    </div>
+                  )
+                })
+              }
+
+              const showContent = getContent('short')
+              const showTooltipContent = getContent('three')
+
               return (
-                <div class="cp mt4 mb4">
-                  <div>
-                    <span class="text-visit-label">今日</span>
-                    <span class="text-visit" title={`访问次数：${this.$global.utils.countFormat.three(stats.pv_today)}`}>
-                      {this.$global.utils.countFormat.short(stats.pv_today)}
-                    </span>
-                    <span> / </span>
-                    <span class="text-visit" title={`访问人数：${this.$global.utils.countFormat.three(stats.uv_today)}`}>
-                      {this.$global.utils.countFormat.short(stats.uv_today)}
-                    </span>
-                    <span> / </span>
-                    <span class="text-visit" title={`IP数：${this.$global.utils.countFormat.three(stats.uip_today)}`}>
-                      {this.$global.utils.countFormat.short(stats.uip_today)}
-                    </span>
-                  </div>
-                  <div class="grey">
-                    <span class="text-visit-label">累计</span>
-                    <span class="text-visit" title={`访问次数：${this.$global.utils.countFormat.three(stats.pv)}`}>
-                      {this.$global.utils.countFormat.short(stats.pv)}
-                    </span>
-                    <span> / </span>
-                    <span class="text-visit" title={`访问人数：${this.$global.utils.countFormat.three(stats.uv)}`}>
-                      {this.$global.utils.countFormat.short(stats.uv)}
-                    </span>
-                    <span> / </span>
-                    <span class="text-visit" title={`IP数：${this.$global.utils.countFormat.three(stats.uip)}`}>
-                      {this.$global.utils.countFormat.short(stats.uip)}
-                    </span>
-                  </div>
-                  <div class="grey" style={statsTargetInfo.show ? 'display: block' : 'display: none'}>
-                    <span class="text-visit-label" title={statsTargetInfo.tooltip}>
-                      目标页面
-                    </span>
-                    <span class="text-visit" title={`访问次数：${this.$global.utils.countFormat.three(statsTargetInfo.pv)}`}>
-                      {this.$global.utils.countFormat.short(statsTargetInfo.pv)}
-                    </span>
-                    <span> / </span>
-                    <span class="text-visit" title={`访问人数：${this.$global.utils.countFormat.three(statsTargetInfo.uv)}`}>
-                      {this.$global.utils.countFormat.short(statsTargetInfo.uv)}
-                    </span>
-                    <span> / </span>
-                    <span class="text-visit" title={`IP数：${this.$global.utils.countFormat.three(statsTargetInfo.uip)}`}>
-                      {this.$global.utils.countFormat.short(statsTargetInfo.uip)}
-                    </span>
-                  </div>
-                </div>
+                <Tooltip placement="right" max-width={500} theme="light" class="flex1">
+                  <div class="cp mt4 mb4">{showContent}</div>
+                  <div slot="content">{showTooltipContent}</div>
+                </Tooltip>
               )
             }
           }
@@ -305,7 +311,7 @@ export default {
           // 来源
           {
             title: '来源',
-            minWidth: 80,
+            width: 60,
             key: 'source',
             render: (h, { row }) => {
               return (
@@ -320,7 +326,7 @@ export default {
           // 插件功能
           {
             title: '插件功能',
-            minWidth: 90,
+            width: 80,
             key: 'subscribe',
             // align: 'center',
             render: (h, { row }) => {
@@ -332,13 +338,13 @@ export default {
 
               isNotEpmty = res.some((item) => item !== null)
 
-              return <div>{isNotEpmty ? res : '-'}</div>
+              return <div class="itv-text--grey3">{isNotEpmty ? res : '-'}</div>
             }
           },
           // 微信分享
           {
             title: '微信分享',
-            minWidth: 90,
+            width: 80,
             key: 'wx_share',
             // eslint-disable-next-line no-unused-vars
             render: (h, { row }) => {
@@ -358,13 +364,13 @@ export default {
                   />
                 )
               }
-              return null
+              return <span class="itv-text--grey3">-</span>
             }
           },
           // 是否可用
           {
             title: '是否可用',
-            minWidth: 90,
+            width: 80,
             key: 'enabled',
             render: (h, { row }) => {
               return (
@@ -389,10 +395,12 @@ export default {
         [
           {
             title: '协作空间',
-            minWidth: 140,
+            minWidth: 130,
             key: 'workspace',
             render: (h, { row }) => {
-              return <span>{(row.workspace || {}).name || '-'}</span>
+              const name = (row.workspace || {}).name
+
+              return <span class={name ? '' : 'itv-text--grey3'}>{name || '-'}</span>
             }
           }
         ],
@@ -401,10 +409,11 @@ export default {
           // 是否归档
           {
             title: '是否归档',
-            minWidth: 90,
+            width: 80,
             key: '',
             render: (h, { row }) => {
-              return <Icon title={row.archived ? '已归档' : '未归档'} type="md-checkmark-circle" color={row.archived ? C_GREEN : C_GREY} size="20" />
+              // eslint-disable-next-line prettier/prettier
+              return row.archived ? <Icon title={row.archived ? '已归档' : '未归档'} type="md-checkmark-circle" color={row.archived ? C_GREEN : C_GREY} size="20" /> : <span class="itv-text--grey3">-</span>
             }
           }
         ]
