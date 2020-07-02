@@ -9,6 +9,21 @@
         <span>{{ data.nickname }}</span>
       </div>
 
+      <!-- 地区 -->
+      <div class="row">
+        <div class="label">地区</div>
+        <div>{{ [data.country, data.province, data.city].filter((v) => v).join('-') }}</div>
+      </div>
+
+      <!-- 是否激活 -->
+      <div class="row">
+        <div class="label">是否激活</div>
+        <div class="itv-flex--fs">
+          <Icon :title="data.active ? '已激活' : '未激活'" type="md-checkmark-circle" :color="data.active ? C_GREEN : C_GREY" size="20" class="mr8" />
+          <span title="激活时间">{{ active_date }}</span>
+        </div>
+      </div>
+
       <!-- 是否可登录 -->
       <div class="row">
         <div class="label">是否可登录</div>
@@ -324,6 +339,11 @@ export default {
     },
     create_time() {
       const time = (this.data || {}).create_time || ''
+
+      return time ? this.$PDo.Date.format(time) : '-'
+    },
+    active_date() {
+      const time = (this.data || {}).active_date || ''
 
       return time ? this.$PDo.Date.format(time) : '-'
     },
