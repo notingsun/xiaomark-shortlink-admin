@@ -80,6 +80,8 @@ export default {
           { value: '1', label: '随机-记忆' },
           { value: '2', label: '随机-非记忆' }
         ],
+        // 是否使用自定义域名
+        custom: OPTIONS_YES_NO,
         // 是否设置了微信内分享卡片参数
         set_wx_share: OPTIONS_YES_NO,
         // 是否开启微信内分享卡片
@@ -109,6 +111,13 @@ export default {
           key: 'order_by',
           valueCaclType: 'calcSpecialValue',
           value: 'modify_time',
+          type: 'select'
+        },
+        {
+          name: '使用自定义域名',
+          key: 'custom',
+          valueCaclType: 'calcSpecialValue',
+          value: '*',
           type: 'select'
         },
         {

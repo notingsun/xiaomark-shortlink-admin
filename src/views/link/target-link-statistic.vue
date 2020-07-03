@@ -119,6 +119,54 @@ export default {
             key: 'pv'
           },
           {
+            title: '对应今日短链数量',
+            minWidth: 140,
+            key: 'n_links_today',
+            // eslint-disable-next-line
+            renderHeader: (h) => {
+              const options = [
+                { name: '全部', value: '' },
+                { name: '大于0', value: 1 },
+                { name: '等于0', value: 0 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.has_link_today === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.has_link_today = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">对应今日短链数量</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            }
+          },
+          {
+            title: '今日访问次数',
+            minWidth: 120,
+            key: 'pv_today'
+          },
+          {
             title: '是否可用',
             minWidth: 120,
             key: 'enabled',
@@ -197,6 +245,7 @@ export default {
         height: null // 表格的高度
       },
       form: {
+        has_link_today: '', // 今日链接数量是否大于0：0 - 否，1 - 是
         has_link: '',
         enabled: '',
         search: '',
@@ -206,7 +255,9 @@ export default {
         sort: [
           { value: 'time', label: '按创建时间排序' },
           { value: 'n_links', label: '按链接数量倒序' },
-          { value: 'pv', label: '按链接访问次数倒序' }
+          { value: 'pv', label: '按链接访问次数倒序' },
+          { value: 'n_links_today', label: '按今日链接数量倒序' },
+          { value: 'pv_today', label: '按链接今日访问次数倒序' }
         ]
       }
     }
@@ -266,6 +317,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          has_link_today: this.form.has_link_today,
           has_link: this.form.has_link,
           enabled: this.form.enabled,
           qs: this.form.search,

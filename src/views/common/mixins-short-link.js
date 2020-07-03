@@ -338,7 +338,11 @@ export default {
 
               isNotEpmty = res.some((item) => item !== null)
 
-              return <div class="itv-text--grey3">{isNotEpmty ? res : '-'}</div>
+              return (
+                <div class="itv-text--grey3" style="height: 24px;">
+                  {isNotEpmty ? res : '-'}
+                </div>
+              )
             }
           },
           // 微信分享

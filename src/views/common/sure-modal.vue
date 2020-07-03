@@ -71,6 +71,9 @@
           确认屏蔽【{{ (modal.obj || {}).netloc || '-' }}】吗？
         </p>
         <Checkbox v-model="form.stop_api_domain.recursive" size="large">设置相关联的链接</Checkbox>
+        <div class="itv-text--red mt16">
+          注意：此操作不可逆，即暂时没有取消屏蔽某个API域名的功能。
+        </div>
       </div>
 
       <!-- 6、设置API权限 -->

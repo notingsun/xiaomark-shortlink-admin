@@ -76,13 +76,8 @@ export default {
             title: '操作',
             width: 100,
             render: (h, { row }) => {
-              return (
-                <div>
-                  <span class="itv-btn__text" onClick={this.handleStop.bind(null, row)}>
-                    屏蔽
-                  </span>
-                </div>
-              )
+              // eslint-disable-next-line prettier/prettier
+              return row.enabled ? <span class="itv-btn__text" onClick={this.handleStop.bind(null, row)}>屏蔽</span> : <span class="itv-text--grey3">-</span>
             }
           }
         ],
