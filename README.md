@@ -9,6 +9,7 @@
 [后端接口](http://test.xiaomark.com/apidoc/)
   > 接口的域名： admin-test.xiaomark.com
   > 账户密码： admin interval
+[后端接口_短链](http://sl-stage.xiaomark.com/apidoc/#api-user_User-user_get_current_user)
 
 
   1、用户拉黑（展示、筛选、操作）

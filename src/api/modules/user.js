@@ -5,7 +5,7 @@ export default {
     return {
       method: 'post',
       name: '给用户打标签',
-      url: `/api/sl/users/${id}/tag/`,
+      url: `${BASE_URL_LINK}/api/users/${id}/tags/`,
       params
     }
   },
@@ -51,7 +51,7 @@ export default {
     return {
       method: 'put',
       name: '更新用户的API调用限制',
-      url: `/api/sl/users/${id}/api_limits/`,
+      url: `${BASE_URL_LINK}/api/users/${id}/api_config/`,
       params
     }
   },
@@ -60,7 +60,7 @@ export default {
     return {
       method: 'put',
       name: '设置用户是否可用',
-      url: `/api/sl/users/${id}/enabled/`,
+      url: `${BASE_URL_LINK}/api/users/${id}/enabled/`,
       params
     }
   },

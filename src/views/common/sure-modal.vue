@@ -28,7 +28,7 @@
         >
           {{ (modal.obj || {}).enabled ? '不允许' : '允许' }}
         </span>
-        <span>【{{ (modal.obj || {}).nickname || '-' }}】</span>
+        <span>【 {{ (modal.obj || {}).nickname || '-' }} 】</span>
         <span>登录吗？</span>
       </p>
 
@@ -43,7 +43,7 @@
         >
           {{ (modal.obj || {}).enabled ? '禁用' : '启用' }}
         </span>
-        <span>【{{ (modal.obj || {}).name || '-' }}】</span>
+        <span>【 {{ (modal.obj || {}).name || '-' }} 】</span>
         <span>吗？</span>
       </p>
 
@@ -425,6 +425,8 @@ export default {
         setTimeout(() => {
           this.$Message.success('添加成功')
         }, 300)
+        // 刷新用户详情
+        this.modal.success_cb({ page: 'now' })
       } catch (e) {
         console.error(e)
       }
@@ -475,17 +477,18 @@ export default {
         await this.$api.User.putUserEnabled(this.modal.obj.id, {
           enabled: !this.modal.obj.enabled
         })
-        this.modal.show = false
-        this.modal.success_cb({ page: 'now' })
-        setTimeout(() => {
-          this.$Message.success(
-            // eslint-disable-next-line prettier/prettier
-            (this.modal.obj || {}).enabled ? '已设置为不允许登录' : '已设置为允许登录'
-          )
-        }, 300)
       } catch (e) {
         console.error(e)
       }
+
+      this.modal.show = false
+      this.modal.success_cb({ page: 'now' })
+      setTimeout(() => {
+        this.$Message.success(
+          // eslint-disable-next-line prettier/prettier
+          (this.modal.obj || {}).enabled ? '已设置为不允许登录' : '已设置为允许登录'
+        )
+      }, 300)
     },
 
     // 短链是否可用
@@ -596,7 +599,7 @@ export default {
         const n_links_d = Number(this.form.open_api_domain['_count'])
 
         await this.$api.User.putApiLimits(this.modal.obj.id, {
-          n_links_d
+          max_links_daily: n_links_d
         })
         this.$Message.success('设置成功')
         this.form.open_api_domain['_count_default'] = n_links_d

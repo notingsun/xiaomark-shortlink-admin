@@ -269,9 +269,10 @@
             class="mb8 itv-flex--fs"
             @click="
               () => {
-                $bus.modal.type = 'user_tags'
-                $bus.modal.show = true
-                $bus.modal.obj = data
+                this.$bus.modal.type = 'user_tags'
+                this.$bus.modal.show = true
+                this.$bus.modal.obj = data
+                this.$bus.modal.success_cb = this.doGetData
               }
             "
           >
