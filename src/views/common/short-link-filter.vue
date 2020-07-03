@@ -229,7 +229,9 @@ export default {
       this.show_drawer = false
       // 提交筛选数据
       this.$emit('input', this.calcFormFilter())
-      this.$emit('submit')
+      setTimeout(() => {
+        this.$emit('submit')
+      }, 300)
     },
 
     // 点击外部

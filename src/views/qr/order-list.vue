@@ -3,8 +3,7 @@
   <div class="order-list itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">
       <div></div>
-      <itv-filter v-model="form_order_filter" @submit="doGetData" :loading="loading" />
-      <!-- <order-filter v-model="form_order_filter" @submit="doGetData" :loading="loading" /> -->
+      <order-filter v-model="form_order_filter" @submit="doGetData" :loading="loading" />
     </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
@@ -15,10 +14,12 @@
 
 <script>
 import tableMixins from '../table-mixins'
+import OrderFilter from './components/order-filter'
 // import { comboMap, mealMap } from './components/common-data'
 
 export default {
   name: 'QrderList',
+  components: { OrderFilter },
   mixins: [tableMixins],
   props: {},
   data() {
