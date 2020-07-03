@@ -129,9 +129,12 @@ export default {
       options: {
         sort: [
           { value: 'time', label: '按创建时间倒序' },
-          { value: 'collaborator', label: '按协作者数量倒序' },
-          { value: 'link', label: '按链接数量倒序' },
-          { value: 'click', label: '按链接访问次数倒序' }
+          { value: 'n_collaborators', label: '按协作者数量倒序' },
+          { value: 'n_groups', label: '按链接分组数量倒序' },
+          { value: 'n_links', label: '按链接数量倒序' },
+          { value: 'n_links_today', label: '按今日链接数量倒序' },
+          { value: 'pv', label: '按链接访问次数倒序' },
+          { value: 'pv_today', label: '按链接今日访问次数倒序' }
         ]
       }
     }

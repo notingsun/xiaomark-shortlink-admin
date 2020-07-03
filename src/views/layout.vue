@@ -113,11 +113,11 @@ export default {
       },
       // 短链接.菜单
       menu_link: [
-        // {
-        //   name: '2',
-        //   title: '用户列表',
-        //   route: { name: 'UserList' }
-        // },
+        {
+          name: '2',
+          title: '用户列表',
+          route: { name: 'UserList' }
+        },
         // {
         //   name: '3',
         //   title: '短链数据',

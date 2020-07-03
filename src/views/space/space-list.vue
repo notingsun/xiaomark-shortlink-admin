@@ -3,7 +3,10 @@
   <div class="space-list itv-flex-v--fs">
     <!-- 头部 -->
     <div class="header mb16 itv-flex--sb">
-      <div class="header__search"></div>
+      <div class="header__search">
+        <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
+        <Button type="primary" @click="doGetData">搜索</Button>
+      </div>
       <div>
         <!-- 排序 -->
         <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
@@ -31,6 +34,7 @@ export default {
     return {
       // 获取表格数据的参数
       form: {
+        search: '',
         sort: 'time',
         n_collaborators: ''
       }
@@ -64,6 +68,7 @@ export default {
         const params = {
           ...this.filter,
           // user_id: this.form.user_id,
+          qs: this.form.search,
           order_by: this.form.sort,
           has_collaborator: this.form.n_collaborators // 协作空间的数量
         }
