@@ -59,16 +59,6 @@ export default {
     const C_GREY = '#c5c8ce'
 
     return {
-      // img_default: require('../../assets/earth.png'),
-      // modal: {
-      //   titleMap: {
-      //     ws_creator: '设置创建协作空间权限',
-      //     enabled: '设置用户登录权限'
-      //   },
-      //   type: '', // 对话框类型 [ ws_creator:用户协作空间创建权限 、 enabled:用户拉黑 ]
-      //   show: false, // 显示对话框
-      //   obj: null // 操作对象
-      // },
       show_drawer: false, // 显示抽屉
       value: '',
       type: '',

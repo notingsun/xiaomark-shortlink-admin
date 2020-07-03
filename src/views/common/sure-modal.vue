@@ -88,7 +88,7 @@
         <!-- 开关 -->
         <div class="itv-flex--fs mb24">
           <p class="mr16 itv-title--16">API 权限</p>
-          <i-switch :loading="is_change.open_api_domain" v-model="form.open_api_domain._switch" :before-change="handleOpenApi">
+          <i-switch :loading="is_change.open_api_domain" v-model="form.open_api_domain._switch" :before-change="handleOpenApi" :disabled="true">
             <span slot="open">开</span>
             <span slot="close">关</span>
           </i-switch>
@@ -574,26 +574,24 @@ export default {
 
     // API域名.开启权限
     async handleOpenApi() {
-      this.is_change.open_api_domain = true
-      const api_auth = !this.form.open_api_domain['_switch']
-
-      try {
-        await this.$api.User.putApiAuth(this.modal.obj.id, {
-          api_auth
-        })
-        this.$Message.success(`API 权限已${api_auth ? '开启' : '关闭'}`)
-        this.form.open_api_domain['_switch'] = api_auth
-        this.modal.success_cb({ page: 'now' })
-      } catch (e) {
-        console.error(e)
-        this.modal.show = false
-        this.modal.success_cb({ page: 'now' })
-      }
-      this.is_change.open_api_domain = false
-
-      return new Promise((resolve, reject) => {
-        reject()
-      })
+      // this.is_change.open_api_domain = true
+      // const api_auth = !this.form.open_api_domain['_switch']
+      // try {
+      //   await this.$api.User.putApiAuth(this.modal.obj.id, {
+      //     api_auth
+      //   })
+      //   this.$Message.success(`API 权限已${api_auth ? '开启' : '关闭'}`)
+      //   this.form.open_api_domain['_switch'] = api_auth
+      //   this.modal.success_cb({ page: 'now' })
+      // } catch (e) {
+      //   console.error(e)
+      //   this.modal.show = false
+      //   this.modal.success_cb({ page: 'now' })
+      // }
+      // this.is_change.open_api_domain = false
+      // return new Promise((resolve, reject) => {
+      //   reject()
+      // })
     },
 
     // API域名.更新用户的API调用限制

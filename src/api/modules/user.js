@@ -78,7 +78,7 @@ export default {
     return {
       method: 'get',
       name: '列出用户',
-      url: '/api/sl/users/',
+      url: `${BASE_URL_LINK}/api/users/`,
       params
     }
   }
