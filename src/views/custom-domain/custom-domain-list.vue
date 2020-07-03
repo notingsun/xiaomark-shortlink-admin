@@ -102,9 +102,17 @@ export default {
             }
           },
           {
+            title: '创建时间',
+            minWidth: 180,
+            // key: 'create_time',
+            render: (h, { row }) => {
+              return <span>{this.$PDo.Date.format(row.create_time)}</span>
+            }
+          },
+          {
             title: '绑定时间',
             minWidth: 180,
-            key: 'create_time',
+            // key: 'bind_time',
             render: (h, { row }) => {
               return <span>{this.$PDo.Date.format(row.bind_time)}</span>
             }
@@ -189,7 +197,7 @@ export default {
         })
 
         this.table.total = res.total
-        this.table.data = res.domains || []
+        this.table.data = res.custom_domains || []
       } catch (e) {
         console.error(e)
       }

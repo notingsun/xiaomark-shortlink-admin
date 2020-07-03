@@ -82,8 +82,6 @@ export default {
               const revert = ORDER_OPTION_MAP.revert[row.revert]
               const menu = ORDER_OPTION_MAP.menu[row.menu]
 
-              console.log({ genre, combo })
-
               return (
                 <div>
                   {/* eslint-disable-next-line prettier/prettier */}
@@ -113,8 +111,7 @@ export default {
             render: (h, { row }) => {
               const icon = resMap[row.result] || {}
 
-              // eslint-disable-next-line prettier/prettier
-              return row.real_prize > 0 ? <Tag color={icon.color}>{icon.name}</Tag> : <span>-</span>
+              return <Tag color={icon.color}>{icon.name}</Tag>
             }
           },
           {

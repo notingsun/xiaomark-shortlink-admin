@@ -133,26 +133,26 @@ export default {
           title: '跳转域名列表',
           route: { name: 'TargetLinkStatistic' }
         },
-        // {
-        //   name: '6',
-        //   title: '协作空间列表',
-        //   route: { name: 'SpaceList' }
-        // },
+        {
+          name: '6',
+          title: '协作空间列表',
+          route: { name: 'SpaceList' }
+        },
         {
           name: '7',
           title: 'API域名列表',
           route: { name: 'ApiDomainList' }
-        }
+        },
         // {
         //   name: '8',
         //   title: 'API待审核域名',
         //   route: { name: 'ApiDomainCheck' }
         // }
-        // {
-        //   name: '9',
-        //   title: '自定义域名列表',
-        //   route: { name: 'CustomDomainList' }
-        // }
+        {
+          name: '9',
+          title: '自定义域名列表',
+          route: { name: 'CustomDomainList' }
+        }
         // {
         //   name: '10',
         //   title: '插件列表',
