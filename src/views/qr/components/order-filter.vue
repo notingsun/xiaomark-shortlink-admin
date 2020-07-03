@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { ORDER_OPTIONS_MAP } from './common-data'
+
 export default {
   name: 'OrderFilter',
   mixins: [],
@@ -72,44 +74,8 @@ export default {
 
     return {
       show_drawer: false,
-      options: {
-        // 列表排序方式
-        genre: [
-          { value: '*', label: '不限' },
-          { value: '0', label: '打包' },
-          { value: '1', label: '渠道码' },
-          { value: '2', label: '推送' },
-          { value: '3', label: '自动回复' },
-          { value: '4', label: '菜单' }
-        ],
-        combo: [
-          { value: '*', label: '不限' },
-          { value: '0', label: '免费版' },
-          { value: '1', label: '入门版' },
-          { value: '2', label: '专业版' }
-        ],
-        meal: [
-          { value: '*', label: '不限' },
-          { value: '1', label: '单次' },
-          { value: '2', label: '包年' }
-        ],
-        revert: [
-          { value: '*', label: '不限' },
-          { value: '0', label: '免费版' },
-          { value: '1', label: '包年版' }
-        ],
-        menu: [
-          { value: '*', label: '不限' },
-          { value: '0', label: '免费版' },
-          { value: '1', label: '包年版' }
-        ],
-        result: [
-          { value: '*', label: '不限' },
-          { value: 'NOTPAY', label: '未支付' },
-          { value: 'SUCCESS', label: '支付成功' },
-          { value: 'PAYERROR', label: '支付失败' }
-        ]
-      },
+      // 列表排序方式
+      options: ORDER_OPTIONS_MAP,
       form_filter: [
         /*
           name: 筛选项的名称
@@ -271,7 +237,7 @@ export default {
 
     // 点击外部
     handleClickoutside() {
-      console.log('handleClickoutside')
+      // console.log('handleClickoutside')
       // this.show_drawer = false
     },
 

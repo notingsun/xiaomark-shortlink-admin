@@ -15,7 +15,7 @@
 <script>
 import tableMixins from '../table-mixins'
 import OrderFilter from './components/order-filter'
-// import { comboMap, mealMap } from './components/common-data'
+import { ORDER_OPTION_MAP } from './components/common-data'
 
 export default {
   name: 'QrderList',
@@ -50,7 +50,6 @@ export default {
     return {
       form_order_filter: {},
       loading: true,
-      // order_type: 'qr',
       table: {
         data: [],
         total: 0,
@@ -75,13 +74,20 @@ export default {
           },
           {
             title: '所选套餐',
-            minWidth: 100,
+            minWidth: 140,
             render: (h, { row }) => {
+              const genre = ORDER_OPTION_MAP.genre[row.genre]
+              const combo = ORDER_OPTION_MAP.combo[row.combo]
+              const meal = ORDER_OPTION_MAP.meal[row.meal]
+              const revert = ORDER_OPTION_MAP.revert[row.revert]
+              const menu = ORDER_OPTION_MAP.menu[row.menu]
+
+              console.log({ genre, combo })
+
               return (
                 <div>
-                  {/* TODO 套餐 */}
                   {/* eslint-disable-next-line prettier/prettier */}
-                  <span>TODO {row.combo}</span>
+                  <span>{genre}{row.genre !== 0 ? '-' : ''}{combo || meal||revert ||menu}</span>
                 </div>
               )
             }
@@ -154,7 +160,7 @@ export default {
             minWidth: 120,
             // key: 'start_date',
             render: (h, { row }) => {
-              return <span>{this.order_type === 'qr' ? row.start_date : row.begin_date}</span>
+              return <span>{row.start_date}</span>
             }
           },
           {
@@ -162,13 +168,16 @@ export default {
             minWidth: 120,
             // key: 'stop_date',
             render: (h, { row }) => {
-              return <span>{this.order_type === 'qr' ? row.stop_date : row.over_date}</span>
+              return <span>{row.stop_date}</span>
             }
           },
           {
             title: '下次可续费日期',
             minWidth: 120,
-            key: 'renew_date'
+            // key: 'renew_date'
+            render: (h, { row }) => {
+              return <span>{row.renew_date || '-'}</span>
+            }
           },
           {
             title: '用户',
