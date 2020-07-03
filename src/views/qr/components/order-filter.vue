@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { ORDER_OPTIONS_MAP } from './common-data'
+import { ORDER_OPTIONS_FILTER_MAP } from './common-data'
 
 export default {
   name: 'OrderFilter',
@@ -75,7 +75,7 @@ export default {
     return {
       show_drawer: false,
       // 列表排序方式
-      options: ORDER_OPTIONS_MAP,
+      options: ORDER_OPTIONS_FILTER_MAP,
       form_filter: [
         /*
           name: 筛选项的名称

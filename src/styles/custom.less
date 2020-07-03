@@ -9,6 +9,11 @@
     align-items: center;
     justify-content: flex-start;
   }
+  &--fe {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
   &--fs--fs {
     display: flex;
     align-items: flex-start;
@@ -649,4 +654,13 @@
     text-align: right;
     padding-right: 8px;
   }
+}
+
+::-webkit-scrollbar {
+  width:6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius:10px;
+  background:rgba(77,124,254,0.2);
 }

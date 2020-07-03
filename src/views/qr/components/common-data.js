@@ -32,6 +32,11 @@ function calcOptionsMap(Options) {
   return res
 }
 
+// 是否是打包套餐
+const ORDER_BALE_ARR = [
+  { value: '1', label: '打包套餐' },
+  { value: '0', label: '非打包套餐' }
+]
 // 套餐分类
 const ORDER_GENRE_ARR = [
   { value: '*', label: '不限' },
@@ -75,7 +80,8 @@ const ORDER_RESULT_ARR = [
 ]
 
 // 筛选框需要用到的选项map
-export const ORDER_OPTIONS_MAP = {
+export const ORDER_OPTIONS_FILTER_MAP = {
+  bale: ORDER_BALE_ARR,
   genre: ORDER_GENRE_ARR,
   combo: ORDER_COMBO_ARR,
   meal: ORDER_MEAL_ARR,
@@ -84,8 +90,20 @@ export const ORDER_OPTIONS_MAP = {
   result: ORDER_RESULT_ARR
 }
 
+// 筛选框需要用到的选项map
+export const ORDER_OPTIONS_MAP = {
+  bale: ORDER_BALE_ARR,
+  genre: ORDER_GENRE_ARR.slice(1),
+  combo: ORDER_COMBO_ARR.slice(1),
+  meal: ORDER_MEAL_ARR.slice(1),
+  revert: ORDER_REVERT_ARR.slice(1),
+  menu: ORDER_MENU_ARR.slice(1),
+  result: ORDER_RESULT_ARR.slice(1)
+}
+
 // 某个选项value对应的前端显示值
 export const ORDER_OPTION_MAP = {
+  bale: calcOptionsMap(ORDER_BALE_ARR),
   genre: calcOptionsMap(ORDER_GENRE_ARR),
   combo: calcOptionsMap(ORDER_COMBO_ARR),
   meal: calcOptionsMap(ORDER_MEAL_ARR),

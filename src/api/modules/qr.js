@@ -83,17 +83,8 @@ export default {
   putPackage(id, params) {
     return {
       method: 'put',
-      name: '修改公众号套餐（此API会归零已扫码次数）',
-      url: `/api/qr/platforms/${id}/combo/`,
-      params
-    }
-  },
-
-  putPackage2(id, params) {
-    return {
-      method: 'put',
-      name: '修改公众号推送套餐',
-      url: `/api/qr/platforms/${id}/meal/`,
+      name: '修改公众号套餐',
+      url: `/api/qr/platforms/${id}/bale/`,
       params
     }
   }

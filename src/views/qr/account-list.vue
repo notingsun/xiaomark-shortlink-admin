@@ -17,19 +17,21 @@
     <!-- 分页器 -->
     <itv-pagination :total="table.total" @on-change="doGetData" />
     <modal-auto-reply v-model="dialog.show" :data="dialog.data" />
+    <modal-set-plan v-model="dialog_set_plan.show" :data="dialog_set_plan.data" @success_cb="doGetData" />
   </div>
 </template>
 
 <script>
 import tableMixins from '../table-mixins'
 import ModalAutoReply from './components/modal-auto-reply'
-import { comboMap, mealMap } from './components/common-data'
+import ModalSetPlan from './components/modal-set-plan'
+import { ORDER_OPTION_MAP } from './components/common-data'
 
 export default {
   name: 'AccountList',
   mixins: [tableMixins],
   props: {},
-  components: { ModalAutoReply },
+  components: { ModalAutoReply, ModalSetPlan },
   data() {
     const C_GREEN = '#47cb89'
     // const C_ORANGE = '#e88986'
@@ -39,6 +41,10 @@ export default {
     return {
       loading: true,
       dialog: {
+        show: false,
+        data: {}
+      },
+      dialog_set_plan: {
         show: false,
         data: {}
       },
@@ -66,28 +72,26 @@ export default {
           },
           {
             // title: '渠道码套餐',
-            minWidth: 120,
-            key: 'n_qrcodes',
+            width: 120,
             // eslint-disable-next-line
             renderHeader: (h) => {
               const options = [
-                { value: '', name: '不限套餐' },
-                { value: '0', name: '免费版' },
-                { value: '1', name: '入门版' },
-                { value: '2', name: '专业版' }
+                { value: '', name: '不限' },
+                { value: '0', name: '非打包套餐' },
+                { value: '1', name: '打包套餐' }
               ]
               const optionsList = options.map((item) => {
                 return (
                   <DropdownItem
                     class={
                       // eslint-disable-next-line prettier/prettier
-                      this.form.combo === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                      this.form.bale === item.value ? 'enabled_active enabled_item' : 'enabled_item'
                     }
                   >
                     <span
                       class="enabled_span"
                       onClick={() => {
-                        this.form.combo = item.value
+                        this.form.bale = item.value
                         this.doGetData()
                       }}
                     >
@@ -100,7 +104,7 @@ export default {
               return (
                 <Dropdown>
                   <div class="cp">
-                    <span class="mr8">渠道码套餐</span>
+                    <span class="mr8">套餐</span>
                     <Icon type="ios-funnel" title="筛选" />
                   </div>
                   <DropdownMenu slot="list">{optionsList}</DropdownMenu>
@@ -108,150 +112,18 @@ export default {
               )
             },
             render: (h, { row }) => {
-              return <span>{comboMap[row.combo]}</span>
-            }
-          },
-          {
-            title: '渠道码套餐到期时间',
-            minWidth: 150,
-            key: 'create_time',
-            render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.stop_date).split(' ')
-
               return (
                 <div class="itv-flex--fs">
-                  <p style="width: 70px;">{arr[0] || '-'}</p>
-                  <itv-icon title="编辑" type="i-edit" class="ml16 cp" size="18" color="primary" onClick={this.handlePackage.bind(this, row)} />
-                </div>
-              )
-            }
-          },
-          {
-            // title: '推送套餐',
-            minWidth: 130,
-            key: 'n_qrcodes',
-            // eslint-disable-next-line
-            renderHeader: (h) => {
-              const options = [
-                { value: '', name: '不限套餐' },
-                { value: '1', name: '单条' },
-                { value: '2', name: '包年' }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.meal === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.meal = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">推送套餐</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
-            render: (h, { row }) => {
-              let mealName = row.meal === 1 && row.n_push === 0 ? '-' : mealMap[row.meal]
-
-              return (
-                <span>
-                  {mealName}
-                  {row.meal === 1 && row.n_push ? `（余: ${row.n_push}）` : ''}
-                </span>
-              )
-            }
-          },
-          {
-            title: '推送套餐到期时间',
-            minWidth: 150,
-            // key: 'over_date',
-            render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.over_date).split(' ')
-
-              return (
-                <div class="itv-flex--fs">
-                  <p style="width: 70px;">{arr[0] || '-'}</p>
-                  <itv-icon title="编辑" type="i-edit" class="ml16 cp " size="18" color="primary" onClick={this.handlePackage2.bind(this, row)} />
+                  <div class="flex1">{row.bale ? '打包套餐' : '非打包套餐'}</div>
+                  <itv-icon title="编辑" type="i-edit" class="ml16 cp " size="18" color="primary" onClick={this.handlePackage.bind(this, row)} />
                 </div>
               )
             }
           },
           {
             title: '二维码数量',
-            minWidth: 120,
+            minWidth: 90,
             key: 'n_qrcodes'
-          },
-          {
-            // title: '开启关注回复',
-            minWidth: 120,
-            key: 'stay_ratio',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '开启', value: 1 },
-                { name: '关闭', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.auto_reply === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.auto_reply = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">开启关注回复</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
-            render: (h, { row }) => {
-              const is_show = ((row.auto_reply || {}).reply || 0) !== 0
-
-              return (
-                <div class="itv-flex--fs">
-                  <Icon title={is_show ? '开启关注回复' : '停用关注回复'} type="md-checkmark-circle" color={is_show ? C_GREEN : C_GREY} size="20" />
-                  {/* eslint-disable-next-line prettier/prettier */}
-                  {is_show ? <div class="itv-text--btn ml4" onClick={this.handleShowDialog.bind(this, row)}>查看详情</div> : null}
-                </div>
-              )
-            }
           },
           {
             // title: '扫码 / 扫码新增关注 / 当前留存 / 当前取关',
@@ -299,6 +171,87 @@ export default {
             key: 'stay_ratio',
             render: (h, { row }) => {
               return <span>{((row.stay_ratio || 0) * 100).toFixed(1)}%</span>
+            }
+          },
+          {
+            title: '个性化菜单',
+            minWidth: 120,
+            key: 'stay_ratio',
+            // eslint-disable-next-line no-unused-vars
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <div class={`itv-text--btn3 mr8 ${row.exist_public ? '' : 'sub'}`} title="通用菜单栏">
+                    通
+                  </div>
+                  <div class={`itv-text--btn3 ${row.exist_person ? '' : 'sub'}`} title="个性化菜单栏">
+                    个
+                  </div>
+                </div>
+              )
+            }
+          },
+          {
+            // title: '开启关注回复',
+            minWidth: 140,
+            key: 'stay_ratio',
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              const options = [
+                { name: '不限', value: '' },
+                { name: '开启自动回复', value: 1 },
+                { name: '开启收到消息回复', value: 2 },
+                { name: '开启关键词回复', value: 3 }
+              ]
+              const optionsList = options.map((item) => {
+                return (
+                  <DropdownItem
+                    class={
+                      // eslint-disable-next-line prettier/prettier
+                      this.form.auto_reply === item.value ? 'enabled_active enabled_item' : 'enabled_item'
+                    }
+                  >
+                    <span
+                      class="enabled_span"
+                      onClick={() => {
+                        this.form.auto_reply = item.value
+                        this.doGetData()
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </DropdownItem>
+                )
+              })
+
+              return (
+                <Dropdown>
+                  <div class="cp">
+                    <span class="mr8">自动回复</span>
+                    <Icon type="ios-funnel" title="筛选" />
+                  </div>
+                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
+                </Dropdown>
+              )
+            },
+            render: (h, { row }) => {
+              const is_show = ((row.auto_reply || {}).reply || 0) !== 0
+
+              return (
+                <div class="itv-flex--fs">
+                  <div class={`itv-text--btn3 mr8 ${row.keyword_switch ? '' : 'sub'}`} title="关键字回复">
+                    字
+                  </div>
+                  <div class={`itv-text--btn3 mr8 ${row.obtain_switch ? '' : 'sub'}`} title="收到消息回复">
+                    回
+                  </div>
+                  <div class={`itv-text--btn3 mr8 ${row.auto_switch ? '' : 'sub'}`} title="关注后回复">
+                    注
+                  </div>
+                  {/* eslint-disable-next-line prettier/prettier */}
+                  {is_show ? <div class="itv-text--btn ml4" onClick={this.handleShowDialog.bind(this, row)}>详情</div> : null}
+                </div>
+              )
             }
           },
           {
@@ -449,8 +402,7 @@ export default {
       form: {
         auto_reply: '',
         search: '',
-        combo: '',
-        meal: '',
+        bale: '', // 套餐类型
         authorized: '', // 公众号授权状态：0 - 取消授权，1 - 授权中
         sort: 'time'
       },
@@ -509,12 +461,11 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
-          auto_reply: this.form.auto_reply,
-          qs: this.form.search,
-          meal: this.form.meal,
-          combo: this.form.combo,
+          auto_reply: this.form.auto_reply, // 是否开启自动回复
+          qs: this.form.search, // 查询字符串（昵称）
+          bale: this.form.bale, // 套餐类型
           authorized: this.form.authorized,
-          order_by: this.form.sort
+          order_by: this.form.sort // 排序（默认按创建时间倒序）
         }
 
         const res = await this.$api.Qr.getAccountList({
@@ -531,17 +482,29 @@ export default {
     },
     handlePackage(row) {
       // 屏蔽后该域名从当前列表消失
-      this.$bus.modal2.type = 'package'
-      this.$bus.modal2.show = true
-      this.$bus.modal2.obj = row
-      this.$bus.modal2.success_cb = this.doGetData
-    },
-    handlePackage2(row) {
-      // 屏蔽后该域名从当前列表消失
-      this.$bus.modal2.type = 'package2'
-      this.$bus.modal2.show = true
-      this.$bus.modal2.obj = row
-      this.$bus.modal2.success_cb = this.doGetData
+      this.dialog_set_plan.show = true
+      this.dialog_set_plan.data = {
+        id: row.id,
+        nick_name: row.nick_name,
+        head_img: row.head_img,
+        bale: row.bale ? '1' : '0',
+        bale_date: row.bale ? row.stop_date : '',
+        combo: String(row.combo),
+        combo_date: row.stop_date,
+        meal: String(row.meal),
+        meal_date: row.over_date,
+        meal_count: row.n_push,
+        revert: String(row.revert),
+        revert_date: row.late_date,
+        menu: String(row.menu),
+        menu_date: row.final_date,
+        // 备注：用于显示原始值
+        bale_name: ORDER_OPTION_MAP.bale[row.bale ? '1' : '0'],
+        combo_name: ORDER_OPTION_MAP.combo[row.combo],
+        meal_name: ORDER_OPTION_MAP.meal[row.meal],
+        revert_name: ORDER_OPTION_MAP.revert[row.revert],
+        menu_name: ORDER_OPTION_MAP.menu[row.menu]
+      }
     },
     handleShowDialog(row) {
       this.dialog.show = true
@@ -554,7 +517,8 @@ export default {
 <style lang="less">
 .account-list {
   @btn-size: 20px;
-  .itv-text--btn2 {
+  .itv-text--btn2,
+  .itv-text--btn3 {
     width: @btn-size;
     height: @btn-size;
     border-radius: 50%;
@@ -564,9 +528,13 @@ export default {
     font-size: 12px;
     color: #fff;
     cursor: pointer;
+    flex-shrink: 0;
     &.sub {
       background: #c5c7ce;
     }
+  }
+  .itv-text--btn3 {
+    background: #47cb89;
   }
 }
 </style>
