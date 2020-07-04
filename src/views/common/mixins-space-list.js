@@ -1,3 +1,5 @@
+import { appMap, pluginListUser, apiKeyMap } from './plugin-data'
+
 /* 协作空间列表 */
 export default {
   data() {
@@ -76,13 +78,51 @@ export default {
           },
           {
             title: '链接数量',
-            minWidth: 90,
-            key: 'n_links'
+            minWidth: 140,
+            // key: 'n_links',
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <div class="flex1" title="今日">
+                    {row.n_links_today}
+                  </div>
+                  <div class="mr16">/</div>
+                  <div class="flex2" title="累计">
+                    {row.n_links}
+                  </div>
+                </div>
+              )
+            }
           },
           {
             title: '链接访问次数',
-            minWidth: 120,
-            key: 'n_clicks'
+            minWidth: 160,
+            // key: 'n_clicks',
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <div class="flex1" title="今日">
+                    {row.pv_today}
+                  </div>
+                  <div class="mr16">/</div>
+                  <div class="flex2" title="累计">
+                    {row.pv}
+                  </div>
+                </div>
+              )
+            }
+          },
+          {
+            title: '插件',
+            minWidth: 190,
+            // key: 'n_clicks',
+            render: (h, { row }) => {
+              let res = pluginListUser.map((item) => {
+                return row[apiKeyMap[item]] ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
+              })
+
+              return <div>{res}</div>
+            }
           }
         ],
         [
