@@ -3,6 +3,7 @@
   <div class="order-filter">
     <Dropdown trigger="custom" :visible="show_drawer" placement="bottom-end" @on-clickoutside="handleClickoutside">
       <Button class="" @click="show_drawer = true" style="width: 90px;" :loading="loading">筛选</Button>
+      <!-- <itv-filter :loading="loading" value></itv-filter> -->
       <DropdownMenu slot="list">
         <div class="form-filter">
           <!-- 筛选表单 -->
@@ -49,6 +50,7 @@ export default {
   },
   components: {},
   data() {
+    this.init_form_filter = null
     this.start_form_filter = null
 
     // 是否显示下拉框（共用）
@@ -163,6 +165,7 @@ export default {
     show_drawer(v) {
       if (v) {
         this.start_form_filter = this.copyArr(this.form_filter)
+        !this.init_form_filter && (this.init_form_filter = this.copyArr(this.form_filter))
       }
     }
   },
@@ -183,7 +186,9 @@ export default {
     },
     // 重置筛选
     handleFilterReset() {
-      this.form_filter = this.$options.data.apply(this).form_filter
+      // 备注：会重置上次选择的值
+      // this.form_filter = this.$options.data.apply(this).form_filter
+      this.form_filter = this.copyArr(this.init_form_filter)
     },
 
     // 获得筛选的值
