@@ -47,6 +47,9 @@ export default {
   },
   components: {},
   data() {
+    // 重置，恢复初始值
+    this.init_form_filter = null
+    // 取消，恢复上一次的选择
     this.start_form_filter = null
 
     // 是否显示下拉框（共用）
