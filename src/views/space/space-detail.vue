@@ -18,6 +18,7 @@
 
 <script>
 import tableMixins from '../table-mixins'
+import { appMap, pluginListUser, apiKeyMap } from '../common/plugin-data'
 
 export default {
   name: 'SpaceDetail',
@@ -104,32 +105,39 @@ export default {
           },
           {
             title: '最近登录时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 160,
-            key: 'last_login_time',
+            width: 200,
+            // key: 'pc_last_login_time',
             render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.last_login_time).split(' ')
-
               return (
-                <span>
-                  {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
-                  {arr[1]}
-                </span>
+                <div class="mt4 mb4">
+                  <div title="PC端最近登录时间" class="mb4">
+                    <span class="mr8" title="是否网页登录">
+                      <itv-icon type="i-pc" style={{ color: row.sa_openid ? C_ORANGE : C_GREY }} size="24" />
+                    </span>
+                    {this.$PDo.Date.format(row.pc_last_login_time)}
+                  </div>
+                  <div title="小程序最近登录时间">
+                    <span class="mr8" title="是否小程序登录">
+                      <itv-icon type="i-wx" style={{ color: row.mp_openid ? C_BLUE : C_GREY }} size="24" />
+                    </span>
+                    {this.$PDo.Date.format(row.mp_last_login_time)}
+                  </div>
+                </div>
               )
             }
           },
           {
             title: '开启协作空间',
-            minWidth: 110,
-            key: 'ws_creator',
+            width: 100,
+            // key: 'open_workspace',
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
                   <Icon
                     class="cp"
-                    title={row.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'}
+                    title={row.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'}
                     type="md-checkmark-circle"
-                    color={row.ws_creator ? C_GREEN : C_GREY}
+                    color={row.open_workspace ? C_GREEN : C_GREY}
                     size="20"
                   />
                 </div>
@@ -143,12 +151,12 @@ export default {
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
-                  <span class="ml8 cp" title={`已创建 ${row.n_ws_created} 个协作空间`}>
-                    {row.n_ws_created}
+                  <span class="ml8 cp" title={`已创建 ${row.n_created_workspaces} 个协作空间`}>
+                    {row.n_created_workspaces}
                   </span>
                   <span class="ml8">/</span>
-                  <span class="ml8 cp" title={`已加入 ${row.n_ws_joined} 个协作空间`}>
-                    {row.n_ws_joined}
+                  <span class="ml8 cp" title={`已加入 ${row.n_joined_workspaces} 个协作空间`}>
+                    {row.n_joined_workspaces}
                   </span>
                 </div>
               )
@@ -162,7 +170,7 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <span class="ml8 cp" title="该协作空间内的链接数">
-                    {row.n_links_in_ws}
+                    {row.n_links_in_workspace}
                   </span>
                   <span class="ml8">/</span>
                   <span class="ml8 cp" title="创建短链数量">
@@ -180,28 +188,40 @@ export default {
               return (
                 <div class="itv-flex--fs">
                   <span class="ml8 cp" title="该协作空间内的链接访问次数">
-                    {row.n_clicks_in_ws}
+                    {row.pv_in_workspace}
                   </span>
                   <span class="ml8">/</span>
                   <span class="ml8 cp" title="链接访问次数">
-                    {row.n_clicks}
+                    {row.pv}
                   </span>
                 </div>
               )
             }
           },
-          // {
-          //   title: '服务号openid',
-          //   minWidth: 120,
-          //   key: 'sa_openid',
-          //   tooltip: true
-          // },
-          // {
-          //   title: '小程序openid',
-          //   minWidth: 120,
-          //   key: 'mp_openid',
-          //   tooltip: true
-          // },
+          {
+            title: '开启API',
+            width: 80,
+            // key: 'open_api',
+            render: (h, { row }) => {
+              return (
+                <div class="itv-flex--fs">
+                  <Icon class="cp" title={row.open_api ? '开启API' : '未开启API'} type="md-checkmark-circle" color={row.open_api ? C_GREEN : C_GREY} size="20" />
+                </div>
+              )
+            }
+          },
+          {
+            title: '插件',
+            minWidth: 190,
+            // key: 'n_clicks',
+            render: (h, { row }) => {
+              let res = pluginListUser.map((item) => {
+                return <img src={appMap[item].icon} class={`mr8 img--plugin--icon ${row[apiKeyMap[item]] ? '' : ' disabled'}`} title={appMap[item].title} />
+              })
+
+              return <div>{res}</div>
+            }
+          },
           {
             title: '其他',
             minWidth: 130,
@@ -212,12 +232,6 @@ export default {
                 <div>
                   <span class="mr8" title="是否关注服务号">
                     <itv-icon type="i-attention" style={{ color: row.subscribe ? C_GREEN : C_GREY }} size="24" />
-                  </span>
-                  <span class="mr8" title="是否网页登录">
-                    <itv-icon type="i-pc" style={{ color: row.sa_openid ? C_ORANGE : C_GREY }} size="24" />
-                  </span>
-                  <span title="是否小程序登录">
-                    <itv-icon type="i-wx" style={{ color: row.mp_openid ? C_BLUE : C_GREY }} size="24" />
                   </span>
                 </div>
               )

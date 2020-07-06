@@ -1,12 +1,12 @@
-/* 短链列表的筛选 */
+/* 协作空间列表的筛选 */
 <template>
-  <div class="short-link-filter">
+  <div class="filter-space">
     <Dropdown trigger="custom" :visible="show_drawer" placement="bottom-end" @on-clickoutside="handleClickoutside">
       <Button class="" @click="show_drawer = true" style="width: 90px;" :loading="loading">筛选</Button>
       <DropdownMenu slot="list">
         <div class="form-filter">
           <!-- 筛选表单 -->
-          <div class="itv-flex--fs mb8" v-for="(fromItem, i) in form_filter" :key="i">
+          <div class="itv-flex--fs mb8 row" v-for="(fromItem, i) in form_filter" :key="i">
             <div class="row-label">{{ fromItem.name }}</div>
             <div class="row-value">
               <!-- 下拉框 -->
@@ -15,6 +15,10 @@
                   {{ option.label }}
                 </Option>
               </Select>
+              <!-- 单选 -->
+              <RadioGroup v-if="['radio'].includes(fromItem.type)" v-model="fromItem.value">
+                <Radio :label="option.value" v-for="option in options[fromItem.key]" :key="option.value">{{ option.label }}</Radio>
+              </RadioGroup>
             </div>
           </div>
           <!-- 底部按钮 -->
@@ -33,7 +37,7 @@
 
 <script>
 export default {
-  name: 'ShortLinkFilter',
+  name: 'FilterSpace',
   mixins: [],
   props: {
     loading: {
@@ -52,52 +56,32 @@ export default {
     ]
 
     this.start_form_filter = null
-    this.init_form_filter = null
 
     return {
       show_drawer: false,
       options: {
         // 列表排序方式
         order_by: [
-          { value: 'modify_time', label: '按数据修改时间倒序' },
-          { value: '*', label: '按数据创建时间倒序' },
-          { value: 'pv', label: '按访问次数倒序' },
-          { value: 'uv', label: '按访问人数倒序' },
-          { value: 'uip', label: '按访问IP数倒序' },
-          { value: 'pv_today', label: '按今日访问次数倒序' },
-          { value: 'uv_today', label: '按今日访问人数倒序' },
-          { value: 'uip_today', label: '按今日访问IP数倒序' }
+          { value: '*', label: '按创建时间倒序' },
+          { value: 'n_collaborators', label: '按协作者数量倒序' },
+          { value: 'n_groups', label: '按链接分组数量倒序' },
+          { value: 'n_links', label: '按链接数量倒序' },
+          { value: 'n_links_today', label: '按今日链接数量倒序' },
+          { value: 'pv', label: '按链接访问次数倒序' },
+          { value: 'pv_today', label: '按链接今日访问次数倒序' }
         ],
-        // 列表排序方式
-        sources: [
-          { value: '1', label: '网站' },
-          { value: '2', label: '小程序' },
-          { value: '3', label: '浏览器插件' },
-          { value: '4', label: '开放API' }
-        ],
-        // 链接跳转类型
-        modes: [
-          { value: '0', label: '普通' },
-          { value: '1', label: '随机-记忆' },
-          { value: '2', label: '随机-非记忆' }
-        ],
-        // 是否使用自定义域名
-        custom: OPTIONS_YES_NO,
-        // 是否设置了微信内分享卡片参数
-        set_wx_share: OPTIONS_YES_NO,
         // 是否开启微信内分享卡片
         open_wx_share: OPTIONS_YES_NO,
-        open_other_plugin: [
-          { value: '*', label: '不限' },
-          { value: 'open_wx_trace', label: '微信内追踪访问记录' },
-          { value: 'open_wx_escape', label: '微信内强制浏览器打开' },
-          { value: 'open_douyin_app', label: '跳转抖音APP' },
-          { value: 'open_taobao_app', label: '跳转淘宝APP' }
-        ],
-        // 是否可用
-        enabled: OPTIONS_YES_NO,
-        // 是否归档
-        archived: OPTIONS_YES_NO
+        // 是否开启微信内追踪访问记录
+        open_wx_trace: OPTIONS_YES_NO,
+        // 是否开启微信内强制浏览器打开
+        open_wx_escape: OPTIONS_YES_NO,
+        // 是否开启跳转抖音APP
+        open_douyin_app: OPTIONS_YES_NO,
+        // 是否开启跳转淘宝APP
+        open_taobao_app: OPTIONS_YES_NO,
+        // 协作者数量是否大于0
+        has_collaborator: OPTIONS_YES_NO
       },
       form_filter: [
         /*
@@ -111,64 +95,43 @@ export default {
           name: '列表排序方式',
           key: 'order_by',
           valueCaclType: 'calcSpecialValue',
-          value: 'modify_time',
+          value: '*',
           type: 'select'
         },
         {
-          name: '使用自定义域名',
-          key: 'custom',
+          name: '开启微信内追踪访问记录',
+          key: 'open_wx_trace',
           valueCaclType: 'calcSpecialValue',
           value: '*',
-          type: 'select'
+          type: 'radio'
         },
         {
-          name: '来源',
-          key: 'sources',
-          valueCaclType: 'calcArr',
-          value: ['3', '1', '2'],
-          type: 'selectMultiple'
-        },
-        {
-          name: '链接跳转类型',
-          key: 'modes',
-          valueCaclType: 'calcArr',
-          value: ['0', '1', '2'],
-          type: 'selectMultiple'
-        },
-        {
-          name: '设置微信内分享卡片参数',
-          key: 'set_wx_share',
+          name: '开启微信内强制浏览器打开',
+          key: 'open_wx_escape',
           valueCaclType: 'calcSpecialValue',
           value: '*',
-          type: 'select'
+          type: 'radio'
         },
         {
-          name: '插件微信内分享卡片',
-          key: 'open_wx_share',
+          name: '开启跳转抖音APP',
+          key: 'open_douyin_app',
           valueCaclType: 'calcSpecialValue',
           value: '*',
-          type: 'select'
+          type: 'radio'
         },
         {
-          name: '其他插件',
-          key: 'open_other_plugin',
-          valueCaclType: 'calcPlugin',
-          value: '*',
-          type: 'select'
-        },
-        {
-          name: '是否可用',
-          key: 'enabled',
+          name: '开启跳转淘宝APP',
+          key: 'open_taobao_app',
           valueCaclType: 'calcSpecialValue',
           value: '*',
-          type: 'select'
+          type: 'radio'
         },
         {
-          name: '是否归档',
-          key: 'archived',
+          name: '协作者数量是否大于0',
+          key: 'has_collaborator',
           valueCaclType: 'calcSpecialValue',
           value: '*',
-          type: 'select'
+          type: 'radio'
         }
       ]
     }
@@ -187,31 +150,14 @@ export default {
     },
     show_drawer(v) {
       if (v) {
-        // this.start_form_filter = JSON.parse(JSON.stringify(this.form_filter))
-        this.start_form_filter = this.copyArr(this.form_filter)
-        !this.init_form_filter && (this.init_form_filter = this.copyArr(this.form_filter))
+        this.start_form_filter = JSON.parse(JSON.stringify(this.form_filter))
       }
     }
   },
   methods: {
-    // 拷贝子元素是对象，且对象中包含值为function类型的数组
-    copyArr(arr) {
-      let res = []
-
-      arr.forEach((item) => {
-        let new_item = {}
-
-        Object.keys(item).forEach((key) => {
-          new_item[key] = item[key]
-        })
-        res.push(new_item)
-      })
-      return res
-    },
     // 重置筛选
     handleFilterReset() {
-      // this.form_filter = this.$options.data().form_filter
-      this.form_filter = this.copyArr(this.init_form_filter)
+      this.form_filter = this.$options.data().form_filter
     },
 
     // 获得筛选的值
@@ -222,13 +168,6 @@ export default {
         const t = formItem.valueCaclType
         const v = formItem.value
 
-        const calcStarPlugin = function(other, key) {
-          if (other === key) {
-            return '1'
-          }
-          return ''
-        }
-
         if (t === 'calcSpecialValue') {
           res[formItem.key] = v === '*' ? '' : v
         } else if (t === 'calcArr') {
@@ -238,11 +177,6 @@ export default {
           res[formItem.key] = isSelectAll ? '' : v.join(',')
         } else if (t === 'calcDefault') {
           res[formItem.key] = v
-        } else if (t === 'calcPlugin') {
-          res.open_wx_trace = calcStarPlugin(v, 'open_wx_trace')
-          res.open_wx_escape = calcStarPlugin(v, 'open_wx_escape')
-          res.open_douyin_app = calcStarPlugin(v, 'open_douyin_app')
-          res.open_taobao_app = calcStarPlugin(v, 'open_taobao_app')
         } else {
           console.error('没有对应测处理函数', t)
         }
@@ -269,7 +203,7 @@ export default {
 
     // 点击取消
     handleCancle() {
-      this.form_filter = this.copyArr(this.start_form_filter)
+      this.form_filter = JSON.parse(JSON.stringify(this.start_form_filter))
       this.show_drawer = false
     }
   }
@@ -277,15 +211,18 @@ export default {
 </script>
 
 <style lang="less">
-// .short-link-filter {
+// .filter-space {
 // }
 
 .form-filter {
   width: 540px;
   padding: 16px 16px 8px;
   box-sizing: border-box;
+  .row {
+    min-height: 32px;
+  }
   .row-label {
-    width: 150px;
+    width: 160px;
     text-align: right;
     padding-right: 16px;
   }

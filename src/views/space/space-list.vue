@@ -7,12 +7,7 @@
         <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
-      <div>
-        <!-- 排序 -->
-        <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
-          <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
-        </Select>
-      </div>
+      <filter-space v-model="form_filter" @submit="doGetData" :loading="loading"></filter-space>
     </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
@@ -24,30 +19,25 @@
 <script>
 import tableMixins from '../table-mixins'
 import spaceMixins from '../common/mixins-space-list'
+import filterSpace from '../common/filter-space'
 
 export default {
   name: 'SpaceList',
   mixins: [tableMixins, spaceMixins],
   props: {},
-  components: {},
+  components: { filterSpace },
   data() {
     return {
+      form_filter: {},
       // 获取表格数据的参数
       form: {
-        search: '',
-        sort: 'time',
-        n_collaborators: ''
+        search: ''
       }
     }
   },
   computed: {},
   created() {},
-  mounted() {
-    const { page, per_page } = this.$route.query
-    const params = page && per_page ? { page, per_page } : ''
-
-    this.doGetData(params)
-  },
+  mounted() {},
   watch: {},
   methods: {
     doGetData(page = {}) {
@@ -65,16 +55,9 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        const params = {
-          ...this.filter,
-          // user_id: this.form.user_id,
-          qs: this.form.search,
-          order_by: this.form.sort,
-          has_collaborator: this.form.n_collaborators // 协作空间的数量
-        }
-
         const res = await this.$api.Space.getSpaceList({
-          ...params,
+          ...this.form_filter,
+          qs: this.form.search,
           ...this.$global.utils.pagination.params()
         })
 

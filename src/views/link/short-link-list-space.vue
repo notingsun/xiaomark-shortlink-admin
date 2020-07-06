@@ -10,9 +10,7 @@
           <BreadcrumbItem>空间：{{ $route.query.name }}</BreadcrumbItem>
         </Breadcrumb>
       </div>
-      <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
-        <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
-      </Select>
+      <short-link-filter v-model="form_short_link_filter" @submit="doGetData" :loading="loading" />
     </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
@@ -24,31 +22,24 @@
 <script>
 import tableMixins from '../table-mixins'
 import shortLinkMixins from '../common/mixins-short-link'
+import ShortLinkFilter from '../common/short-link-filter'
 
 export default {
   name: 'ShortLinkListSpace',
   mixins: [tableMixins, shortLinkMixins],
   props: {},
-  components: {},
+  components: { ShortLinkFilter },
   data() {
     return {
+      form_short_link_filter: {},
       form: {
-        has_params: '',
-        archived: '',
-        enabled: '',
-        search: '',
-        sort: 'time'
+        search: ''
       }
     }
   },
   computed: {},
   created() {},
-  mounted() {
-    const { page, per_page } = this.$route.query
-    const params = page && per_page ? { page, per_page } : ''
-
-    this.doGetData(params)
-  },
+  mounted() {},
   watch: {},
   methods: {
     // 去用户详情
@@ -75,17 +66,10 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        const params = {
-          api: this.form.api ? 1 : 0, // 是否为开放API创建
-          has_params: this.form.has_params,
-          archived: this.form.archived,
-          enabled: this.form.enabled,
-          workspace_id: this.$route.params.space_id, // 用户ID
-          order_by: this.form.sort
-        }
-
         const res = await this.$api.Link.getShortLinkList({
-          ...params,
+          workspace_id: this.$route.params.space_id, // 用户ID
+          ...this.form_short_link_filter,
+          qs: this.form.search, // 查询字符串（名称/原始URL/短链接URL）
           ...this.$global.utils.pagination.params()
         })
 

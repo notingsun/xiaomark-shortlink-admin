@@ -31,45 +31,7 @@ export default {
           {
             title: '协作者数量',
             minWidth: 120,
-            key: 'n_collaborators',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '大于0', value: 1 },
-                { name: '0', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.n_collaborators === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.n_collaborators = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">协作者数量</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            }
+            key: 'n_collaborators'
           },
           {
             title: '链接分组数量',
@@ -118,7 +80,7 @@ export default {
             // key: 'n_clicks',
             render: (h, { row }) => {
               let res = pluginListUser.map((item) => {
-                return row[apiKeyMap[item]] ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
+                return <img src={appMap[item].icon} class={`mr8 img--plugin--icon ${row[apiKeyMap[item]] ? '' : ' disabled'}`} title={appMap[item].title} />
               })
 
               return <div>{res}</div>
@@ -165,17 +127,6 @@ export default {
         total: 0,
         columns: [],
         height: null // 表格的高度
-      },
-      options: {
-        sort: [
-          { value: 'time', label: '按创建时间倒序' },
-          { value: 'n_collaborators', label: '按协作者数量倒序' },
-          { value: 'n_groups', label: '按链接分组数量倒序' },
-          { value: 'n_links', label: '按链接数量倒序' },
-          { value: 'n_links_today', label: '按今日链接数量倒序' },
-          { value: 'pv', label: '按链接访问次数倒序' },
-          { value: 'pv_today', label: '按链接今日访问次数倒序' }
-        ]
       }
     }
   },
