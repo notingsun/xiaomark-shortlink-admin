@@ -6,22 +6,9 @@
       <!-- 头像 -->
       <div class="row mb32">
         <img :src="data.headimgurl" class="img--headimgurl mr16" />
-        <span>{{ data.nickname }}</span>
-      </div>
-
-      <!-- 地区 -->
-      <div class="row">
-        <div class="label">地区</div>
-        <div>{{ [data.country, data.province, data.city].filter((v) => v).join('-') }}</div>
-      </div>
-
-      <!-- 是否激活 -->
-      <div class="row">
-        <div class="label">是否激活</div>
-        <div class="itv-flex--fs">
-          <Icon :title="data.active ? '已激活' : '未激活'" type="md-checkmark-circle" :color="data.active ? C_GREEN : C_GREY" size="20" class="mr8" />
-          <span title="激活时间">{{ active_date }}</span>
-        </div>
+        <span class="mr16">{{ data.nickname }}</span>
+        <itv-icon class="fs0" type="i-woman" size="20" v-if="data.sex === 2" />
+        <itv-icon class="fs0" type="i-man" size="20" v-if="data.sex === 1" />
       </div>
 
       <!-- 是否可登录 -->
@@ -46,12 +33,59 @@
         />
       </div>
 
+      <!-- 最近登录时间 -->
+      <div class="row">
+        <div class="label">最近登录时间</div>
+        <div>
+          <div class="itv-flex--fs mb8">
+            <span class="mr8" title="是否网页登录">
+              <itv-icon type="i-pc" :style="{ color: pc_last_login_time ? C_ORANGE : C_GREY }" size="24" />
+            </span>
+            <span title="PC端最近登录时间">{{ pc_last_login_time || '-' }}</span>
+          </div>
+          <div class="itv-flex--fs mb8" v-if="data.sa_openid">
+            <div style="word-break: break-all;font-size: 12px;" class="itv-text--grey2 cp" title="服务号openid">
+              {{ data.sa_openid || '-' }}
+            </div>
+            <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.sa_openid">
+              <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.sa_openid)" />
+            </div>
+          </div>
+          <div class="itv-flex--fs mb8">
+            <span class="mr8" title="是否小程序登录">
+              <itv-icon type="i-wx" :style="{ color: mp_last_login_time ? C_BLUE : C_GREY }" size="24" />
+            </span>
+            <span title="小程序最近登录时间">{{ mp_last_login_time || '-' }}</span>
+          </div>
+          <div class="itv-flex--fs" v-show="data.mp_openid">
+            <div style="word-break: break-all;font-size: 12px;" class="itv-text--grey2 cp" title="小程序openid">
+              {{ data.mp_openid || '-' }}
+            </div>
+            <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.mp_openid">
+              <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.mp_openid)" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 激活时间 -->
+      <div class="row">
+        <div class="label">激活时间</div>
+        <div>
+          {{ data.active ? active_date : '未激活' }}
+        </div>
+      </div>
+
       <!-- 插件功能 -->
       <div class="row">
-        <div class="label">插件功能</div>
+        <div class="label">插件权限</div>
         <div class="itv-flex--fs">
           <div v-for="(item, i) in pluginList" :key="i" class="mr8">
-            <img class="img--plugin--icon" :src="appMap[item].icon" :title="appMap[item].title" v-if="data[apiKeyMap[item]]" />
+            <img
+              :class="['img--plugin--icon', data[apiKeyMap[item]] ? '' : 'disabled']"
+              :src="appMap[item].icon"
+              :title="`${data[apiKeyMap[item]] ? '开启' : '未开启'}${appMap[item].title}`"
+            />
           </div>
         </div>
       </div>
@@ -59,48 +93,36 @@
       <!-- API 权限 -->
       <div class="row">
         <div class="label">API 权限</div>
-        <Icon :title="data.open_api ? '有API权限' : '没有API权限'" type="md-checkmark-circle" :color="data.open_api ? C_GREEN : C_GREY" size="20" />
-      </div>
-
-      <!-- API 创建上限 -->
-      <div class="row">
-        <div class="label"></div>
-        <!-- <div class="label">API 创建上限</div> -->
-
-        <div class="itv-flex--fs">
-          <span title="每日创建短链接上限">{{ data.api_max_links_daily }}</span>
-          <span
-            class="itv-text--btn ml8"
-            style="margin-top: -2px;"
-            @click="
-              () => {
-                this.$bus.modal.type = 'open_api_domain'
-                this.$bus.modal.show = true
-                this.$bus.modal.obj = data
-                this.$bus.modal.success_cb = this.doGetData
-              }
-            "
-          >
-            设置上限
-          </span>
-        </div>
-      </div>
-
-      <!-- 最近登录时间 -->
-      <div class="row">
-        <div class="label">最近登录时间</div>
         <div>
-          <div class="mb8">
-            <span class="mr8" title="是否网页登录">
-              <itv-icon type="i-pc" :style="{ color: pc_last_login_time ? C_ORANGE : C_GREY }" size="24" />
+          <div class="itv-flex--fs mb8">
+            <Icon :title="data.open_api ? '有API权限' : '没有API权限'" type="md-checkmark-circle" :color="data.open_api ? C_GREEN : C_GREY" size="20" class="mr8" />
+            <span title="今日调用API创建链接数">{{ data.api_n_links_today }}</span>
+            <span>/</span>
+            <span title="每日创建短链接上限">{{ data.api_max_links_daily }}</span>
+            <span
+              class="itv-text--btn ml8"
+              style="margin-top: -2px;"
+              @click="
+                () => {
+                  this.$bus.modal.type = 'open_api_domain'
+                  this.$bus.modal.show = true
+                  this.$bus.modal.obj = data
+                  this.$bus.modal.success_cb = this.doGetData
+                }
+              "
+            >
+              设置上限
             </span>
-            <span title="PC端最近登录时间">{{ pc_last_login_time }}</span>
           </div>
-          <div>
-            <span class="mr8" title="是否小程序登录">
-              <itv-icon type="i-wx" :style="{ color: mp_last_login_time ? C_BLUE : C_GREY }" size="24" />
-            </span>
-            <span title="小程序最近登录时间">{{ mp_last_login_time }}</span>
+          <div class="cp">
+            <div class="mb4">
+              {{ data.api_n_requests_today }}
+              <span class="itv-text--grey2">(今日调用API请求数)</span>
+            </div>
+            <div>
+              {{ (data.api_whitelists || []).join('、') || '-' }}
+              <span class="itv-text--grey2">(白名单)</span>
+            </div>
           </div>
         </div>
       </div>
@@ -108,15 +130,34 @@
       <!-- 短链访问次数 -->
       <div class="row">
         <div class="label">短链访问次数</div>
-        <div>{{ data.pv }}</div>
+        <div class="cp">
+          <span title="今日">{{ data.pv_today }}</span>
+          <span class="mr8 ml8">/</span>
+          <span title="累计">{{ data.pv }}</span>
+        </div>
       </div>
 
       <!-- 创建短链数量 -->
       <div class="row">
         <div class="label">创建短链数量</div>
         <div>
-          {{ data.n_links }}
-          <!-- （普通: {{ data.n_normal_links }}、 随机:{{ data.n_random_links }}） -->
+          <div class="mb4">
+            <span title="今日">{{ data.n_links_today }}</span>
+            <span class="mr8 ml8">/</span>
+            <span title="累计">{{ data.n_links }}</span>
+          </div>
+          <div class="itv-flex--fs mb4">
+            <div style="width: 50px;">普通：</div>
+            {{ data.n_normal_links }}
+          </div>
+          <div class="itv-flex--fs mb4">
+            <div style="width: 50px;">随机：</div>
+            {{ data.n_random_links }}
+          </div>
+          <div class="itv-flex--fs">
+            <div style="width: 50px;">API：</div>
+            {{ data.n_api_links }}
+          </div>
         </div>
       </div>
 
@@ -124,43 +165,31 @@
       <div class="row">
         <div class="label">协作空间权限</div>
         <div>
-          <Icon :title="data.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'" type="md-checkmark-circle" :color="data.open_workspace ? C_GREEN : C_GREY" size="20" />
+          <div class="mb4">
+            <Icon :title="data.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'" type="md-checkmark-circle" :color="data.open_workspace ? C_GREEN : C_GREY" size="20" />
+          </div>
+          <div>创建：{{ data.n_created_workspaces }}</div>
+          <div>加入：{{ data.n_joined_workspaces }}</div>
           <!-- <span>（创建: {{ data.n_created_workspaces }}、</span> -->
           <!-- <span>加入: {{ data.n_joined_workspaces }}）</span> -->
-        </div>
-      </div>
-
-      <!-- 创建协作空间数量 -->
-      <div class="row">
-        <div class="label"></div>
-        <div class="itv-flex--fs">
-          <span>创建：{{ data.n_created_workspaces }}</span>
-        </div>
-      </div>
-
-      <!-- 加入协作空间数量 -->
-      <div class="row">
-        <div class="label"></div>
-        <div class="itv-flex--fs">
-          <span>加入：{{ data.n_joined_workspaces }}</span>
         </div>
       </div>
 
       <!-- 注册时间 -->
       <div class="row">
         <div class="label">注册时间</div>
-        <div>{{ create_time }}</div>
+        <div>{{ create_time || '-' }}</div>
       </div>
 
       <!-- 是否关注服务号 -->
       <div class="row">
         <div class="label">是否关注服务号</div>
         <div>
-          <div class="mb8">
-            <span class="mr8" title="是否关注服务号">
+          <div class="itv-flex--fs mb8">
+            <span class="mr8 cp" :title="data.subscribe ? '已关注' : '未关注'">
               <itv-icon type="i-attention" :style="{ color: data.subscribe ? C_GREEN : C_GREY }" size="24" />
             </span>
-            <span :title="data.subscribe ? '最近关注服务号的时间' : '最近取消关注服务号的时间'" class="cp">{{ subscribe_time }}</span>
+            <span :title="data.subscribe ? '最近关注服务号的时间' : '最近取消关注服务号的时间'" class="cp">{{ subscribe_time || '-' }}</span>
           </div>
           <div title="关注服务号的渠道来源" class="cp">
             {{ subscribe_scene_map[data.subscribe_scene] }}
@@ -176,6 +205,12 @@
         </div>
       </div>
 
+      <!-- 地区 -->
+      <div class="row">
+        <div class="label">地区</div>
+        <div>{{ [data.country, data.province, data.city].filter((v) => v).join('-') }}</div>
+      </div>
+
       <!-- 电子邮箱 -->
       <div class="row">
         <div class="label">电子邮箱</div>
@@ -188,32 +223,6 @@
       <div class="row">
         <div class="label">来源</div>
         <div style="word-break: break-all">{{ data.source || '-' }}</div>
-      </div>
-
-      <!-- 服务号openid -->
-      <div class="row">
-        <div class="label">服务号openid</div>
-        <div class="itv-flex--fs">
-          <div style="word-break: break-all;font-size: 12px;">
-            {{ data.sa_openid || '-' }}
-          </div>
-          <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.sa_openid">
-            <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.sa_openid)" />
-          </div>
-        </div>
-      </div>
-
-      <!-- 小程序openid -->
-      <div class="row">
-        <div class="label">小程序openid</div>
-        <div class="itv-flex--fs">
-          <div style="word-break: break-all;font-size: 12px;">
-            {{ data.mp_openid || '-' }}
-          </div>
-          <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.mp_openid">
-            <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.mp_openid)" />
-          </div>
-        </div>
       </div>
 
       <!-- 操作 -->
@@ -331,22 +340,22 @@ export default {
     pc_last_login_time() {
       const time = (this.data || {}).pc_last_login_time || ''
 
-      return time ? this.$PDo.Date.format(time) : '-'
+      return time ? this.$PDo.Date.format(time) : ''
     },
     mp_last_login_time() {
       const time = (this.data || {}).mp_last_login_time || ''
 
-      return time ? this.$PDo.Date.format(time) : '-'
+      return time ? this.$PDo.Date.format(time) : ''
     },
     create_time() {
       const time = (this.data || {}).create_time || ''
 
-      return time ? this.$PDo.Date.format(time) : '-'
+      return time ? this.$PDo.Date.format(time) : ''
     },
     active_date() {
       const time = (this.data || {}).active_date || ''
 
-      return time ? this.$PDo.Date.format(time) : '-'
+      return time ? this.$PDo.Date.format(time) : ''
     },
     subscribe_time() {
       const time1 = (this.data || {}).subscribe_time || ''
@@ -354,7 +363,7 @@ export default {
 
       const time = (this.data || {}).subscribe ? time1 : time0
 
-      return time ? this.$PDo.Date.format(time) : '-'
+      return time ? this.$PDo.Date.format(time) : ''
     },
     tagid_list() {
       return ((this.data || {}).tagid_list || []).map((id) => this.$bus.userTags[id] || '-').join('、') || '-'
@@ -425,6 +434,7 @@ export default {
       text-align: left;
       padding-right: 24px;
       align-self: flex-start;
+      flex-shrink: 0;
     }
   }
   .img--headimgurl {

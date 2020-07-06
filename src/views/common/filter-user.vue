@@ -1,6 +1,6 @@
 /* 协作空间列表的筛选 */
 <template>
-  <div class="filter-space">
+  <div class="filter-user">
     <Dropdown trigger="custom" :visible="show_drawer" placement="bottom-end" @on-clickoutside="handleClickoutside">
       <Button class="" @click="show_drawer = true" style="width: 90px;" :loading="loading">筛选</Button>
       <DropdownMenu slot="list">
@@ -19,6 +19,12 @@
               <RadioGroup v-if="['radio'].includes(fromItem.type)" v-model="fromItem.value">
                 <Radio :label="option.value" v-for="option in options[fromItem.key]" :key="option.value">{{ option.label }}</Radio>
               </RadioGroup>
+              <!-- 有范围的输入框 -->
+              <i-input v-if="['range_input'].includes(fromItem.type)" v-model="fromItem.value" type="number">
+                <Select v-model="fromItem.range_value" style="width:60px" slot="prepend">
+                  <Option v-for="item in options_range" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </i-input>
             </div>
           </div>
           <!-- 底部按钮 -->
@@ -37,7 +43,7 @@
 
 <script>
 export default {
-  name: 'FilterSpace',
+  name: 'FilterUser',
   mixins: [],
   props: {
     loading: {
@@ -55,6 +61,13 @@ export default {
       { label: '否', value: '0' }
     ]
 
+    this.options_range = [
+      { value: '*', label: '不限' },
+      { value: 'eq', label: '等于' },
+      { value: 'lt', label: '小于' },
+      { value: 'gt', label: '大于' }
+    ]
+
     this.start_form_filter = null
 
     return {
@@ -63,13 +76,26 @@ export default {
         // 列表排序方式
         order_by: [
           { value: '*', label: '按创建时间倒序' },
-          { value: 'n_collaborators', label: '按协作者数量倒序' },
-          { value: 'n_groups', label: '按链接分组数量倒序' },
-          { value: 'n_links', label: '按链接数量倒序' },
-          { value: 'n_links_today', label: '按今日链接数量倒序' },
-          { value: 'pv', label: '按链接访问次数倒序' },
-          { value: 'pv_today', label: '按链接今日访问次数倒序' }
+          { value: 'last_login_time', label: '按最近登录时间倒序' },
+          { value: 'n_created_workspaces', label: '按创建的协作空间数量倒序' },
+          { value: 'n_joined_workspaces', label: '按加入的协作空间数量倒序' },
+          { value: 'n_links', label: '按创建的链接数量倒序' },
+          { value: 'n_api_links', label: '按开放API创建的链接数量倒序' },
+          { value: 'n_nonapi_links', label: '按非开放API创建的链接数量倒序' },
+          { value: 'n_normal_links', label: '按创建的普通跳转链接数量倒序' },
+          { value: 'n_random_links', label: '按创建的随机跳转链接数量倒序' },
+          { value: 'n_links_today', label: '按今日创建的链接数量倒序' },
+          { value: 'pv', label: '按创建的链接的访问次数倒序' },
+          { value: 'pv_today', label: '按创建的链接的今日访问次数倒序' }
         ],
+        // 是否可用
+        enabled: OPTIONS_YES_NO,
+        // 是否已激活
+        active: OPTIONS_YES_NO,
+        // 是否开启API
+        open_api: OPTIONS_YES_NO,
+        // 是否开启协作空间
+        open_workspace: OPTIONS_YES_NO,
         // 是否开启微信内分享卡片
         open_wx_share: OPTIONS_YES_NO,
         // 是否开启微信内追踪访问记录
@@ -87,7 +113,9 @@ export default {
         /*
           name: 筛选项的名称
           key: 筛选项对应的键名
+          range_key: 取值范围对应选项的键名
           value: 筛选项的值
+          range_value: 筛选的前置选择框
           type: 筛选项的表单类型
           valueCaclType: 提取值时，处理方式
          */
@@ -97,6 +125,74 @@ export default {
           valueCaclType: 'calcSpecialValue',
           value: '*',
           type: 'select'
+        },
+        {
+          name: '最近登录时间距今的天数',
+          key: 'last_login_date',
+          valueCaclType: 'calcRangeInput',
+          type: 'range_input',
+          value: '',
+          range_value: '*'
+        },
+        {
+          name: '激活时间距今的天数',
+          key: 'active_date',
+          valueCaclType: 'calcRangeInput',
+          type: 'range_input',
+          value: '',
+          range_value: '*'
+        },
+        {
+          name: '过去30天登录天数',
+          key: 'login_30',
+          valueCaclType: 'calcRangeInput',
+          type: 'range_input',
+          value: '',
+          range_value: '*'
+        },
+        {
+          name: '过去30天创建链接数',
+          key: 'link_30',
+          valueCaclType: 'calcRangeInput',
+          type: 'range_input',
+          value: '',
+          range_value: '*'
+        },
+        {
+          name: '过去30天数据报表页分享次数',
+          key: 'share_30',
+          valueCaclType: 'calcRangeInput',
+          type: 'range_input',
+          value: '',
+          range_value: '*'
+        },
+        {
+          name: '是否可用',
+          key: 'enabled',
+          valueCaclType: 'calcSpecialValue',
+          value: '*',
+          type: 'radio'
+        },
+        {
+          name: '是否已激活',
+          key: 'active',
+          valueCaclType: 'calcSpecialValue',
+          value: '*',
+          type: 'radio'
+        },
+        {
+          name: '是否开启API',
+          key: 'open_api',
+          valueCaclType: 'calcSpecialValue',
+          value: '*',
+          type: 'radio'
+        },
+        {
+          name: '是否开启协作空间',
+          key: 'open_workspace',
+          valueCaclType: 'calcSpecialValue',
+          value: '*',
+          type: 'radio'
         },
         {
           name: '开启微信内追踪访问记录',
@@ -129,13 +225,6 @@ export default {
         {
           name: '开启跳转淘宝APP',
           key: 'open_taobao_app',
-          valueCaclType: 'calcSpecialValue',
-          value: '*',
-          type: 'radio'
-        },
-        {
-          name: '协作者数量是否大于0',
-          key: 'has_collaborator',
           valueCaclType: 'calcSpecialValue',
           value: '*',
           type: 'radio'
@@ -184,6 +273,8 @@ export default {
           res[formItem.key] = isSelectAll ? '' : v.join(',')
         } else if (t === 'calcDefault') {
           res[formItem.key] = v
+        } else if (t === 'calcRangeInput') {
+          res[formItem.key] = formItem.range_value === '*' ? null : `${formItem.range_value}${v}`
         } else {
           console.error('没有对应测处理函数', t)
         }
@@ -218,7 +309,7 @@ export default {
 </script>
 
 <style lang="less">
-// .filter-space {
+// .filter-user {
 // }
 
 .form-filter {

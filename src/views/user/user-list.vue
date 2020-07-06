@@ -7,33 +7,7 @@
         <Button type="primary" @click="doGetData">搜索</Button>
       </div>
       <div>
-        <!-- 筛选 -->
-        <Dropdown trigger="custom" :visible="show_drawer" placement="bottom-end" @on-clickoutside="show_drawer = false">
-          <Button class="mr16" @click="show_drawer = true" style="width: 90px;" :loading="loading">筛选</Button>
-          <DropdownMenu slot="list">
-            <div class="form-filter">
-              <div class="itv-flex--fs mb8" v-for="(item, i) in form_filter" :key="i">
-                <div class="label">{{ item.name }}</div>
-                <i-input v-model="item.value" type="number" style="width: 150px;">
-                  <Select v-model="item.type" style="width:60px" slot="prepend">
-                    <Option v-for="item in options.filter" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                  </Select>
-                </i-input>
-              </div>
-              <div class="itv-flex--sb mt24">
-                <Button class="mr16" @click="handleFilterReset">清空</Button>
-                <div>
-                  <Button class="mr16" @click="show_drawer = false">取消</Button>
-                  <Button type="primary" @click="handleFilter">确认</Button>
-                </div>
-              </div>
-            </div>
-          </DropdownMenu>
-        </Dropdown>
-        <!-- 排序 -->
-        <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
-          <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
-        </Select>
+        <filter-user v-model="form_filter" @submit="doGetData" :loading="loading"></filter-user>
       </div>
     </div>
     <!-- 表格 -->
@@ -45,13 +19,14 @@
 
 <script>
 import tableMixins from '../table-mixins'
-import { appMap, pluginList } from '../common/plugin-data'
+import { appMap, pluginListUser, apiKeyMap } from '../common/plugin-data'
+import FilterUser from '../common/filter-user'
 
 export default {
   name: 'UserList',
   mixins: [tableMixins],
   props: {},
-  components: {},
+  components: { FilterUser },
   data() {
     const C_GREEN = '#47cb89'
     const C_ORANGE = '#e88986'
@@ -59,47 +34,10 @@ export default {
     const C_GREY = '#c5c8ce'
 
     return {
+      form_filter: {},
       show_drawer: false, // 显示抽屉
       value: '',
       type: '',
-      form_filter: [
-        {
-          name: '最近登录时间距今的天数',
-          key: 'last_login',
-          value: '',
-          type: '*'
-        },
-        {
-          name: '过去30天登录天数',
-          key: 'login_30',
-          value: '',
-          type: '*'
-        },
-        {
-          name: '过去30天创建链接数',
-          key: 'link_30',
-          value: '',
-          type: '*'
-        },
-        {
-          name: '过去30天链接访问数',
-          key: 'click_30',
-          value: '',
-          type: '*'
-        },
-        {
-          name: '过去30天导出图片数',
-          key: 'share1_30',
-          value: '',
-          type: '*'
-        },
-        {
-          name: '过去30天小程序内分享数',
-          key: 'share2_30',
-          value: '',
-          type: '*'
-        }
-      ],
       filter: {},
       loading: true,
       table: {
@@ -132,141 +70,107 @@ export default {
               )
             }
           },
+          // {
+          //   title: 'PC最近登录时间',
+          //   width: 200,
+          //   // key: 'pc_last_login_time',
+          //   render: (h, { row }) => {
+          //     return (
+          //       <div class="mt4 mb4">
+          //         <div title="PC端最近登录时间" class="mb4">
+          //           <span class="mr8" title="是否网页登录">
+          //             <itv-icon type="i-pc" style={{ color: row.pc_last_login_time ? C_ORANGE : C_GREY }} size="24" />
+          //           </span>
+          //           <span class={row.pc_last_login_time ? '' : 'itv-text--grey4'}>{row.pc_last_login_time ? this.$PDo.Date.format(row.pc_last_login_time) : '未登录'}</span>
+          //         </div>
+          //         <div title="小程序最近登录时间">
+          //           <span class="mr8" title="是否小程序登录" v-if="">
+          //             <itv-icon type="i-wx" style={{ color: row.mp_last_login_time ? C_BLUE : C_GREY }} size="24" />
+          //           </span>
+          //           <span class={row.mp_last_login_time ? '' : 'itv-text--grey4'}>{row.mp_last_login_time ? this.$PDo.Date.format(row.mp_last_login_time) : '未登录'}</span>
+          //         </div>
+          //       </div>
+          //     )
+          //   }
+          // },
           {
-            title: '最近登录时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
-            key: 'last_login_time',
+            title: '创建短链数量',
+            minWidth: 200,
+            key: 'n_links',
             render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.last_login_time).split(' ')
-
               return (
-                <span>
-                  {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
-                  {arr[1]}
-                </span>
-              )
-            }
-          },
-          {
-            title: '注册时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
-            key: 'create_time',
-            render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.create_time).split(' ')
-
-              return (
-                <span>
-                  {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
-                  {arr[1]}
-                </span>
+                <div class="itv-flex--fs mt4 mb4">
+                  <div style="width: 30%">
+                    <span title="今日">{row.n_links_today}</span>
+                    <span>/</span>
+                    <span title="累计">{row.n_links}</span>
+                  </div>
+                  <div class="itv-flex--v ml8 flex1">
+                    <div class="itv-flex--fs">
+                      <div style="color: #afafaf;width: 36px;">普通：</div>
+                      {row.n_normal_links}
+                    </div>
+                    <div class="itv-flex--fs">
+                      <div style="color: #afafaf;width: 36px;">随机：</div>
+                      {row.n_random_links}
+                    </div>
+                    <div class="itv-flex--fs">
+                      <div style="color: #afafaf;width: 36px;">API： </div>
+                      <span title="开放API创建的链接数量">{row.n_random_links}</span>
+                      {/* <span>/</span> */}
+                      {/* <span title="非开放API创建的链接数量">{row.n_nonapi_links}</span> */}
+                    </div>
+                  </div>
+                </div>
               )
             }
           },
           {
             title: '短链访问次数',
             minWidth: 120,
-            key: 'n_clicks'
-          },
-          {
-            title: '创建短链数量',
-            minWidth: 160,
-            key: 'n_links',
+            key: 'n_links n_links_in_ws',
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
-                  <p style="width: 30%">{row.n_links}</p>
-                  <div class="itv-flex--v ml8 flex1">
-                    <p>
-                      <span style="color: #afafaf;">普通：</span>
-                      {row.n_normal_links}
-                    </p>
-                    <p>
-                      <span style="color: #afafaf;">随机：</span>
-                      {row.n_random_links}
-                    </p>
-                  </div>
+                  <span class="ml8 cp" title="链接今日访问次数">
+                    {row.pv_today}
+                  </span>
+                  <span class="ml8">/</span>
+                  <span class="ml8 cp" title="链接访问次数">
+                    {row.pv}
+                  </span>
                 </div>
               )
             }
           },
-          // {
-          //   title: '普通跳转链接数量',
-          //   minWidth: 140,
-          //   key: 'n_normal_links'
-          // },
-          // {
-          //   title: '随机跳转链接数量',
-          //   minWidth: 140,
-          //   key: 'n_random_links'
-          // },
           {
-            // title: '协作空间',
-            minWidth: 180,
-            // key: 'ws_creator',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '可创建', value: 1 },
-                { name: '不可创建', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.ws_creator === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.ws_creator = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">是否可创建协作空间</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
+            title: '协作空间',
+            minWidth: 130,
+            // key: 'open_workspace',
+            // <itv-icon
+            //   class="cp"
+            //   title={row.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'}
+            //   type={row.open_workspace ? 'i-stop' : 'i-start'}
+            //   size="20"
+            //   style={`color: ${row.open_workspace ? C_GREEN : C_GREY}`}
+            //   onClick={() => {
+            //     this.$bus.modal.type = 'ws_creator'
+            //     this.$bus.modal.show = true
+            //     this.$bus.modal.obj = row
+            //     this.$bus.modal.success_cb = this.doGetData
+            //   }}
+            // />
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
-                  <itv-icon
-                    class="cp"
-                    title={row.ws_creator ? '可以创建协作空间' : '不可以创建协作空间'}
-                    type={row.ws_creator ? 'i-stop' : 'i-start'}
-                    size="20"
-                    style={`color: ${row.ws_creator ? C_GREEN : C_GREY}`}
-                    onClick={() => {
-                      this.$bus.modal.type = 'ws_creator'
-                      this.$bus.modal.show = true
-                      this.$bus.modal.obj = row
-                      this.$bus.modal.success_cb = this.doGetData
-                    }}
-                  />
-                  <div class="itv-flex--v ml8" style={`color: ${row.ws_creator ? '' : '#afafaf'}`}>
-                    <p class="ml8 cp" title={`已创建 ${row.n_ws_created} 个协作空间`}>
+                  <div class="itv-flex--v ml8" style={`color: ${row.open_workspace ? '' : '#afafaf'}`}>
+                    <p class="ml8 cp" title={`已创建 ${row.n_created_workspaces} 个协作空间`}>
                       <span style="color: #afafaf;">创建：</span>
-                      {row.n_ws_created}
+                      {row.n_created_workspaces}
                     </p>
-                    <p class="ml8 cp" title={`已加入 ${row.n_ws_joined} 个协作空间`}>
+                    <p class="ml8 cp" title={`已加入 ${row.n_joined_workspaces} 个协作空间`}>
                       <span style="color: #afafaf;">加入：</span>
-                      {row.n_ws_joined}
+                      {row.n_joined_workspaces}
                     </p>
                   </div>
                 </div>
@@ -274,56 +178,17 @@ export default {
             }
           },
           {
-            // title: 'API权限',
+            title: 'API权限',
             minWidth: 120,
-            // key: 'enabled',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '有API权限', value: 1 },
-                { name: '没有API权限', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.api_auth === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.api_auth = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">API权限</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
                   <itv-icon
-                    class="cp"
-                    title={row.api_auth ? '有API权限' : '没有API权限'}
-                    type={row.api_auth ? 'i-stop' : 'i-start'}
+                    class="cp mr12"
+                    title={row.open_api ? '有API权限' : '没有API权限'}
+                    type={row.open_api ? 'i-stop' : 'i-start'}
                     size="20"
-                    style={`color: ${row.api_auth ? C_GREEN : C_GREY}`}
+                    style={`color: ${row.open_api ? C_GREEN : C_GREY}`}
                     onClick={() => {
                       this.$bus.modal.type = 'open_api_domain'
                       this.$bus.modal.show = true
@@ -331,52 +196,14 @@ export default {
                       this.$bus.modal.success_cb = this.doGetData
                     }}
                   />
+                  <span title="每日调用API创建链接数上限">{row.api_max_links_daily}</span>
                 </div>
               )
             }
           },
           {
-            // title: '是否可登录',
+            title: '是否可登录',
             minWidth: 120,
-            // key: 'enabled',
-            // eslint-disable-next-line no-unused-vars
-            renderHeader: (h) => {
-              const options = [
-                { name: '全部', value: '' },
-                { name: '可登录', value: 1 },
-                { name: '不可登录', value: 0 }
-              ]
-              const optionsList = options.map((item) => {
-                return (
-                  <DropdownItem
-                    class={
-                      // eslint-disable-next-line prettier/prettier
-                      this.form.enabled === item.value ? 'enabled_active enabled_item' : 'enabled_item'
-                    }
-                  >
-                    <span
-                      class="enabled_span"
-                      onClick={() => {
-                        this.form.enabled = item.value
-                        this.doGetData()
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </DropdownItem>
-                )
-              })
-
-              return (
-                <Dropdown>
-                  <div class="cp">
-                    <span class="mr8">是否可登录</span>
-                    <Icon type="ios-funnel" title="筛选" />
-                  </div>
-                  <DropdownMenu slot="list">{optionsList}</DropdownMenu>
-                </Dropdown>
-              )
-            },
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
@@ -398,22 +225,75 @@ export default {
             }
           },
           {
-            title: '插件功能',
-            minWidth: 130,
-            key: 'subscribe',
-            // align: 'center',
-            // TODO
+            title: '插件',
+            minWidth: 190,
+            // key: 'n_clicks',
             render: (h, { row }) => {
-              let res = pluginList.map((item) => {
-                return row.subscribe ? <img src={appMap[item].icon} class="mr8 img--plugin--icon" title={appMap[item].title} /> : null
+              let res = pluginListUser.map((item) => {
+                return <img src={appMap[item].icon} class={`mr8 img--plugin--icon ${row[apiKeyMap[item]] ? '' : ' disabled'}`} title={appMap[item].title} />
               })
 
               return <div>{res}</div>
             }
           },
           {
+            title: 'PC最近登录时间',
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            render: (h, { row }) => {
+              if (!row.pc_last_login_time) {
+                return <span class="itv-text--grey3">-</span>
+              }
+              return <div>{this.$PDo.Date.format(row.pc_last_login_time)}</div>
+            }
+          },
+          {
+            title: '小程序最近登录时间',
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            render: (h, { row }) => {
+              if (!row.mp_last_login_time) {
+                return <span class="itv-text--grey3">-</span>
+              }
+              return <div>{this.$PDo.Date.format(row.mp_last_login_time)}</div>
+            }
+          },
+          {
+            title: '注册时间',
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            key: 'create_time',
+            render: (h, { row }) => {
+              const arr = this.$PDo.Date.format(row.create_time).split(' ')
+
+              return (
+                <span>
+                  {arr[0]}
+                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  {arr[1]}
+                </span>
+              )
+            }
+          },
+          {
+            title: '激活时间',
+            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            // key: 'active_date',
+            render: (h, { row }) => {
+              if (!row.active) {
+                return <span class="itv-text--grey3">-</span>
+              }
+              const arr = this.$PDo.Date.format(row.active_date).split(' ')
+
+              return (
+                <span>
+                  {arr[0]}
+                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
+                  {arr[1]}
+                </span>
+              )
+            }
+          },
+          {
             title: '其他',
-            minWidth: 130,
+            width: 150,
             key: 'subscribe',
             // align: 'center',
             render: (h, { row }) => {
@@ -423,10 +303,10 @@ export default {
                     <itv-icon type="i-attention" style={{ color: row.subscribe ? C_GREEN : C_GREY }} size="24" />
                   </span>
                   <span class="mr8" title="是否网页登录">
-                    <itv-icon type="i-pc" style={{ color: row.sa_openid ? C_ORANGE : C_GREY }} size="24" />
+                    <itv-icon type="i-pc" style={{ color: row.pc_last_login_time ? C_ORANGE : C_GREY }} size="24" />
                   </span>
-                  <span title="是否小程序登录">
-                    <itv-icon type="i-wx" style={{ color: row.mp_openid ? C_BLUE : C_GREY }} size="24" />
+                  <span class="mr8" title="是否小程序登录" v-if="">
+                    <itv-icon type="i-wx" style={{ color: row.mp_last_login_time ? C_BLUE : C_GREY }} size="24" />
                   </span>
                 </div>
               )
@@ -435,7 +315,18 @@ export default {
           {
             title: '来源',
             minWidth: 120,
-            key: 'source'
+            // key: 'source'
+            render: (h, { row }) => {
+              return <span class={row.source ? '' : 'itv-text--grey3'}>{row.source || '-'}</span>
+            }
+          },
+          {
+            title: '邮箱',
+            minWidth: 120,
+            // key: 'email',
+            render: (h, { row }) => {
+              return <span class={row.email ? '' : 'itv-text--grey3'}>{row.email || '-'}</span>
+            }
           },
           {
             title: '地域',
@@ -450,12 +341,6 @@ export default {
                 </Tooltip>
               )
             }
-          },
-          {
-            title: 'openid',
-            minWidth: 120,
-            key: 'sa_openid',
-            tooltip: true
           },
           {
             title: '操作',
@@ -485,40 +370,18 @@ export default {
       },
       // 获取表格数据的参数
       form: {
-        api_auth: '',
-        enabled: '',
-        ws_creator: '',
-        search: '',
-        sort: 'time'
-      },
-      options: {
-        filter: [
-          { value: '*', label: '不限' },
-          { value: 'eq', label: '等于' },
-          { value: 'lt', label: '小于' },
-          { value: 'gt', label: '大于' }
-        ],
-        sort: [
-          { value: 'time', label: '按创建时间倒序' },
-          { value: 'login', label: '按最近登录时间' },
-          { value: 'link', label: '按创建短链数量倒序' },
-          { value: 'normal_link', label: '按普通跳转链接数量倒序' },
-          { value: 'random_link', label: '按随机跳转链接数量倒序' },
-          { value: 'click', label: '按短链访问次数倒序' },
-          { value: 'ws_created', label: '按创建的协作空间数量倒序' },
-          { value: 'ws_joined', label: '按加入的协作空间数量倒序' }
-        ]
+        search: ''
       }
     }
   },
   computed: {},
   created() {},
   mounted() {
-    const { page, per_page } = this.$route.query
-    const params = page && per_page ? { page, per_page } : ''
+    // const { page, per_page } = this.$route.query
+    // const params = page && per_page ? { page, per_page } : ''
 
     this.form.search = this.$route.query.name || ''
-    this.doGetData(params)
+    // this.doGetData(params)
   },
   watch: {},
   methods: {
@@ -526,29 +389,6 @@ export default {
     openUserDetail(row) {
       this.$bus.drawer_user.show = true
       this.$bus.drawer_user.id = row.id
-    },
-    // handleImgError(row, index) {
-    // console.log(row, index)
-    // this.table.data[index].headimgurl = this.img_default
-    // },
-    // 重置筛选
-    handleFilterReset() {
-      this.form_filter.forEach((item, i) => {
-        this.form_filter[i].value = ''
-        this.form_filter[i].type = '*'
-      })
-      console.log(this.form_filter)
-    },
-    // 筛选
-    handleFilter() {
-      this.show_drawer = false
-      let filter = {}
-
-      this.form_filter.forEach((item) => {
-        filter[item.key] = item.type === '*' ? null : `${item.type}${item.value}`
-      })
-      this.filter = filter
-      this.doGetData()
     },
     // 去用户详情
     toUserDetail(row) {
@@ -594,17 +434,9 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        const params = {
-          ...this.filter,
-          api_auth: this.form.api_auth,
-          enabled: this.form.enabled,
-          ws_creator: this.form.ws_creator,
-          nickname: this.form.search,
-          order_by: this.form.sort
-        }
-
         const res = await this.$api.User.getUserList({
-          ...params,
+          ...this.form_filter,
+          qs: this.form.search,
           ...this.$global.utils.pagination.params()
         })
 
