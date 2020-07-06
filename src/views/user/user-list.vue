@@ -100,10 +100,10 @@ export default {
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs mt4 mb4">
-                  <div style="width: 30%">
+                  <div style="width: 40%" class="cp">
                     <span title="今日">{row.n_links_today}</span>
                     <span>/</span>
-                    <span title="累计">{row.n_links}</span>
+                    <span title={`累计：${row.n_links}`}>{this.$global.utils.countFormat.short(row.n_links)}</span>
                   </div>
                   <div class="itv-flex--v ml8 flex1">
                     <div class="itv-flex--fs">
@@ -116,7 +116,7 @@ export default {
                     </div>
                     <div class="itv-flex--fs">
                       <div style="color: #afafaf;width: 36px;">API： </div>
-                      <span title="开放API创建的链接数量">{row.n_random_links}</span>
+                      <span title="开放API创建的链接数量">{row.n_api_links}</span>
                       {/* <span>/</span> */}
                       {/* <span title="非开放API创建的链接数量">{row.n_nonapi_links}</span> */}
                     </div>
@@ -136,8 +136,8 @@ export default {
                     {row.pv_today}
                   </span>
                   <span class="ml8">/</span>
-                  <span class="ml8 cp" title="链接访问次数">
-                    {row.pv}
+                  <span class="ml8 cp" title={`链接访问次数：${row.pv}`}>
+                    {this.$global.utils.countFormat.short(row.pv)}
                   </span>
                 </div>
               )
