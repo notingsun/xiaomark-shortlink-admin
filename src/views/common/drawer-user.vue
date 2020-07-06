@@ -366,10 +366,25 @@ export default {
     'drawer.show'(v) {
       if (v) {
         this.doGetData()
+        this.doGetUserTags()
       }
     }
   },
   methods: {
+    // 获取用户标签
+    async doGetUserTags() {
+      if (Object.keys(this.$bus.userTags || {}).length === 0) {
+        try {
+          let res = await this.$api.User.getUserTags()
+
+          res = (res || {}).tags || []
+
+          this.$bus.updateUserTags(res)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    },
     async doGetData() {
       this.loading = true
       try {

@@ -315,9 +315,7 @@ export default {
     }
   },
   created() {},
-  mounted() {
-    this.doGetUserTags()
-  },
+  mounted() {},
   watch: {
     // 重置表单
     'modal.show'(v) {
