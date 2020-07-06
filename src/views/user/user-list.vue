@@ -70,29 +70,6 @@ export default {
               )
             }
           },
-          // {
-          //   title: 'PC最近登录时间',
-          //   width: 200,
-          //   // key: 'pc_last_login_time',
-          //   render: (h, { row }) => {
-          //     return (
-          //       <div class="mt4 mb4">
-          //         <div title="PC端最近登录时间" class="mb4">
-          //           <span class="mr8" title="是否网页登录">
-          //             <itv-icon type="i-pc" style={{ color: row.pc_last_login_time ? C_ORANGE : C_GREY }} size="24" />
-          //           </span>
-          //           <span class={row.pc_last_login_time ? '' : 'itv-text--grey4'}>{row.pc_last_login_time ? this.$PDo.Date.format(row.pc_last_login_time) : '未登录'}</span>
-          //         </div>
-          //         <div title="小程序最近登录时间">
-          //           <span class="mr8" title="是否小程序登录" v-if="">
-          //             <itv-icon type="i-wx" style={{ color: row.mp_last_login_time ? C_BLUE : C_GREY }} size="24" />
-          //           </span>
-          //           <span class={row.mp_last_login_time ? '' : 'itv-text--grey4'}>{row.mp_last_login_time ? this.$PDo.Date.format(row.mp_last_login_time) : '未登录'}</span>
-          //         </div>
-          //       </div>
-          //     )
-          //   }
-          // },
           {
             title: '创建短链数量',
             minWidth: 200,
@@ -238,6 +215,29 @@ export default {
               return <div>{res}</div>
             }
           },
+          // {
+          //   title: 'PC最近登录时间',
+          //   width: 200,
+          //   // key: 'pc_last_login_time',
+          //   render: (h, { row }) => {
+          //     return (
+          //       <div class="mt4 mb4">
+          //         <div title="PC端最近登录时间" class="mb4">
+          //           <span class="mr8" title="是否网页登录">
+          //             <itv-icon type="i-pc" style={{ color: row.pc_last_login_time ? C_ORANGE : C_GREY }} size="24" />
+          //           </span>
+          //           <span class={row.pc_last_login_time ? '' : 'itv-text--grey4'}>{row.pc_last_login_time ? this.$PDo.Date.format(row.pc_last_login_time) : '未登录'}</span>
+          //         </div>
+          //         <div title="小程序最近登录时间">
+          //           <span class="mr8" title="是否小程序登录" v-if="">
+          //             <itv-icon type="i-wx" style={{ color: row.mp_last_login_time ? C_BLUE : C_GREY }} size="24" />
+          //           </span>
+          //           <span class={row.mp_last_login_time ? '' : 'itv-text--grey4'}>{row.mp_last_login_time ? this.$PDo.Date.format(row.mp_last_login_time) : '未登录'}</span>
+          //         </div>
+          //       </div>
+          //     )
+          //   }
+          // },
           {
             title: 'PC最近登录时间',
             minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
