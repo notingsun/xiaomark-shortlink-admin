@@ -157,6 +157,11 @@ export default {
           name: '10',
           title: '插件列表',
           route: { name: 'PluginList' }
+        },
+        {
+          name: '11',
+          title: 'Redis集群列表',
+          route: { name: 'RedisList' }
         }
       ],
       // 渠道码.菜单

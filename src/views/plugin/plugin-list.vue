@@ -71,7 +71,7 @@ export default {
             key: 'user'
           },
           {
-            title: '应用控件数量',
+            title: '应用空间数量',
             minWidth: 100,
             key: 'workspace'
           },

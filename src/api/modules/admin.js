@@ -41,5 +41,16 @@ export default {
       url: `${BASE_URL_LINK}/api/current_admin/`,
       params
     }
+  },
+
+  /**
+   * 获取Redis集群运行数据
+   */
+  getRedis(params) {
+    return {
+      method: 'get',
+      url: `${BASE_URL_LINK}/api/system/rc_info/`,
+      params
+    }
   }
 }

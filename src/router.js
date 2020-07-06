@@ -120,6 +120,14 @@ const short_link = [
     meta: { menuIndex: '10', title: '插件列表' },
     name: 'PluginList',
     component: () => import('@/views/plugin/plugin-list.vue')
+  },
+
+  /* Redis集群列表 */
+  {
+    path: '/redis-list',
+    meta: { menuIndex: '11', title: 'Redis集群列表' },
+    name: 'RedisList',
+    component: () => import('@/views/dev/redis-list.vue')
   }
 ]
 
