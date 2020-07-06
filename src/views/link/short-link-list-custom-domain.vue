@@ -10,9 +10,7 @@
           <BreadcrumbItem>自定义域名：{{ $route.params.domain_name }}</BreadcrumbItem>
         </Breadcrumb>
       </div>
-      <Select v-model="form.sort" style="width:150px" @on-change="doGetData" placement="bottom-end">
-        <Option v-for="(item, index) in options.sort" :value="item.value" :key="index">{{ item.label }}</Option>
-      </Select>
+      <short-link-filter v-model="form_short_link_filter" @submit="doGetData" :loading="loading" />
     </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
@@ -24,28 +22,23 @@
 <script>
 import tableMixins from '../table-mixins'
 import shortLinkMixins from '../common/mixins-short-link'
+import ShortLinkFilter from '../common/short-link-filter'
 
 export default {
   name: 'ShortLinkListCustomDomain',
   mixins: [tableMixins, shortLinkMixins],
   props: {},
-  components: {},
+  components: { ShortLinkFilter },
   data() {
     return {
+      form_short_link_filter: {},
       // 获取表格数据的参数
-      form: {
-        has_params: '',
-        archived: '',
-        enabled: '',
-        sort: 'time'
-      }
+      form: {}
     }
   },
   computed: {},
   created() {},
-  mounted() {
-    this.doGetData()
-  },
+  mounted() {},
   watch: {},
   methods: {
     doGetData(page = {}) {
@@ -62,17 +55,9 @@ export default {
       this.loading = true
       this.domTableScrollTop()
       try {
-        const params = {
-          api: this.form.api ? 1 : 0, // 是否为开放API创建
-          domain: this.$route.params.domain_name, // 用户ID
-          has_params: this.form.has_params,
-          archived: this.form.archived,
-          enabled: this.form.enabled,
-          order_by: this.form.sort
-        }
-
         const res = await this.$api.Link.getShortLinkList({
-          ...params,
+          ...this.form_short_link_filter,
+          domain: this.$route.params.domain_name, // 用户ID
           ...this.$global.utils.pagination.params()
         })
 

@@ -148,11 +148,6 @@ export default {
             minWidth: 130,
             // key: 'open_workspace',
             // <itv-icon
-            //   class="cp"
-            //   title={row.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'}
-            //   type={row.open_workspace ? 'i-stop' : 'i-start'}
-            //   size="20"
-            //   style={`color: ${row.open_workspace ? C_GREEN : C_GREY}`}
             //   onClick={() => {
             //     this.$bus.modal.type = 'ws_creator'
             //     this.$bus.modal.show = true
@@ -163,6 +158,13 @@ export default {
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
+                  <itv-icon
+                    class="cp"
+                    title={row.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'}
+                    type={row.open_workspace ? 'i-stop' : 'i-start'}
+                    size="20"
+                    style={`color: ${row.open_workspace ? C_GREEN : C_GREY}`}
+                  />
                   <div class="itv-flex--v ml8" style={`color: ${row.open_workspace ? '' : '#afafaf'}`}>
                     <p class="ml8 cp" title={`已创建 ${row.n_created_workspaces} 个协作空间`}>
                       <span style="color: #afafaf;">创建：</span>
@@ -300,13 +302,13 @@ export default {
               return (
                 <div>
                   <span class="mr8" title="是否关注服务号">
-                    <itv-icon type="i-attention" style={{ color: row.subscribe ? C_GREEN : C_GREY }} size="24" />
+                    <itv-icon type="i-attention" style={`color: ${row.subscribe ? C_GREEN : C_GREY}`} size="24" />
                   </span>
                   <span class="mr8" title="是否网页登录">
-                    <itv-icon type="i-pc" style={{ color: row.pc_last_login_time ? C_ORANGE : C_GREY }} size="24" />
+                    <itv-icon type="i-pc" style={`color: ${row.pc_last_login_time ? C_ORANGE : C_GREY}`} size="24" />
                   </span>
-                  <span class="mr8" title="是否小程序登录" v-if="">
-                    <itv-icon type="i-wx" style={{ color: row.mp_last_login_time ? C_BLUE : C_GREY }} size="24" />
+                  <span class="mr8" title="是否小程序登录">
+                    <itv-icon type="i-wx" style={`color: ${row.mp_last_login_time ? C_BLUE : C_GREY}`} size="24" />
                   </span>
                 </div>
               )
@@ -358,8 +360,8 @@ export default {
                   <span title="登录该用户">
                     <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" onClick={this.toUserLogin.bind(null, row)} />
                   </span>
-                  <span title="给用户打标签">
-                    <itv-icon type="i-tag" size="20" class="itv-btn__icon" onClick={this.handleUserTags.bind(null, row)} />
+                  <span title={row.subscribe ? '给用户打标签' : '无权限，该用户未关注公众号'}>
+                    <itv-icon type="i-tag" size="20" class="itv-btn__icon" style={`color: ${row.subscribe ? C_BLUE : C_GREY}`} onClick={this.handleUserTags.bind(null, row)} />
                   </span>
                 </div>
               )
@@ -414,9 +416,11 @@ export default {
     },
     // 给用户打标签
     handleUserTags(row) {
-      this.$bus.modal.type = 'user_tags'
-      this.$bus.modal.show = true
-      this.$bus.modal.obj = row
+      if (row.subscribe) {
+        this.$bus.modal.type = 'user_tags'
+        this.$bus.modal.show = true
+        this.$bus.modal.obj = row
+      }
     },
 
     doGetData(page = {}) {

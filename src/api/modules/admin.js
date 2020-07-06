@@ -1,3 +1,5 @@
+const BASE_URL_LINK = process.env.VUE_APP_LINK_BASE_URL
+
 export default {
   getQnToken(params) {
     return {
@@ -14,7 +16,7 @@ export default {
   login(params) {
     return {
       method: 'put',
-      url: '/api/admin/login/',
+      url: `${BASE_URL_LINK}/api/admin/login/`,
       params
     }
   },
@@ -25,7 +27,7 @@ export default {
   putPassword(params) {
     return {
       method: 'put',
-      url: '/api/password/',
+      url: `${BASE_URL_LINK}/api/password/`,
       params
     }
   },
@@ -36,7 +38,7 @@ export default {
   getAdminDetail(params) {
     return {
       method: 'get',
-      url: '/api/current_admin/',
+      url: `${BASE_URL_LINK}/api/current_admin/`,
       params
     }
   }
