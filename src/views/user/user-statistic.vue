@@ -370,9 +370,9 @@ export default {
   }
   .cell-small-label {
     flex-shrink: 0;
-    width: 44%;
+    width: 47%;
     text-align: right;
-    padding-right: 8px;
+    padding-right: 6%;
     box-sizing: border-box;
     font-size: 12px;
     color: #9a9a9a;
@@ -403,6 +403,10 @@ export default {
     margin-right: 12px;
   }
   .text-grey {
+    color: #9a9a9a;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     color: #9a9a9a;
   }
 }
