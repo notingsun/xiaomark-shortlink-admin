@@ -1,6 +1,12 @@
 /* 自定义域名列表 */
 <template>
   <div class="custom-domain-list itv-flex-v--fs link-list">
+    <div class="header mb16 itv-flex--sb">
+      <div class="header__search">
+        <Input clearable v-model="form.search" placeholder="请输入" style="width: 300px" @on-enter="doGetData" @on-clear="doGetData" class="mr8" />
+        <Button type="primary" @click="doGetData">搜索</Button>
+      </div>
+    </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 分页器 -->
@@ -19,6 +25,7 @@ export default {
   data() {
     return {
       form: {
+        search: '',
         bind: ''
         // status: '',
         // enabled: ''
@@ -187,6 +194,7 @@ export default {
       this.domTableScrollTop()
       try {
         const params = {
+          qs: this.form.search,
           bind: this.form.bind
           // resolved: this.form.status, // DNS解析是否正确：0 - 否，1 - 是
           // enabled: this.form.enabled // 是否可用：0 - 不可用，1 - 可用
