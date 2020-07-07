@@ -7,10 +7,15 @@
       <div>
         <div v-for="(row, index) in overview.map" :key="`row-${index}`" class="overview--wrap mb16">
           <div class="overview__cell" v-for="(item, i) in row" :key="`item-${i}`">
+            <!-- 数据名称 -->
+            <p class="overview__cell__name mb4">
+              {{ config[overview.key].name_map[item.key] }}
+            </p>
+
             <!-- 历史总的数据 -->
-            <div class="overview__cell__value">
+            <div class="overview__cell__value mb4">
               <Tooltip :disabled="config[overview.key].data[item.key] < 1000 || item.noShort" placement="top" theme="light">
-                <div slot="content" style="font-size: 16px;">
+                <div slot="content" style="font-size: 18px;">
                   {{ config[overview.key].data[item.key] | countThree }}
                 </div>
                 <div class="pr minh38">
@@ -20,21 +25,32 @@
                 </div>
               </Tooltip>
             </div>
-            <!-- 数据名称 -->
-            <p class="overview__cell__name mb4">
-              {{ config[overview.key].name_map[item.key] }}
-            </p>
-            <!-- 今日数据 -->
-            <div class="text-today pr" v-if="item.today" :title="config[overview.key].name_map[item.today]">
-              <div v-show="!config[overview.key].loading" class="itv-flex--fs">
-                <!-- <span style="font-size: 12px;">今日</span> -->
-                <itv-icon type="i-increase" size="14" color="" />
-                <span class="ml4">{{ config[overview.key].data[item.today] | countThree }}</span>
+
+            <!-- 今日/昨日 -->
+            <div :style="{ width: '100%', minHeight: item.nosmall ? '' : '44px' }">
+              <!-- 今日数据 -->
+              <div class="itv-flex--fs" v-if="item.today" :title="config[overview.key].name_map[item.today]">
+                <div class="cell-small-label">今日</div>
+                <div class="cell-small-value ml4">{{ config[overview.key].data[item.today] | countThree }}</div>
+              </div>
+              <div class="itv-flex--fs" v-if="item.yesterday" :title="config[overview.key].name_map[item.yesterday]">
+                <div class="cell-small-label">昨日</div>
+                <div class="cell-small-value ml4">{{ config[overview.key].data[item.yesterday] | countThree }}</div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <!-- 表格 -->
+      <Table
+        v-if="overview.table"
+        :loading="config[overview.key].loading"
+        ref="refTable"
+        :height="overview.table.height"
+        :columns="overview.table.columns"
+        :data="overview.table.data"
+        class="table"
+      />
     </div>
   </div>
 </template>
@@ -48,20 +64,24 @@ export default {
   data() {
     const OVERVIEW_NAME_MAP = {
       n_users: '用户数',
-      n_users_new_today: '今天注册的用户数',
-      n_users_active_today: '今天的活跃用户数',
+      n_users_yesterday: '昨天注册的用户数',
+      n_users_today: '今天注册的用户数',
+      n_users_active: '已激活的用户数',
+      n_users_active_yesterday: '昨天激活的用户数',
+      n_users_login_yesterday: '昨天的活跃用户数',
+      n_users_login_today: '今天的活跃用户数',
+      n_workspaces: '协作空间数',
+      n_workspaces_yesterday: '昨天创建的协作空间数',
+      n_workspaces_today: '今天创建的协作空间数',
+      n_custom_domains: '自定义域名数',
+      n_custom_domains_yesterday: '昨天绑定的自定义域名数',
+      n_custom_domains_today: '今天绑定的自定义域名数',
       n_groups: '链接分组数',
+      n_groups_yesterday: '昨天创建的链接分组数',
       n_groups_today: '今天创建的链接分组数',
       n_links: '链接数',
-      n_links_today: '今天创建的链接数',
-      n_urls: '跳转链接数',
-      n_urls_today: '今天创建的跳转链接数',
-      n_clicks: '链接访问次数',
-      n_clicks_today: '今天的链接访问次数',
-      n_visitors: '链接访问人数',
-      n_visitors_today: '今天的链接访问人数',
-      n_ips: '链接访问IP数',
-      n_ips_today: '今天的链接访问IP数'
+      n_links_yesterday: '昨天创建的链接数',
+      n_links_today: '今天创建的链接数'
     }
 
     const OVERVIEW_NAME_QR_MAP = {
@@ -82,15 +102,97 @@ export default {
         {
           name: '小码短链接',
           key: 'overview',
+          table: {
+            columns: [
+              {
+                title: '数据类型',
+                width: 150,
+                key: 'name'
+              },
+              {
+                title: '访问次数',
+                align: 'center',
+                minWidth: 120,
+                // key: 'name',
+                render: (h, { row }) => {
+                  return (
+                    <div class="itv-flex--fs">
+                      <div class="text-blue" title="累计">
+                        {row.pv}
+                      </div>
+                      <div class="itev-flex--v--fs text-grey">
+                        <div class="" title="今日">
+                          今日：{row.pv_today}
+                        </div>
+                        <div class="" title="昨日">
+                          昨日：{row.pv_yesterday}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+              },
+              {
+                title: '访问人数',
+                align: 'center',
+                minWidth: 120,
+                // key: 'name',
+                render: (h, { row }) => {
+                  return (
+                    <div class="itv-flex--fs">
+                      <div class="text-blue" title="累计">
+                        {row.uv}
+                      </div>
+                      <div class="itev-flex--v--fs text-grey">
+                        <div class="" title="今日">
+                          今日：{row.uv_today}
+                        </div>
+                        <div class="" title="昨日">
+                          昨日：{row.uv_yesterday}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+              },
+              {
+                title: '访问IP数',
+                align: 'center',
+                minWidth: 120,
+                // key: 'name',
+                render: (h, { row }) => {
+                  return (
+                    <div class="itv-flex--fs">
+                      <div class="text-blue" title="累计">
+                        {row.uip}
+                      </div>
+                      <div class="itev-flex--v--fs text-grey">
+                        <div class="" title="今日">
+                          今日：{row.uip_today}
+                        </div>
+                        <div class="" title="昨日">
+                          昨日：{row.uip_yesterday}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+              }
+            ],
+            data: [],
+            height: null
+          },
           map: [
-            [{ key: 'n_users', noShort: true }, { key: 'n_users_new_today' }, { key: 'n_users_active_today' }],
             [
-              { key: 'n_groups', today: 'n_groups_today' },
-              { key: 'n_links', today: 'n_links_today' },
-              { key: 'n_urls', today: 'n_urls_today' },
-              { key: 'n_clicks', today: 'n_clicks_today' },
-              { key: 'n_visitors', today: 'n_visitors_today' },
-              { key: 'n_ips', today: 'n_ips_today' }
+              { key: 'n_users', noShort: true, today: 'n_users_today', yesterday: 'n_users_yesterday' },
+              { key: 'n_users_active', noShort: true, yesterday: 'n_users_active_yesterday' },
+              { key: 'n_users_login_today', noShort: true, yesterday: 'n_users_login_yesterday' }
+            ],
+            [
+              { key: 'n_workspaces', today: 'n_workspaces_today', yesterday: 'n_workspaces_yesterday' },
+              { key: 'n_custom_domains', today: 'n_custom_domains_today', yesterday: 'n_custom_domains_yesterday' },
+              { key: 'n_groups', today: 'n_groups_today', yesterday: 'n_groups_yesterday' },
+              { key: 'n_links', today: 'n_links_today', yesterday: 'n_links_yesterday' }
             ]
           ]
         },
@@ -99,7 +201,11 @@ export default {
           name: '小码渠道码',
           key: 'overview_qr',
           map: [
-            [{ key: 'n_users' }, { key: 'n_users_new_today' }, { key: 'n_users_active_today' }],
+            [
+              { key: 'n_users', nosmall: true },
+              { key: 'n_users_new_today', nosmall: true },
+              { key: 'n_users_active_today', nosmall: true }
+            ],
             [
               { key: 'n_platforms', today: 'n_platforms_today' },
               { key: 'n_qrcodes', today: 'n_qrcodes_today' },
@@ -138,7 +244,22 @@ export default {
       try {
         const res = await this.$api.Link.getLinkStatistic({})
 
+        const arr1 = ['link_core_stats', 'link_wxt_stats', 'link_wxe_stats', 'link_dya_stats', 'link_tba_stats']
+        const arrMap = {
+          link_core_stats: '链接核心访问数据',
+          link_wxt_stats: '微信内追踪访问记录',
+          link_wxe_stats: '微信内强制浏览器打开',
+          link_dya_stats: '跳转抖音APP',
+          link_tba_stats: '跳转淘宝APP'
+        }
+
         this.config.overview.data = res
+        this.list[0].table.data = arr1.map((key) => {
+          return {
+            name: arrMap[key],
+            ...res[key]
+          }
+        })
       } catch (e) {
         console.log(e)
       }
@@ -148,7 +269,7 @@ export default {
     async doGetTableDataAllQr() {
       this.config.overview_qr.loading = true
       try {
-        const res = await this.$api.Qr.getStatisticsInfo({})
+        let res = await this.$api.Qr.getStatisticsInfo({})
 
         this.config.overview_qr.data = res
       } catch (e) {
@@ -169,8 +290,15 @@ export default {
 
 .user-statistic {
   overflow-y: auto;
+
   .text-today {
     color: #07c160;
+    font-size: 24px;
+    cursor: default;
+    min-height: 36px;
+  }
+  .text-yesterday {
+    color: grey;
     font-size: 24px;
     cursor: default;
     min-height: 36px;
@@ -225,7 +353,7 @@ export default {
         right: 0;
         top: 50%;
         width: 1px;
-        height: 20px;
+        height: 40px;
         background: #dcdee2;
         -webkit-transform: translateY(-50%);
         transform: translateY(-50%);
@@ -234,12 +362,48 @@ export default {
     .overview__cell__value {
       font-size: 32px;
       font-weight: 500;
-      margin-bottom: 4px;
       color: @primary-color;
     }
     .overview__cell__name {
       font-size: 14px;
     }
+  }
+  .cell-small-label {
+    flex-shrink: 0;
+    width: 44%;
+    text-align: right;
+    padding-right: 8px;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #9a9a9a;
+  }
+  .cell-small-value {
+    flex: 1;
+    color: #9a9a9a; // 灰色
+    // color: #07c160; // 绿色
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .table {
+    margin: 40px 3% 12px;
+    min-height: 280px;
+    max-width: 62%;
+  }
+}
+</style>
+
+<style lang="less">
+.user-statistic {
+  .text-blue {
+    color: @primary-color;
+    font-weight: bold;
+    font-size: 16px;
+    width: 50%;
+    text-align: right;
+    margin-right: 12px;
+  }
+  .text-grey {
+    color: #9a9a9a;
   }
 }
 </style>

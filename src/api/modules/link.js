@@ -76,8 +76,8 @@ export default {
   getLinkStatistic(params) {
     return {
       method: 'get',
-      name: '获取总体数据',
-      url: '/api/sl/stats/overview/',
+      name: '获取总体数据(短链)',
+      url: `${BASE_URL_LINK}/api/stats/overview/`,
       params
     }
   }
