@@ -85,7 +85,8 @@ const countFormat = {
     const p = 1 // 精度
 
     let k = parseInt(count / 1000),
-      w = parseInt(count / 10000)
+      w = parseInt(count / 10000),
+      e = parseInt(count / 100000000)
 
     // 千
     if (k > 0 && k < 10) {
@@ -93,9 +94,16 @@ const countFormat = {
     }
 
     // 万
-    if (w > 0) {
+    if (w > 0 && w < 10000) {
       return parseFloat(count / 10000).toFixed(p) + 'w'
     }
+
+    // 亿
+    if (w >= 10000 && e > 0) {
+      console.log({ count, e })
+      return parseFloat(count / 100000000).toFixed(p) + '亿'
+    }
+
     return count
   }
 }
