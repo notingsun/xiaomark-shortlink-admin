@@ -22,11 +22,6 @@ export default {
     }
   },
   mounted() {
-    // 全局设置Message距离顶部的高度
-    // this.$Message.config({
-    //   top: 300
-    // })
-
     // 登录 LOGIN 触发的事件
     this.$bus.$on(this.$bus.EVENTS.LOGIN, (token) => {
       this.$bus.token = token
