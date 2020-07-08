@@ -20,7 +20,7 @@
                 </div>
                 <div class="pr minh38">
                   <Spin fix v-if="config[overview.key].loading"></Spin>
-                  <span v-if="item.noShort">{{ config[overview.key].data[item.key] }}</span>
+                  <span v-if="item.noShort">{{ config[overview.key].data[item.key] | countThree }}</span>
                   <span v-else>{{ config[overview.key].data[item.key] | countShort }}</span>
                 </div>
               </Tooltip>
@@ -116,16 +116,16 @@ export default {
                 // key: 'name',
                 render: (h, { row }) => {
                   return (
-                    <div class="itv-flex--fs">
-                      <div class="text-blue" title="累计">
-                        {row.pv}
+                    <div class="itv-flex--fs cp">
+                      <div class="text-blue" title={`累计：${this.$global.utils.countFormat.three(row.pv)}`}>
+                        {this.$global.utils.countFormat.short(row.pv)}
                       </div>
                       <div class="itev-flex--v--fs text-grey">
-                        <div class="" title="今日">
-                          今日：{row.pv_today}
+                        <div class="" title={`今日：${this.$global.utils.countFormat.three(row.pv_today)}`}>
+                          今日：{this.$global.utils.countFormat.short(row.pv_today)}
                         </div>
-                        <div class="" title="昨日">
-                          昨日：{row.pv_yesterday}
+                        <div class="" title={`昨日：${this.$global.utils.countFormat.three(row.pv_yesterday)}`}>
+                          昨日：{this.$global.utils.countFormat.short(row.pv_yesterday)}
                         </div>
                       </div>
                     </div>
@@ -139,16 +139,16 @@ export default {
                 // key: 'name',
                 render: (h, { row }) => {
                   return (
-                    <div class="itv-flex--fs">
-                      <div class="text-blue" title="累计">
-                        {row.uv}
+                    <div class="itv-flex--fs cp">
+                      <div class="text-blue" title={`累计：${this.$global.utils.countFormat.three(row.uv)}`}>
+                        {this.$global.utils.countFormat.short(row.uv)}
                       </div>
                       <div class="itev-flex--v--fs text-grey">
-                        <div class="" title="今日">
-                          今日：{row.uv_today}
+                        <div class="" title={`今日：${this.$global.utils.countFormat.three(row.uv_today)}`}>
+                          今日：{this.$global.utils.countFormat.short(row.uv_today)}
                         </div>
-                        <div class="" title="昨日">
-                          昨日：{row.uv_yesterday}
+                        <div class="" title={`昨日：${this.$global.utils.countFormat.three(row.uv_yesterday)}`}>
+                          昨日：{this.$global.utils.countFormat.short(row.uv_yesterday)}
                         </div>
                       </div>
                     </div>
@@ -162,16 +162,16 @@ export default {
                 // key: 'name',
                 render: (h, { row }) => {
                   return (
-                    <div class="itv-flex--fs">
-                      <div class="text-blue" title="累计">
-                        {row.uip}
+                    <div class="itv-flex--fs cp">
+                      <div class="text-blue" title={`累计：${this.$global.utils.countFormat.three(row.uip)}`}>
+                        {this.$global.utils.countFormat.short(row.uip)}
                       </div>
                       <div class="itev-flex--v--fs text-grey">
-                        <div class="" title="今日">
-                          今日：{row.uip_today}
+                        <div class="" title={`今日：${this.$global.utils.countFormat.three(row.uip_today)}`}>
+                          今日：{this.$global.utils.countFormat.short(row.uip_today)}
                         </div>
-                        <div class="" title="昨日">
-                          昨日：{row.uip_yesterday}
+                        <div class="" title={`昨日：${this.$global.utils.countFormat.three(row.uip_yesterday)}`}>
+                          昨日：{this.$global.utils.countFormat.short(row.uip_yesterday)}
                         </div>
                       </div>
                     </div>
@@ -202,7 +202,7 @@ export default {
           key: 'overview_qr',
           map: [
             [
-              { key: 'n_users', nosmall: true },
+              { key: 'n_users', noShort: true, nosmall: true },
               { key: 'n_users_new_today', nosmall: true },
               { key: 'n_users_active_today', nosmall: true }
             ],
@@ -312,8 +312,11 @@ export default {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     position: relative;
-    &:not(:first-child) {
-      margin-top: 16px;
+    // &:not(:first-child) {
+    //   margin-top: 16px;
+    // }
+    & {
+      margin-bottom: 16px;
     }
     &__title {
       font-size: 18px;
@@ -388,6 +391,7 @@ export default {
     margin: 40px 3% 12px;
     min-height: 280px;
     max-width: 62%;
+    min-width: 800px;
   }
 }
 </style>
