@@ -346,11 +346,11 @@ export default {
           },
           {
             title: '操作',
-            width: 140,
+            width: 160,
             fixed: 'right',
             render: (h, { row }) => {
               return (
-                <div>
+                <div class="itv-flex--fs">
                   <span title="查看短链">
                     <itv-icon type="i-detail" size="20" class="itv-btn__icon mr8" onClick={this.toUserDetail.bind(null, row)} />
                   </span>
@@ -361,8 +361,11 @@ export default {
                     <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" onClick={this.toUserLogin.bind(null, row)} />
                   </span>
                   <span title={row.subscribe ? '给用户打标签' : '无权限，该用户未关注公众号'}>
-                    <itv-icon type="i-tag" size="20" class="itv-btn__icon" style={`color: ${row.subscribe ? C_BLUE : C_GREY}`} onClick={this.handleUserTags.bind(null, row)} />
+                    <itv-icon type="i-tag" size="20" class="itv-btn__icon mr8" style={`color: ${row.subscribe ? C_BLUE : C_GREY}`} onClick={this.handleUserTags.bind(null, row)} />
                   </span>
+                  <div class={'itv-text--btn4'} title="恢复游客链接" onClick={this.handleGuestLinks.bind(null, row)}>
+                    游
+                  </div>
                 </div>
               )
             }
@@ -421,6 +424,13 @@ export default {
         this.$bus.modal.show = true
         this.$bus.modal.obj = row
       }
+    },
+    // 恢复游客链接
+    handleGuestLinks(row) {
+      console.log('handleGuestLinks', row)
+      this.$bus.modal.type = 'guset_link'
+      this.$bus.modal.show = true
+      this.$bus.modal.obj = row
     },
 
     doGetData(page = {}) {

@@ -79,6 +79,33 @@
   }
 }
 
+@btn-size: 20px;
+.itv-text--btn2,
+.itv-text--btn3,
+.itv-text--btn4 {
+  width: @btn-size;
+  height: @btn-size;
+  border-radius: 50%;
+  text-align: center;
+  background: @primary-color;
+  line-height: @btn-size;
+  font-size: 12px;
+  color: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  &.sub {
+    background: #c5c7ce;
+  }
+}
+.itv-text--btn4 {
+  background: #fff;
+  border: 1px solid @primary-color;
+  color: @primary-color;
+}
+.itv-text--btn3 {
+  background: #47cb89;
+}
+
 // 文字不换行，显示省略号
 .itv-div__text--nowrap {
   display: block;

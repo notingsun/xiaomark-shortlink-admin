@@ -288,6 +288,22 @@
             <itv-icon type="i-tag" size="20" class="itv-btn__icon mr8" />
             <span class="itv-text--btn">打标签</span>
           </div>
+          <!-- 恢复游客链接 -->
+          <div
+            class="mb8 itv-flex--fs"
+            @click="
+              () => {
+                this.$bus.modal.type = 'guset_link'
+                this.$bus.modal.show = true
+                this.$bus.modal.obj = data
+              }
+            "
+          >
+            <div class="itv-text--btn4 mr8" title="恢复游客链接">
+              游
+            </div>
+            <span class="itv-text--btn">恢复游客链接</span>
+          </div>
         </div>
       </div>
     </div>

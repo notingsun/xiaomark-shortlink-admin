@@ -80,5 +80,14 @@ export default {
       url: `${BASE_URL_LINK}/api/stats/overview/`,
       params
     }
+  },
+
+  postGuestLinks(params) {
+    return {
+      method: 'post',
+      name: '恢复游客链接',
+      url: `${BASE_URL_LINK}/api/recover_guest_link/`,
+      params
+    }
   }
 }

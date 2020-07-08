@@ -226,6 +226,14 @@
         </Select>
       </div>
 
+      <!-- 12、恢复游客链接 -->
+      <div v-show="modal.type === 'guset_link'">
+        <span>确认恢复</span>
+        <span>【 {{ (modal.obj || {}).nickname || '-' }} 】</span>
+        <span>的游客链接吗？</span>
+        <Input class="mt16" placeholder="请输入对应的短链接地址" v-model="form.guset_link.link" />
+      </div>
+
       <!-- 按钮.取消/确认 -->
       <template slot="footer">
         <div class="itv-flex--fe" v-show="show_footer">
@@ -235,6 +243,7 @@
       </template>
     </Modal>
     <itv-model-img v-model="img_model.show" :imgModelUrl="img_model.url" />
+    <a :href="form.guset_link.link" ref="refLinkA" style="display: none" />
   </div>
 </template>
 
@@ -258,6 +267,7 @@ export default {
       titleMap: {
         user_tags: '设置用户标签',
         login_user: '确认登录',
+        guset_link: '确认恢复游客链接',
         wx_share: '微信分享',
         check_api_domain: '查看API域名',
         open_api_domain: '设置API权限',
@@ -297,6 +307,9 @@ export default {
         },
         user_tags: {
           tagids: ''
+        },
+        guset_link: {
+          link: ''
         }
       },
       options: {
@@ -402,6 +415,7 @@ export default {
       type === 'stop_api_domain' && await this.handleStopApiDomain()
       type === 'check_api_domain' && await this.handleCheckApiDomain()
       type === 'login_user' && await this.handleUserLogin()
+      type === 'guset_link' && await this.handleGuestLinks()
       type === 'user_tags' && await this.handleUserTags()
       /* eslint-enable */
 
@@ -454,6 +468,29 @@ export default {
         }, 300)
       }
       this.modal.show = false
+    },
+
+    // 恢复游客链接
+    async handleGuestLinks() {
+      if (!this.form.guset_link.link) {
+        this.$Message.error('请输入短链接地址')
+        return
+      }
+      const refLinkA = this.$refs.refLinkA
+
+      try {
+        await this.$api.Link.postGuestLinks({
+          user_id: this.modal.obj.id,
+          domain: refLinkA.hostname,
+          key: refLinkA.pathname.slice(1)
+        })
+        this.modal.show = false
+        setTimeout(() => {
+          this.$Message.success('恢复成功！')
+        }, 300)
+      } catch (e) {
+        console.error(e)
+      }
     },
 
     // 是否可以创协作空间

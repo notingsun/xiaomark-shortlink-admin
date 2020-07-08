@@ -515,26 +515,6 @@ export default {
 </script>
 
 <style lang="less">
-.account-list {
-  @btn-size: 20px;
-  .itv-text--btn2,
-  .itv-text--btn3 {
-    width: @btn-size;
-    height: @btn-size;
-    border-radius: 50%;
-    text-align: center;
-    background: @primary-color;
-    line-height: @btn-size;
-    font-size: 12px;
-    color: #fff;
-    cursor: pointer;
-    flex-shrink: 0;
-    &.sub {
-      background: #c5c7ce;
-    }
-  }
-  .itv-text--btn3 {
-    background: #47cb89;
-  }
-}
+// .account-list {
+// }
 </style>
