@@ -10,7 +10,8 @@
 
 <script>
 import SureModal from './views/common/sure-modal'
-import SureModal2 from './views/qr/components/sure-modal'
+// TODO
+import SureModal2 from './views/qr/components/sure-modal2'
 
 export default {
   name: 'app',

@@ -173,7 +173,8 @@ const qr = [
     path: '/order-list',
     meta: { menuIndex: '107', title: '订单列表' },
     name: 'OrderList',
-    component: () => import('@/views/qr/order-list.vue')
+    // TODO
+    component: () => import('@/views/qr/order-list2.vue')
   },
   {
     path: '/qr-list',
@@ -185,7 +186,8 @@ const qr = [
     path: '/account-list',
     meta: { menuIndex: '104', title: '公众号列表' },
     name: 'AccountList',
-    component: () => import('@/views/qr/account-list.vue')
+    // TODO
+    component: () => import('@/views/qr/account-list2.vue')
   }
 ]
 

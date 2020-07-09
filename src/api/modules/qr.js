@@ -48,7 +48,7 @@ export default {
     return {
       method: 'get',
       name: '列出订单(推送)',
-      url: '/api/qr/platforms/indents/',
+      url: '/api/ps/platforms/indents/',
       params
     }
   },
@@ -85,6 +85,26 @@ export default {
       method: 'put',
       name: '修改公众号套餐',
       url: `/api/qr/platforms/${id}/bale/`,
+      params
+    }
+  },
+
+  // TODO 删除
+  putPackage22(id, params) {
+    return {
+      method: 'put',
+      name: '修改公众号套餐（此API会归零已扫码次数）',
+      url: `/api/qr/platforms/${id}/combo/`,
+      params
+    }
+  },
+
+  // TODO 删除
+  putPackage2(id, params) {
+    return {
+      method: 'put',
+      name: '修改公众号推送套餐',
+      url: `/api/ps/platforms/${id}/meal/`,
       params
     }
   }
