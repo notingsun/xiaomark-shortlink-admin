@@ -59,7 +59,7 @@ export default {
     return {
       method: 'get',
       name: '短链数据（获取每日数据）',
-      url: '/api/sl/stats/',
+      url: `${BASE_URL_LINK}/api/stats/daily/`,
       params
     }
   },

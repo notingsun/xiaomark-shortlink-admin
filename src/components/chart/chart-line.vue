@@ -6,24 +6,29 @@
       <ve-line v-if="showLine" :data="chartData" :legend="chartLegend" :extend="chartExtend" height="230px" :width="width" :settings="settings" />
     </div>
     <div class="btns--wrap">
-      <div class="itv-flex--fs btns--group--wrap" v-for="(group, i_g) in legendOptions" :key="i_g">
-        <div
-          class="btn mb16 mr8"
-          @click="handleChangeLegend(o)"
-          v-for="(o, i) in group.data"
-          :key="i"
-          :style="{
-            'background-color': unSelected.includes(o.name) ? 'transparent' : o.bg
-          }"
-        >
-          <div :style="{ 'background-color': o.color }" class="btn__square mr8" />
-          <span>{{ o.name }}</span>
-        </div>
-        <div v-if="group.isGroup">
-          <Button @click="handleSelectGroup(group)" type="dashed" class="mb16 mr8" size="small">只显示</Button>
-          <Button @click="handleHideGroup(group)" size="small" type="dashed" class="mb16">隐藏</Button>
-        </div>
-      </div>
+      <Tabs :animated="false" v-model="groupIndex" @on-click="handleSelectGroup">
+        <Button @click.native="handleHideGroup" size="small" type="dashed" class="mb16" slot="extra">隐藏全部</Button>
+        <TabPane :label="group.groupName" :name="String(i_g)" v-for="(group, i_g) in legendOptions" :key="i_g">
+          <div class="itv-flex--fs btns--group--wrap" v-for="(groupSmall, i_g_s) in group.data" :key="i_g_s">
+            <div
+              class="btn mb16 mr8"
+              @click="handleChangeLegend(o)"
+              v-for="(o, i) in groupSmall.data"
+              :key="i"
+              :style="{
+                'background-color': unSelected.includes(o.name) ? 'transparent' : o.bg
+              }"
+            >
+              <div :style="{ 'background-color': o.color }" class="btn__square mr8" />
+              <span>{{ o.showName || o.name }}</span>
+            </div>
+            <div v-if="groupSmall.isGroup">
+              <Button @click="handleSelectGroup(groupSmall)" type="dashed" class="mb16 mr8" size="small">选</Button>
+              <Button @click="handleHideGroup(groupSmall)" size="small" type="dashed" class="mb16">隐</Button>
+            </div>
+          </div>
+        </TabPane>
+      </Tabs>
     </div>
   </div>
 </template>
@@ -65,6 +70,7 @@ export default {
   components: {},
   data() {
     return {
+      groupIndex: '',
       unSelected: [],
       chartLegend: {
         selected: {}
@@ -77,8 +83,10 @@ export default {
       let res = []
 
       this.legendOptions.forEach((group) => {
-        group.data.forEach((item) => {
-          res.push(item.name)
+        group.data.forEach((row) => {
+          row.data.forEach((item) => {
+            res.push(item.name)
+          })
         })
       })
       return res
@@ -119,8 +127,21 @@ export default {
         this.$set(this.chartLegend.selected, v.name, true)
       }
     },
-    handleSelectGroup(group) {
-      const v = group.data.map((item) => item.name)
+    handleSelectGroup(params) {
+      console.log(params)
+      let group = []
+
+      if (typeof params === 'object' && params.type !== 'click') {
+        group = params.data
+      } else {
+        console.log(this.legendOptions[params].data)
+        this.legendOptions[params].data.forEach((row) => {
+          group = [...group, ...row.data]
+        })
+        console.log(group)
+      }
+
+      const v = group.map((item) => item.name)
       const other = this.selecteOptions.filter((item) => !v.includes(item))
 
       const v_arr = v.map((item) => ({
@@ -138,8 +159,19 @@ export default {
       })
       this.unSelected = other
     },
-    handleHideGroup(group) {
-      const v = group.data.map((item) => item.name)
+    handleHideGroup(params) {
+      console.log(params, this.groupIndex)
+      let group = []
+
+      if (typeof params === 'object' && params.type !== 'click') {
+        group = params.data
+      } else {
+        this.legendOptions[this.groupIndex || 0].data.forEach((row) => {
+          group = [...group, ...row.data]
+        })
+        console.log(group)
+      }
+      const v = group.map((item) => item.name)
 
       v.forEach((item) => {
         this.$set(this.chartLegend.selected, item, false)
@@ -162,16 +194,21 @@ export default {
   .btns--wrap {
     display: flex;
     flex-direction: column;
-    width: 460px;
+    width: 480px;
   }
   .btns--group--wrap {
-    margin-top: 16px;
+    margin-top: 4px;
     display: flex;
     flex-wrap: wrap;
-    &:not(:last-child) {
-      border-bottom: 1px solid #eee;
-    }
+    // &:not(:last-child) {
+    //   border-bottom: 1px solid #eee;
+    // }
   }
+  // .btns--group--name {
+  //   width: 100%;
+  //   font-weight: bold;
+  //   margin-bottom: 8px;
+  // }
   .btn {
     padding: 6px 16px;
     // width: 140px;

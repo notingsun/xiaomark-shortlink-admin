@@ -1,4 +1,6 @@
 /* 图表的配置 */
+import { colorArr1 } from './color'
+
 export default {
   // 曲线图
   line: {
@@ -124,6 +126,6 @@ export default {
       },
       extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);'
     },
-    color: ['#5b89dd', '#862FB7', '#F676A8', '#a64d7f', '#4d8ba6', '#a66d4d', '#96a64d', '#086ca2']
+    color: colorArr1
   }
 }

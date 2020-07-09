@@ -118,11 +118,11 @@ export default {
           title: '用户列表',
           route: { name: 'UserList' }
         },
-        // {
-        //   name: '3',
-        //   title: '短链数据',
-        //   route: { name: 'ShortLinkStatistic' }
-        // },
+        {
+          name: '3',
+          title: '短链数据',
+          route: { name: 'ShortLinkStatistic' }
+        },
         {
           name: '4',
           title: '短链列表',
