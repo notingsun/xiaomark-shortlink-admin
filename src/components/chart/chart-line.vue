@@ -108,7 +108,7 @@ export default {
           this.$set(this.chartLegend.selected, item, !v.includes(item))
         })
 
-        console.log(this.chartLegend, v)
+        // console.log(this.chartLegend, v)
 
         this.unSelected = v
       },

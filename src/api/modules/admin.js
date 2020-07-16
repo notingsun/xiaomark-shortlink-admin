@@ -38,6 +38,7 @@ export default {
   getAdminDetail(params) {
     return {
       method: 'get',
+      name: '获取当前用户详情',
       url: `${BASE_URL_LINK}/api/current_admin/`,
       params
     }

@@ -26,11 +26,18 @@ const short_link = [
     component: () => import('@/views/user/user-list.vue')
   },
 
+  // 数据统计
   {
     path: '/short-link-statistic',
     meta: { menuIndex: '3', title: '短链数据' },
     name: 'ShortLinkStatistic',
     component: () => import('@/views/link/short-link-statistic.vue')
+  },
+  {
+    path: '/pv-statistic',
+    meta: { menuIndex: '3', title: '链接访问次数统计' },
+    name: 'PvStatistic',
+    component: () => import('@/views/link/pv-statistic.vue')
   },
 
   /* 短链列表 */

@@ -35,10 +35,6 @@ const TIMEOUT_VALUE = 60000 // 请求超时的时间（后台管理接口比较�
 // 拦截请求
 instance.interceptors.request.use(
   (config) => {
-    // 请求头加上Authorization字段（用户的cookie信息）
-    if (that.$PDo.Cookies.get(process.env.VUE_APP_COOKIE)) {
-      config.headers.Authorization = that.$PDo.Cookies.get(process.env.VUE_APP_COOKIE)
-    }
     // 请求超时 timeout
     return { ...config, timeout: TIMEOUT_VALUE }
   },
@@ -111,9 +107,16 @@ const request = (config) => {
 
   let params = config.params || {}
 
+  // 请求头加上Authorization字段（用户的cookie信息）
+  const headers = config.headers || {}
+
+  if (!headers.Authorization) {
+    headers.Authorization = that.$PDo.Cookies.get(`${process.env.VUE_APP_COOKIE}${config.online_token ? '-DEV' : ''}`)
+  }
+
   // 为了兼容 get 请求，使参数无需{params: params}传入，依旧保持 params
   if (config.method === 'get') {
-    params = { params }
+    params = { params, headers }
   }
 
   // 禁止拦截器处理请求
@@ -127,7 +130,7 @@ const request = (config) => {
     // 响应超时
     timer = handleTimeout({ rej, controller })
 
-    instance[method](url, params).then(res, rej) // 记得.then
+    instance[method](url, params, { headers }).then(res, rej) // 记得.then
   })
     .then((response) => Promise.resolve({ response, config, timer }))
     .then(handleResponse) // 对response做统一处理，且为了获取到config自定义数据

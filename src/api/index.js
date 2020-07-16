@@ -11,6 +11,7 @@ import Space0 from './modules/space'
 import ApiDomain0 from './modules/api-domain'
 import CustomDomain0 from './modules/custom-domain'
 import Plugin0 from './modules/plugin'
+import Statistic0 from './modules/statistic'
 
 import request from './request' // 为了只使用一个请求实例
 
@@ -50,8 +51,10 @@ const Link = getProxy(Link0)
 const Qr = getProxy(Qr0)
 const CustomDomain = getProxy(CustomDomain0)
 const Plugin = getProxy(Plugin0)
+const Statistic = getProxy(Statistic0)
 
 export default {
+  Statistic,
   Plugin,
   CustomDomain,
   ApiDomain,

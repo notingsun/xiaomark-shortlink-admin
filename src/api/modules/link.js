@@ -55,29 +55,11 @@ export default {
     }
   },
 
-  getShortLinkStatistic(params) {
-    return {
-      method: 'get',
-      name: '短链数据（获取每日数据）',
-      url: `${BASE_URL_LINK}/api/stats/daily/`,
-      params
-    }
-  },
-
   getTargetLinkStatistic(params) {
     return {
       method: 'get',
       name: '跳转链接数据',
       url: `${BASE_URL_LINK}/api/websites/`,
-      params
-    }
-  },
-
-  getLinkStatistic(params) {
-    return {
-      method: 'get',
-      name: '获取总体数据(短链)',
-      url: `${BASE_URL_LINK}/api/stats/overview/`,
       params
     }
   },

@@ -45,6 +45,8 @@ export default {
     async handleLogin() {
       this.loading = true
 
+      await this.doGetOnlineToken()
+
       try {
         const res = await this.$api.Admin.login(this.form)
 
@@ -55,6 +57,29 @@ export default {
       setTimeout(() => {
         this.loading = false
       }, 500)
+    },
+
+    /* 本地环境，获取线上的token */
+    async doGetOnlineToken() {
+      return new Promise(async (resolve) => {
+        if (process.env.NODE_ENV === 'development') {
+          try {
+            const res = await this.$api.Statistic.login(this.form)
+
+            this.$PDo.Cookies.set(
+              `${process.env.VUE_APP_COOKIE}-DEV`,
+              res.token,
+              this.token_expires // 是否自动登陆
+            )
+
+            console.log({ res })
+          } catch (e) {
+            console.error(e)
+          }
+          resolve()
+        }
+        resolve()
+      })
     },
 
     /* 登陆成功的处理 */

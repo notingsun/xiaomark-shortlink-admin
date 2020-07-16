@@ -17,7 +17,6 @@ export default {
   name: 'app',
   components: { SureModal, SureModal2 },
   created() {
-    console.log(process.env.NODE_ENV)
     if (process.env.NODE_ENV === 'development') {
       document.title = document.title + '（本地测试）'
     }

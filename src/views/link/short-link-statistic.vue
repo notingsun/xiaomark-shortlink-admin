@@ -26,7 +26,6 @@
 </template>
 
 <script>
-// import testData from './test'
 import { colorMap } from '../../components/chart/color'
 
 export default {
@@ -475,7 +474,7 @@ export default {
       try {
         const stats_date = this.form.date.map((v) => this.$PDo.Date.format(v.toJSON(), 'y-m-d')).join('~')
 
-        const res = await this.$api.Link.getShortLinkStatistic({
+        const res = await this.$api.Statistic.getShortLinkStatistic({
           stats_date
         })
         // const res = testData

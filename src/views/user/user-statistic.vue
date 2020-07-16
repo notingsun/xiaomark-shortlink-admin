@@ -242,7 +242,7 @@ export default {
     async doGetTableDataAll() {
       this.config.overview.loading = true
       try {
-        const res = await this.$api.Link.getLinkStatistic({})
+        const res = await this.$api.Statistic.getLinkStatistic({})
 
         const arr1 = ['link_core_stats', 'link_wxt_stats', 'link_wxe_stats', 'link_dya_stats', 'link_tba_stats']
         const arrMap = {
