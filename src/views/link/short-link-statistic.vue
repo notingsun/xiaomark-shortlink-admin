@@ -15,6 +15,9 @@
         :clearable="false"
         format="yyyy/MM/dd"
       ></DatePicker>
+      <div>
+        <Button type="primary" @click="$router.push({ name: 'PvStatistic' })">查看访问次数统计</Button>
+      </div>
     </div>
     <!-- 图表的 -->
     <div>
