@@ -39,6 +39,12 @@ const short_link = [
     name: 'PvStatistic',
     component: () => import('@/views/link/pv-statistic.vue')
   },
+  {
+    path: '/uv-statistic',
+    meta: { menuIndex: '3', title: '用户增长数据统计' },
+    name: 'UvStatistic',
+    component: () => import('@/views/link/uv-statistic.vue')
+  },
 
   /* 短链列表 */
   {

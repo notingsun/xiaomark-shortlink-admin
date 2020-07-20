@@ -35,6 +35,26 @@ export default {
     }
   },
 
+  getUv(params) {
+    return {
+      method: 'get',
+      name: '获取总体数据(短链)',
+      online_token: STATISTIC_ONLINE_TOKEN,
+      url: `${STATISTIC_BASE_URL_LINK}/api/stats/user_growth/`,
+      params
+    }
+  },
+
+  putUv(params) {
+    return {
+      method: 'put',
+      name: '更新用户增长数据某一周的UV',
+      online_token: STATISTIC_ONLINE_TOKEN,
+      url: `${STATISTIC_BASE_URL_LINK}/api/stats/user_growth/uv/`,
+      params
+    }
+  },
+
   getLinkPv(params) {
     return {
       method: 'get',

@@ -16,6 +16,7 @@
         format="yyyy/MM/dd"
       ></DatePicker>
       <div>
+        <Button type="primary" @click="$router.push({ name: 'UvStatistic' })" class="mr32">查看用户增长数据统计</Button>
         <Button type="primary" @click="$router.push({ name: 'PvStatistic' })">查看访问次数统计</Button>
       </div>
     </div>
