@@ -24,7 +24,33 @@
         </i-input> -->
       </div>
     </div>
-    <div class="wrap__chart"></div>
+    <!-- 图表 -->
+    <div class="itv-flex--fs pr">
+      <Spin fix v-if="chart_loading" style="z-index: 99999999" />
+      <div :style="{ width: chartWidth }" class="wrap__chart" id="chartPvStatistic"></div>
+      <div style="align-self: flex-start;">
+        <Tabs :animated="false" v-model="legend_group_index" @on-click="handleLegendGroup">
+          <Button
+            v-show="((legend_group_arr || [])[legend_group_index] || {}).isSingle"
+            @click="legend_selected_isSingle = !legend_selected_isSingle"
+            size="small"
+            type="dashed"
+            class="mt8"
+            slot="extra"
+          >
+            {{ legend_selected_isSingle ? '关闭' : '开启' }}单选
+          </Button>
+          <TabPane :label="group.name" :name="String(i_g)" v-for="(group, i_g) in legend_group_arr" :key="i_g">
+            <div class="itv-flex--fs legend-wrap">
+              <div v-for="(item, i_a) in group.arr" :key="i_a" class="mr4 legend-item" @click="handleLegendItem(i_g, item)">
+                <div class="legend-item_bg" :style="{ background: legend_selected[series_map[item].name] ? series_map[item].color : '' }"></div>
+                {{ series_map[item].name }}
+              </div>
+            </div>
+          </TabPane>
+        </Tabs>
+      </div>
+    </div>
     <!-- 表格 -->
     <Table :loading="loading" style="flex: 1;" ref="refTable" :height="table.height" :columns="table.columns" :data="table.data" />
     <!-- 来源对话框 -->
@@ -40,10 +66,11 @@
 
 <script>
 import moment from 'moment'
+import mixinsChart from './uv-statistic-chart-mixins'
 
 export default {
   name: 'UvStatistic',
-  mixins: [],
+  mixins: [mixinsChart],
   props: {},
   components: {},
   data() {
@@ -106,7 +133,7 @@ export default {
   computed: {},
   created() {
     this.maxWeek = moment().diff('2020-02-10', 'weeks')
-    this.startWeek = this.maxWeek - this.initDiffWeek > 0 ? this.maxWeek - this.initDiffWeek : 1
+    this.startWeek = this.maxWeek - this.initDiffWeek > 0 ? this.maxWeek - this.initDiffWeek : this.startWeek
   },
   mounted() {
     console.log({ maxWeek: this.maxWeek })
@@ -120,43 +147,20 @@ export default {
     // 获取数据
     async doGetData() {
       this.loading = true
-      this.dealSetTable()
+      this.dealSetTableColumns()
       try {
         let res = await this.$api.Statistic.getUv({
           page: 1,
           per_page: this.maxWeek - this.startWeek + 1
         })
 
-        // let table_data = [],
-        //   source_data = []
-
-        // res.stats.forEach((item, i) => {
-        //   table_data.unshift({
-        //     index: i,
-        //     week: item.week,
-        //     mon: item.mon,
-        //     sun: item.sun,
-        //     uv: item.uv,
-        //     n_users: item.n_users,
-        //     n_users_active: item.n_users_active,
-        //     n_users_stay: item.n_users_stay,
-        //     register_rate: item.register_rate,
-        //     active_rate: item.active_rate,
-        //     n_users_stay_weeks_later: item.n_users_stay_weeks_later
-        //   })
-        //   source_data.unshift(item.source_stats)
-        // })
-
-        // this.table.data = table_data
-        // this.sourceModel.dataArr = source_data
-
         res = res.stats
         this.table.data = [...res].reverse()
+        console.log({ data: this.table.data })
+        this.dealSetChart()
         setTimeout(() => {
           this.$nextTick(this.dealTableScrollBottom)
         })
-
-        console.log(res)
       } catch (e) {
         console.error(e)
       }
@@ -173,7 +177,8 @@ export default {
         this.loading = true
         setTimeout(() => {
           this.isRate = !this.isRate
-          this.dealSetTable()
+          this.dealSetTableColumns()
+          this.dealSetChart()
           this.$nextTick(() => {
             this.loading = false
           })
@@ -181,7 +186,7 @@ export default {
       }
     },
     // 设置表格的表头
-    dealSetTable() {
+    dealSetTableColumns() {
       this.table.columns = []
       let columns = []
       const base_columns = [
@@ -234,6 +239,7 @@ export default {
         {
           title: '激活用户数',
           key: 'n_users_active',
+          className: 'itv-n_users_active',
           minWidth: 100
         },
         {
@@ -319,7 +325,36 @@ export default {
   .wrap__chart {
     width: 100%;
     height: 260px;
-    background: pink;
+    flex-shrink: 0;
+  }
+  .legend-wrap {
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    white-space: nowrap;
+    padding: 4px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    margin-right: 8px;
+    position: relative;
+    .legend-item_bg {
+      border-radius: 2px;
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      opacity: 0.2;
+    }
+  }
+}
+</style>
+
+<style lang="less">
+.ivu-table {
+  .itv-n_users_active,
+  td.itv-n_users_active {
+    background: #eff3fc;
   }
 }
 </style>
