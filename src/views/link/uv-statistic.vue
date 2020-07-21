@@ -4,14 +4,6 @@
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <div class="itv-flex--fs">
-        <itv-icon type="i-back" title="返回" size="20" class="itv-btn__icon mr16" @click="$router.go(-1)" />
-        <Breadcrumb class="mr32">
-          <BreadcrumbItem>短链数据</BreadcrumbItem>
-          <BreadcrumbItem>用户增长数据统计</BreadcrumbItem>
-        </Breadcrumb>
-      </div>
-      <div class="itv-flex--fs">
-        <Button class="mr32" type="dashed" @click="handleIsRate" :loading="loading">切换为用户留存{{ isRate ? '数' : '率' }}</Button>
         <span>第</span>
         <InputNumber class="input-number" :active-change="false" :max="maxWeek" :min="1" v-model="startWeek"></InputNumber>
         <span>周～第</span>
@@ -23,6 +15,7 @@
           <span slot="append">周～第{{ maxWeek }}周</span>
         </i-input> -->
       </div>
+      <Button class="mr32" type="dashed" @click="handleIsRate" :loading="loading">切换为用户留存{{ isRate ? '数' : '率' }}</Button>
     </div>
     <!-- 图表 -->
     <div class="itv-flex--fs pr">

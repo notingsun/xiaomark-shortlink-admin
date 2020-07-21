@@ -9,7 +9,7 @@ export default {
       chart_loading: true,
       base_columns: ['week', 'n_users_stay', 'n_users', 'n_users_active', 'active_rate', 'register_rate', 'uv'], // 固定有的那几列
       columns: [],
-      legend_selected_isSingle: true,
+      legend_selected_isSingle: false,
       legend_selected: {}, // 图表需要.系列的显示情况
       legend_group_arr: [], // 系列的分组.用于切换显示
       legend_group_index: '0', // 显示哪一个系列的分组

@@ -5,11 +5,6 @@
     <!-- 面包屑 -->
     <div class="header mb16 itv-flex--sb">
       <div class="itv-flex--fs">
-        <itv-icon type="i-back" title="返回" size="20" class="itv-btn__icon mr16" @click="$router.go(-1)" />
-        <Breadcrumb class="mr32">
-          <BreadcrumbItem>短链数据</BreadcrumbItem>
-          <BreadcrumbItem>访问次数统计</BreadcrumbItem>
-        </Breadcrumb>
         <DatePicker
           type="daterange"
           :options="options"

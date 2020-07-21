@@ -29,19 +29,19 @@ const short_link = [
   // 数据统计
   {
     path: '/short-link-statistic',
-    meta: { menuIndex: '3', title: '短链数据' },
+    meta: { menuIndex: '31', submenuIndex: '3', title: '短链数据' },
     name: 'ShortLinkStatistic',
     component: () => import('@/views/link/short-link-statistic.vue')
   },
   {
     path: '/pv-statistic',
-    meta: { menuIndex: '3', title: '链接访问次数统计' },
+    meta: { menuIndex: '32', submenuIndex: '3', title: '链接访问次数统计' },
     name: 'PvStatistic',
     component: () => import('@/views/link/pv-statistic.vue')
   },
   {
     path: '/uv-statistic',
-    meta: { menuIndex: '3', title: '用户增长数据统计' },
+    meta: { menuIndex: '33', submenuIndex: '3', title: '用户增长数据统计' },
     name: 'UvStatistic',
     component: () => import('@/views/link/uv-statistic.vue')
   },

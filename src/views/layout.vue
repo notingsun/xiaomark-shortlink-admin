@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <Menu class="layout-menu" :active-name="$route.meta.menuIndex" :open-names="['01', '02']">
+    <Menu class="layout-menu" :active-name="$route.meta.menuIndex" :open-names="openNames">
       <!-- :open-names="[ '02']" -->
       <!-- 只打开一个 -->
       <!-- :open-names="[$route.meta.menuIndex < 100 ? '01' : '02']" -->
@@ -16,11 +16,19 @@
             <img src="../assets/logo-link.png" class="img-logo-link" alt="小码短链接" />
           </div>
           <!-- 菜单 -->
-          <div class="flex1 itv-flex-v--fs">
-            <MenuItem v-for="item in menu_link" :name="item.name" :key="`menu_${item.name}`" @click.native="handleToRoute(item.route)" class="menu-item">
+          <!-- <div class="flex1 itv-flex-v--fs"> -->
+          <div v-for="item in menu_link" :key="`menu_${item.name}`">
+            <MenuItem v-if="!item.children" class="menu-item" :name="item.name" :to="item.route">
               <span class="ib20">{{ item.title }}</span>
             </MenuItem>
+            <Submenu :name="item.submenuIndex" v-if="item.children">
+              <template slot="title">{{ item.title }}</template>
+              <MenuItem v-for="item2 in item.children" :key="`menu_${item2.name}`" class="menu-item" :name="item2.name" :to="item2.route">
+                <span class="ib20">{{ item2.title }}</span>
+              </MenuItem>
+            </Submenu>
           </div>
+          <!-- </div> -->
         </Submenu>
 
         <!-- 小码渠道码 -->
@@ -84,6 +92,7 @@ export default {
   components: { DrawerUser },
   data() {
     return {
+      openNames: [],
       show_view: false,
       modal: {
         show: false,
@@ -120,8 +129,25 @@ export default {
         },
         {
           name: '3',
-          title: '短链数据',
-          route: { name: 'ShortLinkStatistic' }
+          title: '短链数据统计',
+          submenuIndex: '3',
+          children: [
+            {
+              name: '31',
+              title: '每日数据',
+              route: { name: 'ShortLinkStatistic' }
+            },
+            {
+              name: '32',
+              title: '访问次数',
+              route: { name: 'PvStatistic' }
+            },
+            {
+              name: '33',
+              title: '用户增长',
+              route: { name: 'UvStatistic' }
+            }
+          ]
         },
         {
           name: '4',
@@ -210,7 +236,18 @@ export default {
     }
   },
   computed: {},
-  created() {},
+  created() {
+    this.openNames = ['01', '02']
+    const submenuIndex = this.$route.meta.submenuIndex
+
+    if (submenuIndex) {
+      if (!this.openNames.includes(submenuIndex)) {
+        this.openNames.push(submenuIndex)
+      }
+    }
+
+    console.log({ res: this.openNames })
+  },
   mounted() {
     this.getAdminDetail()
     setTimeout(() => {
