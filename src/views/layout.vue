@@ -9,7 +9,7 @@
         <img src="../assets/logo-xm.png" alt="" class="img-logo" />
       </div>
       <!-- 菜单 -->
-      <div class="flex1 itv-flex-v--fs">
+      <div class="flex1 itv-flex-v--fs" style="padding-bottom: 40px;">
         <!-- 小码短链接 -->
         <Submenu name="01">
           <div slot="title" class="img-logo-sub">
