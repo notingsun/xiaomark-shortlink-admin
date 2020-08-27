@@ -17,4 +17,28 @@ const CONSTS = {
   PAGINATION_DEFAULT
 }
 
+/* 套餐 */
+// 套餐 free - 免费版 personal - 个人版，team - 团队版，enterprise - 企业版
+// API套餐：
+const PACKAGES = {
+  free: '免费版',
+  personal: '个人版',
+  team: '团队版',
+  enterprise: '企业版'
+}
+const API_PACKAGES = {
+  free: '免费版',
+  basic: '基础版',
+  advanced: '进阶版',
+  premium: '高级版',
+  custom: '定制版'
+}
+
+export const PACKAGES_ARR = Object.keys(PACKAGES)
+  .filter((key) => key !== 'free')
+  .map((key) => ({ name: PACKAGES[key], key }))
+export const API_PACKAGES_ARR = Object.keys(API_PACKAGES)
+  .filter((key) => key !== 'free')
+  .map((key) => ({ name: API_PACKAGES[key], key }))
+
 export default CONSTS

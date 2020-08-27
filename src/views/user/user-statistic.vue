@@ -12,30 +12,40 @@
               {{ config[overview.key].name_map[item.key] }}
             </p>
 
-            <!-- 历史总的数据 -->
-            <div class="overview__cell__value mb4">
-              <Tooltip :disabled="config[overview.key].data[item.key] < 1000 || item.noShort" placement="top" theme="light">
-                <div slot="content" style="font-size: 18px;">
-                  {{ config[overview.key].data[item.key] | countThree }}
-                </div>
-                <div class="pr minh38">
-                  <Spin fix v-if="config[overview.key].loading"></Spin>
-                  <span v-if="item.noShort">{{ config[overview.key].data[item.key] | countThree }}</span>
-                  <span v-else>{{ config[overview.key].data[item.key] | countShort }}</span>
-                </div>
-              </Tooltip>
+            <div class="itv-flex-v--fs--c w100 mhcnt pt8 pr" v-if="item.noNormal">
+              <Spin fix v-if="config[overview.key].loading"></Spin>
+              <div class="itv-flex--fs" v-for="p in item.list" :key="p.key">
+                <div class="cell-small-label">{{ p.name }}</div>
+                <div class="cell-small-value ml4 blue">{{ (config[overview.key].data[item.key] || {})[p.key] | countThree }}</div>
+              </div>
             </div>
 
-            <!-- 今日/昨日 -->
-            <div :style="{ width: '100%', minHeight: item.nosmall ? '' : '44px' }">
-              <!-- 今日数据 -->
-              <div class="itv-flex--fs" v-if="item.today" :title="config[overview.key].name_map[item.today]">
-                <div class="cell-small-label">今日</div>
-                <div class="cell-small-value ml4">{{ config[overview.key].data[item.today] | countThree }}</div>
+            <div class="itv-flex-v--fs--c w100 mhcnt" v-else>
+              <!-- 历史总的数据 -->
+              <div class="overview__cell__value mb4">
+                <Tooltip :disabled="config[overview.key].data[item.key] < 1000 || item.noShort" placement="top" theme="light">
+                  <div slot="content" style="font-size: 18px;">
+                    {{ config[overview.key].data[item.key] | countThree }}
+                  </div>
+                  <div class="pr minh38">
+                    <Spin fix v-if="config[overview.key].loading"></Spin>
+                    <span v-if="item.noShort">{{ config[overview.key].data[item.key] | countThree }}</span>
+                    <span v-else>{{ config[overview.key].data[item.key] | countShort }}</span>
+                  </div>
+                </Tooltip>
               </div>
-              <div class="itv-flex--fs" v-if="item.yesterday" :title="config[overview.key].name_map[item.yesterday]">
-                <div class="cell-small-label">昨日</div>
-                <div class="cell-small-value ml4">{{ config[overview.key].data[item.yesterday] | countThree }}</div>
+
+              <!-- 今日/昨日 -->
+              <div :style="{ width: '100%', minHeight: item.nosmall ? '' : '44px' }">
+                <!-- 今日数据 -->
+                <div class="itv-flex--fs" v-if="item.today" :title="config[overview.key].name_map[item.today]">
+                  <div class="cell-small-label">今日</div>
+                  <div class="cell-small-value ml4">{{ config[overview.key].data[item.today] | countThree }}</div>
+                </div>
+                <div class="itv-flex--fs" v-if="item.yesterday" :title="config[overview.key].name_map[item.yesterday]">
+                  <div class="cell-small-label">昨日</div>
+                  <div class="cell-small-value ml4">{{ config[overview.key].data[item.yesterday] | countThree }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -56,6 +66,8 @@
 </template>
 
 <script>
+import { PACKAGES_ARR, API_PACKAGES_ARR } from '../../libs/consts'
+
 export default {
   name: 'UserStatistic',
   mixins: [],
@@ -81,7 +93,9 @@ export default {
       n_groups_today: '今天创建的链接分组数',
       n_links: '链接数',
       n_links_yesterday: '昨天创建的链接数',
-      n_links_today: '今天创建的链接数'
+      n_links_today: '今天创建的链接数',
+      packages: '套餐用户数',
+      api_packages: 'API 套餐用户数'
     }
 
     const OVERVIEW_NAME_QR_MAP = {
@@ -186,7 +200,9 @@ export default {
             [
               { key: 'n_users', noShort: true, today: 'n_users_today', yesterday: 'n_users_yesterday' },
               { key: 'n_users_active', noShort: true, yesterday: 'n_users_active_yesterday' },
-              { key: 'n_users_login_today', noShort: true, yesterday: 'n_users_login_yesterday' }
+              { key: 'n_users_login_today', noShort: true, yesterday: 'n_users_login_yesterday' },
+              { key: 'packages', noNormal: true, noShort: true, list: PACKAGES_ARR },
+              { key: 'api_packages', noNormal: true, noShort: true, list: API_PACKAGES_ARR }
             ],
             [
               { key: 'n_workspaces', today: 'n_workspaces_today', yesterday: 'n_workspaces_yesterday' },
@@ -284,6 +300,13 @@ export default {
 <style scoped lang="less">
 @row-margin: 24px;
 
+.w100 {
+  width: 100%;
+}
+.mhcnt {
+  min-height: 96px;
+}
+
 .pr {
   position: relative;
 }
@@ -366,6 +389,7 @@ export default {
       font-size: 32px;
       font-weight: 500;
       color: @primary-color;
+      text-align: center;
     }
     .overview__cell__name {
       font-size: 14px;
@@ -379,6 +403,7 @@ export default {
     box-sizing: border-box;
     font-size: 12px;
     color: #9a9a9a;
+    line-height: 22px;
   }
   .cell-small-value {
     flex: 1;
@@ -386,6 +411,10 @@ export default {
     // color: #07c160; // 绿色
     font-size: 18px;
     line-height: 22px;
+    &.blue {
+      color: @primary-color;
+      font-weight: bold;
+    }
   }
   .table {
     margin: 40px 3% 12px;

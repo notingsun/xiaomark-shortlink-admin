@@ -31,6 +31,7 @@ export default {
       name: '获取总体数据(短链)',
       online_token: STATISTIC_ONLINE_TOKEN,
       url: `${STATISTIC_BASE_URL_LINK}/api/stats/overview/`,
+      // url: `${BASE_URL_LINK}/api/stats/overview/`,
       params
     }
   },
