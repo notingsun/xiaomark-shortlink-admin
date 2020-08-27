@@ -2,7 +2,7 @@
 <template>
   <Drawer title="" :closable="false" v-model="drawer.show" class="drawer-user" :width="440">
     <Spin fix v-show="loading" />
-    <div class="pl16" v-show="show_page">
+    <div class="pl16 pb32" v-show="show_page">
       <!-- 头像 -->
       <div class="row mb32">
         <img :src="data.headimgurl" class="img--headimgurl mr16" />
@@ -11,68 +11,143 @@
         <itv-icon class="fs0" type="i-man" size="20" v-if="data.sex === 1" />
       </div>
 
-      <!-- 是否可登录 -->
+      <!-- 套餐 -->
       <div class="row">
-        <div class="label">是否可登录</div>
-        <itv-icon
-          class="cp"
-          :title="data.enabled ? '可登录' : '不可登录'"
-          :type="data.enabled ? 'i-stop' : 'i-start'"
-          size="20"
-          :style="{
-            color: data.enabled ? C_GREEN : C_GREY
-          }"
-          @click="
-            () => {
-              this.$bus.modal.type = 'enabled'
-              this.$bus.modal.show = true
-              this.$bus.modal.obj = data
-              this.$bus.modal.success_cb = this.doGetData
-            }
-          "
-        />
+        <div class="label">套餐</div>
+        <div>
+          <div @click="handlePackage(data)">
+            {{ data['_package_name'] }}
+            <itv-icon class="ml4" type="i-edit" size="16" color="primary" />
+          </div>
+          <div v-show="data.package !== 'free'" class="row__row">
+            到期时间：
+            {{ data.package_expire_date | itvTimeShort }}
+          </div>
+        </div>
       </div>
 
-      <!-- 最近登录时间 -->
+      <!-- API 套餐 -->
       <div class="row">
-        <div class="label">最近登录时间</div>
-        <div>
-          <div class="itv-flex--fs mb8">
-            <span class="mr8" title="是否网页登录">
-              <itv-icon type="i-pc" :style="{ color: pc_last_login_time ? C_ORANGE : C_GREY }" size="24" />
-            </span>
-            <span title="PC端最近登录时间">{{ pc_last_login_time || '-' }}</span>
+        <div class="label">API 套餐</div>
+        <!-- 开启了 -->
+        <div v-show="data.open_api">
+          <div @click="handlePackage2(data)">
+            {{ data['_api_package_name'] }}
+            <itv-icon class="ml4" type="i-edit" size="16" color="primary" />
           </div>
-          <div class="itv-flex--fs mb8" v-if="data.sa_openid">
-            <div style="word-break: break-all;font-size: 12px;" class="itv-text--grey2 cp" title="服务号openid">
-              {{ data.sa_openid || '-' }}
+          <!-- 有套餐 -->
+          <div v-show="data.api_package !== 'free'" class="row__row">
+            到期时间：
+            {{ data.api_package_expire_date | itvTimeShort }}
+          </div>
+          <div class="row__row">
+            今日调用API创建链接数：
+            {{ data.api_n_links_today }}
+          </div>
+          <div class="row__row">
+            今日调用API请求数：
+            {{ data.api_n_requests_today }}
+          </div>
+          <div class="row__row">
+            白名单：
+            {{ (data.api_whitelists || []).join('、') || '-' }}
+          </div>
+          <div v-show="data.open_webhook" class="row__row">
+            webHook 推送：开启
+          </div>
+        </div>
+        <!-- 未开启 -->
+        <div v-show="!data.open_api" class="itv-text--grey4">未开启</div>
+      </div>
+
+      <!-- 创建短链数量 -->
+      <div class="row">
+        <div class="label">创建短链数量</div>
+        <div class="flex1">
+          <div class="link__row">
+            <div class="link__cell">
+              <div class="link__label">今日：</div>
+              <div class="link__value">{{ data.n_links_today }}</div>
             </div>
-            <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.sa_openid">
-              <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.sa_openid)" />
+            <div class="link__cell">
+              <div class="link__label">累计：</div>
+              <div class="link__value">{{ data.n_links }}</div>
             </div>
           </div>
-          <div class="itv-flex--fs mb8">
-            <span class="mr8" title="是否小程序登录">
-              <itv-icon type="i-wx" :style="{ color: mp_last_login_time ? C_BLUE : C_GREY }" size="24" />
-            </span>
-            <span title="小程序最近登录时间">{{ mp_last_login_time || '-' }}</span>
-          </div>
-          <div class="itv-flex--fs" v-show="data.mp_openid">
-            <div style="word-break: break-all;font-size: 12px;" class="itv-text--grey2 cp" title="小程序openid">
-              {{ data.mp_openid || '-' }}
+          <div class="link__row grey">
+            <div class="link__cell">
+              <div class="link__label">普通：</div>
+              <div class="link__value">{{ data.n_normal_links }}</div>
             </div>
-            <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.mp_openid">
-              <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.mp_openid)" />
+            <div class="link__cell">
+              <div class="link__label">随机：</div>
+              <div class="link__value">{{ data.n_random_links }}</div>
+            </div>
+          </div>
+          <div class="link__row grey">
+            <div class="link__cell">
+              <div class="link__label" title="自定义域名">自域名：</div>
+              <div class="link__value">{{ data.n_cdm_links }}</div>
+            </div>
+            <div class="link__cell">
+              <div class="link__label" title="开放API">API：</div>
+              <div class="link__value">{{ data.n_api_links }}</div>
+            </div>
+          </div>
+          <!-- 查看短链 -->
+          <div class="mt8 mb8 itv-flex--fs" @click="toUserLink(data)">
+            <itv-icon type="i-detail" size="20" class="itv-btn__icon mr8" />
+            <span class="itv-text--btn">查看短链</span>
+          </div>
+          <!-- 恢复游客链接 -->
+          <div class="mb8 mt8 itv-flex--fs" @click="handleGuestLinks(data)">
+            <div class="itv-text--btn4 mr8" title="恢复游客链接">
+              游
+            </div>
+            <span class="itv-text--btn">恢复游客链接</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 短链访问次数 -->
+      <div class="row">
+        <div class="label">短链访问次数</div>
+        <div class="flex1">
+          <div class="link__row">
+            <div class="link__cell">
+              <div class="link__label">今日：</div>
+              <div class="link__value">{{ data.pv_today }}</div>
+            </div>
+            <div class="link__cell">
+              <div class="link__label">累计：</div>
+              <div class="link__value">{{ data.pv }}</div>
+              <!-- {this.$global.utils.countFormat.short(row.pv)} -->
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 激活时间 -->
+      <!-- 协作空间 -->
       <div class="row">
-        <div class="label">激活时间</div>
-        <div>
-          {{ data.active ? active_date : '未激活' }}
+        <div class="label">协作空间数</div>
+        <div class="flex1">
+          <div class="link__row">
+            <div class="link__cell">
+              <div class="link__label">创建：</div>
+              <div class="link__value">{{ data.n_created_workspaces }}</div>
+            </div>
+          </div>
+          <div class="link__row">
+            <div class="link__cell">
+              <div class="link__label">加入：</div>
+              <div class="link__value">{{ data.n_joined_workspaces }}</div>
+            </div>
+          </div>
+          <!-- 查看协作空间 -->
+          <div class="mt8 mb8 itv-flex--fs" @click="toUserSpaceList(data)">
+            <itv-icon type="i-member" size="20" class="itv-btn__icon mr8" />
+            <span class="itv-text--btn">查看协作空间</span>
+          </div>
         </div>
       </div>
 
@@ -90,88 +165,12 @@
         </div>
       </div>
 
-      <!-- API 权限 -->
+      <!-- 激活时间 -->
       <div class="row">
-        <div class="label">API 权限</div>
+        <div class="label">激活时间</div>
         <div>
-          <div class="itv-flex--fs mb8">
-            <Icon :title="data.open_api ? '有API权限' : '没有API权限'" type="md-checkmark-circle" :color="data.open_api ? C_GREEN : C_GREY" size="20" class="mr8" />
-            <span title="今日调用API创建链接数">{{ data.api_n_links_today }}</span>
-            <span>/</span>
-            <span title="每日创建短链接上限">{{ data.api_max_links_daily }}</span>
-            <span
-              class="itv-text--btn ml8"
-              style="margin-top: -2px;"
-              @click="
-                () => {
-                  this.$bus.modal.type = 'open_api_domain'
-                  this.$bus.modal.show = true
-                  this.$bus.modal.obj = data
-                  this.$bus.modal.success_cb = this.doGetData
-                }
-              "
-            >
-              设置上限
-            </span>
-          </div>
-          <div class="cp">
-            <div class="mb4">
-              {{ data.api_n_requests_today }}
-              <span class="itv-text--grey2">(今日调用API请求数)</span>
-            </div>
-            <div>
-              {{ (data.api_whitelists || []).join('、') || '-' }}
-              <span class="itv-text--grey2">(白名单)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 短链访问次数 -->
-      <div class="row">
-        <div class="label">短链访问次数</div>
-        <div class="cp">
-          <span title="今日">{{ data.pv_today }}</span>
-          <span class="mr8 ml8">/</span>
-          <span title="累计">{{ data.pv }}</span>
-        </div>
-      </div>
-
-      <!-- 创建短链数量 -->
-      <div class="row">
-        <div class="label">创建短链数量</div>
-        <div>
-          <div class="mb4">
-            <span title="今日">{{ data.n_links_today }}</span>
-            <span class="mr8 ml8">/</span>
-            <span title="累计">{{ data.n_links }}</span>
-          </div>
-          <div class="itv-flex--fs mb4">
-            <div style="width: 50px;">普通：</div>
-            {{ data.n_normal_links }}
-          </div>
-          <div class="itv-flex--fs mb4">
-            <div style="width: 50px;">随机：</div>
-            {{ data.n_random_links }}
-          </div>
-          <div class="itv-flex--fs">
-            <div style="width: 50px;">API：</div>
-            {{ data.n_api_links }}
-          </div>
-        </div>
-      </div>
-
-      <!-- 协作空间 -->
-      <div class="row">
-        <div class="label">协作空间权限</div>
-        <div>
-          <div class="mb4">
-            <Icon :title="data.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'" type="md-checkmark-circle" :color="data.open_workspace ? C_GREEN : C_GREY" size="20" />
-          </div>
-          <div>创建：{{ data.n_created_workspaces }}</div>
-          <div>加入：{{ data.n_joined_workspaces }}</div>
-          <!-- <span>（创建: {{ data.n_created_workspaces }}、</span> -->
-          <!-- <span>加入: {{ data.n_joined_workspaces }}）</span> -->
+          <span v-show="data.active">{{ data.active_date | itvTimeShort }}</span>
+          <span v-show="!data.active">未激活</span>
         </div>
       </div>
 
@@ -183,7 +182,7 @@
 
       <!-- 是否关注服务号 -->
       <div class="row">
-        <div class="label">是否关注服务号</div>
+        <div class="label">关注服务号</div>
         <div>
           <div class="itv-flex--fs mb8">
             <span class="mr8 cp" :title="data.subscribe ? '已关注' : '未关注'">
@@ -191,9 +190,7 @@
             </span>
             <span :title="data.subscribe ? '最近关注服务号的时间' : '最近取消关注服务号的时间'" class="cp">{{ subscribe_time || '-' }}</span>
           </div>
-          <div title="关注服务号的渠道来源" class="cp">
-            {{ subscribe_scene_map[data.subscribe_scene] }}
-          </div>
+          <div title="关注服务号的渠道来源" class="cp">渠道：{{ subscribe_scene_map[data.subscribe_scene] }}</div>
         </div>
       </div>
 
@@ -201,7 +198,64 @@
       <div class="row">
         <div class="label">用户标签</div>
         <div>
-          {{ tagid_list }}
+          <!-- 标签 -->
+          <div>{{ tagid_list }}</div>
+          <!-- 打标签 -->
+          <div class="mb8 mt8 itv-flex--fs" @click="handleUserTags(data)">
+            <itv-icon type="i-tag" size="20" class="itv-btn__icon mr8" />
+            <span class="itv-text--btn">打标签</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最近登录时间 -->
+      <div class="row">
+        <div class="label">最近登录时间</div>
+        <div>
+          <div class="itv-flex--fs mb8">
+            <span class="mr8" title="是否网页登录">
+              <itv-icon type="i-pc" :style="{ color: pc_last_login_time ? C_ORANGE : C_GREY }" size="22" />
+            </span>
+            <span title="PC端最近登录时间">{{ pc_last_login_time || '-' }}</span>
+          </div>
+          <div class="itv-flex--fs mb8" v-if="data.sa_openid">
+            <div class="itv-text--grey4 cp small" title="服务号openid">
+              {{ data.sa_openid || '-' }}
+            </div>
+            <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.sa_openid">
+              <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.sa_openid)" />
+            </div>
+          </div>
+          <div class="itv-flex--fs mb8">
+            <span class="mr8" title="是否小程序登录">
+              <itv-icon type="i-wx" :style="{ color: mp_last_login_time ? C_BLUE : C_GREY }" size="22" />
+            </span>
+            <span title="小程序最近登录时间">{{ mp_last_login_time || '-' }}</span>
+          </div>
+          <div class="itv-flex--fs mb8" v-show="data.mp_openid">
+            <div class="itv-text--grey4 small cp" title="小程序openid">
+              {{ data.mp_openid || '-' }}
+            </div>
+            <div title="复制链接" class="ml4" style="flex-shrink:0;" v-if="data.mp_openid">
+              <itv-icon type="i-copy2" class="itv-text--btn" size="20" color="" @click="handleCopy(data.mp_openid)" />
+            </div>
+          </div>
+          <!-- 是否可以登录 -->
+          <div class="itv-flex--fs" @click="handleUserLogin(data)">
+            <itv-icon
+              :title="data.enabled ? '可登录' : '禁止登录'"
+              :type="data.enabled ? 'i-check' : 'i-delete2'"
+              class="itv-btn__icon mr8"
+              size="18"
+              :style="{ color: data.enabled ? C_BLUE : C_ORANGE }"
+            />
+            <span class="itv-text--btn">{{ data.enabled ? '禁止' : '允许' }}登录</span>
+          </div>
+          <!-- 登录该用户 -->
+          <div class="mb8 mt8 itv-flex--fs" @click="handleLoginUser(data)">
+            <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" />
+            <span class="itv-text--btn">登录该用户</span>
+          </div>
         </div>
       </div>
 
@@ -226,86 +280,10 @@
       </div>
 
       <!-- 操作 -->
-      <div class="row">
+      <!-- <div class="row">
         <div class="label">操作</div>
-        <div class="itv-flex--v--fs">
-          <!-- 查看短链 -->
-          <div
-            class="mb8 itv-flex--fs"
-            @click="
-              $bus.drawer_user.show = false
-              $router.push({
-                name: 'ShortLinkListUser',
-                params: { user_id: data.id },
-                query: { name: data.nickname }
-              })
-            "
-          >
-            <itv-icon type="i-detail" size="20" class="itv-btn__icon mr8" />
-            <span class="itv-text--btn">查看短链</span>
-          </div>
-          <!-- 查看协作空间 -->
-          <div
-            class="mb8 itv-flex--fs"
-            @click="
-              $bus.drawer_user.show = false
-              $router.push({
-                name: 'SpaceListUser',
-                params: { user_id: data.id },
-                query: { name: data.nickname }
-              })
-            "
-          >
-            <itv-icon type="i-member" size="20" class="itv-btn__icon mr8" />
-            <span class="itv-text--btn">查看协作空间</span>
-          </div>
-          <!-- 登录该用户 -->
-          <div
-            class="mb8 itv-flex--fs"
-            @click="
-              () => {
-                $bus.modal.type = 'login_user'
-                $bus.modal.show = true
-                $bus.modal.obj = data
-              }
-            "
-          >
-            <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" />
-            <span class="itv-text--btn">登录该用户</span>
-          </div>
-          <!-- 打标签 -->
-          <div
-            class="mb8 itv-flex--fs"
-            @click="
-              () => {
-                this.$bus.modal.type = 'user_tags'
-                this.$bus.modal.show = true
-                this.$bus.modal.obj = data
-                this.$bus.modal.success_cb = this.doGetData
-              }
-            "
-          >
-            <itv-icon type="i-tag" size="20" class="itv-btn__icon mr8" />
-            <span class="itv-text--btn">打标签</span>
-          </div>
-          <!-- 恢复游客链接 -->
-          <div
-            class="mb8 itv-flex--fs"
-            @click="
-              () => {
-                this.$bus.modal.type = 'guset_link'
-                this.$bus.modal.show = true
-                this.$bus.modal.obj = data
-              }
-            "
-          >
-            <div class="itv-text--btn4 mr8" title="恢复游客链接">
-              游
-            </div>
-            <span class="itv-text--btn">恢复游客链接</span>
-          </div>
-        </div>
-      </div>
+        <div class="itv-flex--v--fs"></div>
+      </div> -->
     </div>
     <div v-show="!show_page">报错: {{ page_error }}</div>
   </Drawer>
@@ -313,10 +291,13 @@
 
 <script>
 import { pluginListUser as pluginList, appMap, apiKeyMap } from '../common/plugin-data'
+import { PACKAGES, API_PACKAGES } from '../../libs/consts'
+import MixinsUserOperate from '../common/mixins-user-operate'
+import moment from 'moment'
 
 export default {
   name: 'DrawerUser',
-  mixins: [],
+  mixins: [MixinsUserOperate],
   props: {},
   components: {},
   data() {
@@ -344,6 +325,18 @@ export default {
       show_page: false,
       loading: true,
       data: {}
+    }
+  },
+  filters: {
+    itvTimeShort: function(v) {
+      const time = v ? moment(v).format('YYYY/MM/DD') : ''
+
+      return time
+    },
+    itvTime: function(v) {
+      const time = v ? moment(v).format('YYYY/MM/DD hh:mm:ss') : ''
+
+      return time
     }
   },
   computed: {
@@ -388,11 +381,14 @@ export default {
   created() {},
   mounted() {},
   watch: {
-    'drawer.show'(v) {
-      if (v) {
-        this.doGetData()
-        this.doGetUserTags()
-      }
+    'drawer.show': {
+      handler: function(v) {
+        if (v) {
+          this.doGetData()
+          this.doGetUserTags()
+        }
+      },
+      immediate: true
     }
   },
   methods: {
@@ -413,9 +409,15 @@ export default {
     async doGetData() {
       this.loading = true
       try {
-        const res = await this.$api.User.getUserDetail(this.user_id)
+        let res = await this.$api.User.getUserDetail(this.user_id)
 
-        this.data = (res || {}).user
+        res = (res || {}).user || {}
+
+        // 前端自定义的变量
+        res['_package_name'] = PACKAGES[res.package]
+        res['_api_package_name'] = API_PACKAGES[res.api_package]
+
+        this.data = res
         this.show_page = true
       } catch (e) {
         console.error(e)
@@ -444,13 +446,40 @@ export default {
     align-items: center;
     margin-top: 16px;
     .label {
-      width: 150px;
+      width: 120px;
       font-weight: 500;
       // text-align: right;
       text-align: left;
       padding-right: 24px;
       align-self: flex-start;
       flex-shrink: 0;
+    }
+    .row__row {
+      color: #afafaf;
+      font-size: 12px;
+      word-break: break-all;
+      margin-top: 8px;
+    }
+    .link__row {
+      display: flex;
+      margin-bottom: 4px;
+      .link__cell {
+        flex: 1;
+        display: flex;
+        .link__label {
+          width: 64px;
+          flex: none;
+          // text-align: right;
+          padding-right: 8px;
+        }
+        .link__value {
+          flex: 1;
+          text-align: left;
+        }
+      }
+      &.grey {
+        color: #afafaf;
+      }
     }
   }
   .img--headimgurl {

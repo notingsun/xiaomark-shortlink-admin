@@ -77,15 +77,13 @@
       </div>
 
       <!-- 6、设置API权限 -->
-      <div v-show="modal.type === 'open_api_domain'">
-        <!-- 用户 -->
+      <!-- <div v-show="modal.type === 'open_api_domain'">
         <div class="table-cell__nickname mb24">
           <img :src="(modal.obj || {}).headimgurl" class="img--headimgurl mr8" />
           <div class="itv-div__text--nowrap text_one_line">
             {{ (modal.obj || {}).nickname }}
           </div>
         </div>
-        <!-- 开关 -->
         <div class="itv-flex--fs mb24">
           <p class="mr16 itv-title--16">API 权限</p>
           <i-switch :loading="is_change.open_api_domain" v-model="form.open_api_domain._switch" :before-change="handleOpenApi" :disabled="true">
@@ -93,7 +91,6 @@
             <span slot="close">关</span>
           </i-switch>
         </div>
-        <!-- 域名列表 -->
         <div class="mb24">
           <p class="mr16 itv-title--16 mb8">域名列表</p>
           <p v-for="(item, index) in form.open_api_domain._list" :key="index">
@@ -101,7 +98,6 @@
           </p>
           <p v-show="form.open_api_domain._list.length === 0">无</p>
         </div>
-        <!-- 每日创建短链接上限 -->
         <div class="itv-flex--fs" style="height: 32px;">
           <p class="mr16 itv-title--16">每日创建短链接上限：</p>
           <div class="itv-flex--fs" v-show="!form.open_api_domain.isEditing">
@@ -128,7 +124,7 @@
             <Button type="text" class="mr16" style="width: 60px;" size="small" @click="form.open_api_domain.isEditing = false">取消</Button>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- 7、审核API域名 -->
       <div v-show="modal.type === 'check_api_domain'">
@@ -262,7 +258,7 @@ export default {
       },
       loading: false,
       is_change: {
-        open_api_domain: false
+        // open_api_domain: false
       },
       titleMap: {
         user_tags: '设置用户标签',
@@ -270,7 +266,7 @@ export default {
         guset_link: '确认恢复游客链接',
         wx_share: '微信分享',
         check_api_domain: '查看API域名',
-        open_api_domain: '设置API权限',
+        // open_api_domain: '设置API权限',
         stop_api_domain: '屏蔽API域名',
         enabled_target_link: '将域名添加到黑名单',
         enabled_short_link: '设置短链是否可用',
@@ -288,13 +284,13 @@ export default {
         stop_api_domain: {
           recursive: true // 是否设置相关联的链接
         },
-        open_api_domain: {
-          _switch: false,
-          _list: [],
-          _count_default: 0,
-          _count: 0,
-          isEditing: true
-        },
+        // open_api_domain: {
+        //   _switch: false,
+        //   _list: [],
+        //   _count_default: 0,
+        //   _count: 0,
+        //   isEditing: true
+        // },
         check_api_domain: {
           _switch: []
         },
@@ -322,7 +318,7 @@ export default {
       return this.$bus.modal
     },
     show_footer() {
-      const arr_no_show = ['open_api_domain', 'wx_share', 'check_api_domain', 'link_qr']
+      const arr_no_show = ['wx_share', 'check_api_domain', 'link_qr']
 
       return !arr_no_show.includes(this.modal.type)
     }
@@ -342,13 +338,13 @@ export default {
         this.form.enabled_target_link['domain'] = this.modal.obj.netloc
         this.form.enabled_target_link['block_sub'] = true
         this.form.enabled_target_link['recursive'] = true
-      } else if (v && this.modal.type === 'open_api_domain') {
-        // 初始化.设置API权限
-        this.form.open_api_domain['_switch'] = this.modal.obj.open_api
-        this.form.open_api_domain['_list'] = this.modal.obj.api_domains || []
-        this.form.open_api_domain['_count'] = this.modal.obj.api_max_links_daily
-        // eslint-disable-next-line prettier/prettier
-        this.form.open_api_domain['_count_default'] = this.modal.obj.api_max_links_daily
+        // } else if (v && this.modal.type === 'open_api_domain') {
+        //   // 初始化.设置API权限
+        //   this.form.open_api_domain['_switch'] = this.modal.obj.open_api
+        //   this.form.open_api_domain['_list'] = this.modal.obj.api_domains || []
+        //   this.form.open_api_domain['_count'] = this.modal.obj.api_max_links_daily
+        //   // eslint-disable-next-line prettier/prettier
+        //   this.form.open_api_domain['_count_default'] = this.modal.obj.api_max_links_daily
       } else if (v && this.modal.type === 'check_api_domain') {
         // 初始化.审核API域名
         this.form.check_api_domain['_switch'] = this.modal.obj.netloc_list.map(() => true)
@@ -608,44 +604,44 @@ export default {
     },
 
     // API域名.开启权限
-    async handleOpenApi() {
-      // this.is_change.open_api_domain = true
-      // const api_auth = !this.form.open_api_domain['_switch']
-      // try {
-      //   await this.$api.User.putApiAuth(this.modal.obj.id, {
-      //     api_auth
-      //   })
-      //   this.$Message.success(`API 权限已${api_auth ? '开启' : '关闭'}`)
-      //   this.form.open_api_domain['_switch'] = api_auth
-      //   this.modal.success_cb({ page: 'now' })
-      // } catch (e) {
-      //   console.error(e)
-      //   this.modal.show = false
-      //   this.modal.success_cb({ page: 'now' })
-      // }
-      // this.is_change.open_api_domain = false
-      // return new Promise((resolve, reject) => {
-      //   reject()
-      // })
-    },
+    // async handleOpenApi() {
+    // this.is_change.open_api_domain = true
+    // const api_auth = !this.form.open_api_domain['_switch']
+    // try {
+    //   await this.$api.User.putApiAuth(this.modal.obj.id, {
+    //     api_auth
+    //   })
+    //   this.$Message.success(`API 权限已${api_auth ? '开启' : '关闭'}`)
+    //   this.form.open_api_domain['_switch'] = api_auth
+    //   this.modal.success_cb({ page: 'now' })
+    // } catch (e) {
+    //   console.error(e)
+    //   this.modal.show = false
+    //   this.modal.success_cb({ page: 'now' })
+    // }
+    // this.is_change.open_api_domain = false
+    // return new Promise((resolve, reject) => {
+    //   reject()
+    // })
+    // },
 
     // API域名.更新用户的API调用限制
-    async handleApiLimits() {
-      try {
-        const n_links_d = Number(this.form.open_api_domain['_count'])
+    // async handleApiLimits() {
+    //   try {
+    //     const n_links_d = Number(this.form.open_api_domain['_count'])
 
-        await this.$api.User.putApiLimits(this.modal.obj.id, {
-          max_links_daily: n_links_d
-        })
-        this.$Message.success('设置成功')
-        this.form.open_api_domain['_count_default'] = n_links_d
-        this.form.open_api_domain.isEditing = false
-        this.modal.success_cb({ page: 'now' })
-      } catch (e) {
-        console.error(e)
-        this.modal.success_cb({ page: 'now' })
-      }
-    },
+    //     await this.$api.User.putApiLimits(this.modal.obj.id, {
+    //       max_links_daily: n_links_d
+    //     })
+    //     this.$Message.success('设置成功')
+    //     this.form.open_api_domain['_count_default'] = n_links_d
+    //     this.form.open_api_domain.isEditing = false
+    //     this.modal.success_cb({ page: 'now' })
+    //   } catch (e) {
+    //     console.error(e)
+    //     this.modal.success_cb({ page: 'now' })
+    //   }
+    // },
 
     // API域名.审核
     async handleCheckApiDomain() {

@@ -7,6 +7,7 @@ body {
 #container {
   width: 100vw;
   height: 100vh;
+  overflow-y: hidden;
   font-size: calc(14rem/10);
   line-height: calc(20rem/10);
   position: relative;

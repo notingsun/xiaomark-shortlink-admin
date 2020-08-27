@@ -110,6 +110,8 @@ export default {
 <style scoped lang="less">
 .svg-show-all {
   margin: 50px 0px;
+  height: 100vh;
+  overflow-y: auto;
 
   .svgs-wrap {
     flex-wrap: wrap;

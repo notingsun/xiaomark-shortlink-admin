@@ -19,8 +19,16 @@ export default new Vue({
         obj: null, // 操作对象
         success_cb: Function // 操作成功的回调
       }, // 是否xxx.确认.对话框(渠道码)
+      modal3: {
+        type: '', // 对话框类型
+        show: false, // 显示对话框
+        obj: null, // 操作对象
+        success_cb: Function // 操作成功的回调
+      }, // 套餐对话框（短链接）
       /* 用户详情.抽屉 */
       drawer_user: {
+        // show: true, // 是否显示
+        // id: '2' // 用户的id
         show: false, // 是否显示
         id: '' // 用户的id
       },

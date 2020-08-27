@@ -37,8 +37,9 @@ export default {
         columns: [
           {
             title: '自定义域名',
-            minWidth: 240,
+            width: 160,
             key: 'hostname netloc favicon',
+            fixed: 'left',
             render: (h, { row }) => {
               return <span>{row.domain}</span>
             }
@@ -107,6 +108,31 @@ export default {
                 </Tag>
               )
             }
+          },
+          {
+            title: '协议',
+            minWidth: 120,
+            // key: 'scheme'
+            render: (h, { row }) => {
+              return <span>{row.scheme || '-'}</span>
+            }
+          },
+          {
+            title: 'CNAME',
+            minWidth: 160,
+            // key: 'cname'
+            render: (h, { row }) => {
+              return <span>{row.cname || '-'}</span>
+            }
+          },
+          {
+            title: '首页地址',
+            minWidth: 140,
+            tooltip: true,
+            key: 'home_redirect'
+            // render: (h, { row }) => {
+            //   return <span>{row.home_redirect || '-'}</span>
+            // }
           },
           {
             title: '创建时间',

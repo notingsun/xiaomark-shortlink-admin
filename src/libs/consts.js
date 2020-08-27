@@ -20,13 +20,13 @@ const CONSTS = {
 /* 套餐 */
 // 套餐 free - 免费版 personal - 个人版，team - 团队版，enterprise - 企业版
 // API套餐：
-const PACKAGES = {
+export const PACKAGES = {
   free: '免费版',
   personal: '个人版',
   team: '团队版',
   enterprise: '企业版'
 }
-const API_PACKAGES = {
+export const API_PACKAGES = {
   free: '免费版',
   basic: '基础版',
   advanced: '进阶版',
@@ -40,5 +40,7 @@ export const PACKAGES_ARR = Object.keys(PACKAGES)
 export const API_PACKAGES_ARR = Object.keys(API_PACKAGES)
   .filter((key) => key !== 'free')
   .map((key) => ({ name: API_PACKAGES[key], key }))
+export const PACKAGES_OPTIONS = Object.keys(PACKAGES).map((key) => ({ label: PACKAGES[key], value: key }))
+export const API_PACKAGES_OPTIONS = Object.keys(API_PACKAGES).map((key) => ({ label: API_PACKAGES[key], value: key }))
 
 export default CONSTS

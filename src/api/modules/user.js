@@ -47,14 +47,14 @@ export default {
     }
   },
 
-  putApiLimits(id, params) {
-    return {
-      method: 'put',
-      name: '更新用户的API调用限制',
-      url: `${BASE_URL_LINK}/api/users/${id}/api_config/`,
-      params
-    }
-  },
+  // putApiLimits(id, params) {
+  //   return {
+  //     method: 'put',
+  //     name: '更新用户的API调用限制',
+  //     url: `${BASE_URL_LINK}/api/users/${id}/api_config/`,
+  //     params
+  //   }
+  // },
 
   putUserEnabled(id, params) {
     return {
@@ -79,6 +79,33 @@ export default {
       method: 'get',
       name: '列出用户',
       url: `${BASE_URL_LINK}/api/users/`,
+      params
+    }
+  },
+
+  putUserPackage(id, params) {
+    return {
+      method: 'put',
+      name: '修改用户的套餐',
+      url: `${BASE_URL_LINK}/api/users/${id}/package/`,
+      params
+    }
+  },
+
+  putUserApiPackage(id, params) {
+    return {
+      method: 'put',
+      name: '修改用户的API套餐',
+      url: `${BASE_URL_LINK}/api/users/${id}/api_package/`,
+      params
+    }
+  },
+
+  putUserApiPackageData(id, params) {
+    return {
+      method: 'put',
+      name: '修改用户的API套餐内容',
+      url: `${BASE_URL_LINK}/api/users/${id}/api_package_info/`,
       params
     }
   }

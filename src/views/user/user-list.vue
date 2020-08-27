@@ -19,12 +19,14 @@
 
 <script>
 import tableMixins from '../table-mixins'
+import MixinsUserOperate from '../common/mixins-user-operate'
 import { appMap, pluginListUser, apiKeyMap } from '../common/plugin-data'
 import FilterUser from '../common/filter-user'
+import { PACKAGES, API_PACKAGES } from '../../libs/consts'
 
 export default {
   name: 'UserList',
-  mixins: [tableMixins],
+  mixins: [tableMixins, MixinsUserOperate],
   props: {},
   components: { FilterUser },
   data() {
@@ -71,32 +73,94 @@ export default {
             }
           },
           {
-            title: '创建短链数量',
-            minWidth: 200,
-            key: 'n_links',
+            title: '套餐',
+            width: 110,
+            render: (h, { row }) => {
+              const time = row.package_expire_date ? this.$PDo.Date.format(row.package_expire_date, 'y/m/d') : ''
+
+              return (
+                <Tooltip content={`过期时间: ${time}`} class="flex1 cp" disabled={!time}>
+                  <div onClick={this.handlePackage.bind(this, row)}>
+                    {PACKAGES[row.package]}
+                    <itv-icon class="ml4" type="i-edit" size="16" color="primary" />
+                  </div>
+                </Tooltip>
+              )
+            }
+          },
+          {
+            title: 'API 套餐',
+            width: 116,
+            render: (h, { row }) => {
+              if (row.open_api) {
+                const time = row.api_package_expire_date ? this.$PDo.Date.format(row.api_package_expire_date, 'y/m/d') : ''
+
+                return (
+                  <div class="itv-flex--fs">
+                    <Tooltip content={`过期时间: ${time}`} class="flex1 cp" disabled={!time}>
+                      <div class="mr8" onClick={this.handlePackage2.bind(this, row)}>
+                        {API_PACKAGES[row.api_package]}
+                        <itv-icon class="ml4" type="i-edit" size="16" color="primary" />
+                      </div>
+                    </Tooltip>
+                    <span title="开启事件推送" style={`display: ${row.open_webhook ? 'inline' : 'none'};`} class="itv-text--grey4">
+                      推送
+                    </span>
+                  </div>
+                )
+              }
+              return <div class="flex1 itv-text--grey4">未开启</div>
+            }
+          },
+          {
+            // title: '普通 / 随机  / API  / 自定义域名',
+            minWidth: 360,
+            // eslint-disable-next-line no-unused-vars
+            renderHeader: (h) => {
+              return (
+                <div class="itv-flex--fs" style="text-align: center;">
+                  <div class="flex2 itv-flex--c">短链数量</div>
+                  <Divider type="vertical" />
+                  <div class="flex1">普通</div>
+                  <Divider type="vertical" />
+                  <div class="flex1">随机</div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title="自定义域名">
+                    自域名
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1">API</div>
+                </div>
+              )
+            },
+            // key: 'n_visitors n_sub n_stay n_leave',
             render: (h, { row }) => {
               return (
-                <div class="itv-flex--fs mt4 mb4">
-                  <div style="width: 40%" class="cp">
-                    <span title="今日">{row.n_links_today}</span>
+                <div class="itv-flex--fs" style="text-align: center;">
+                  <div class="flex2 itv-flex--fs">
+                    <div class="flex1" title={`今日: ${row.n_links_today}`}>
+                      {this.$global.utils.countFormat.short(row.n_links_today)}
+                    </div>
                     <span>/</span>
-                    <span title={`累计：${row.n_links}`}>{this.$global.utils.countFormat.short(row.n_links)}</span>
+                    <div class="flex1" title={`累计: ${row.n_links}`}>
+                      {this.$global.utils.countFormat.short(row.n_links)}
+                    </div>
                   </div>
-                  <div class="itv-flex--v ml8 flex1">
-                    <div class="itv-flex--fs">
-                      <div style="color: #afafaf;width: 36px;">普通：</div>
-                      {row.n_normal_links}
-                    </div>
-                    <div class="itv-flex--fs">
-                      <div style="color: #afafaf;width: 36px;">随机：</div>
-                      {row.n_random_links}
-                    </div>
-                    <div class="itv-flex--fs">
-                      <div style="color: #afafaf;width: 36px;">API： </div>
-                      <span title="开放API创建的链接数量">{row.n_api_links}</span>
-                      {/* <span>/</span> */}
-                      {/* <span title="非开放API创建的链接数量">{row.n_nonapi_links}</span> */}
-                    </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title={`普通: ${row.n_normal_links}`}>
+                    {this.$global.utils.countFormat.short(row.n_normal_links)}
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title={`随机: ${row.n_random_links}`}>
+                    {this.$global.utils.countFormat.short(row.n_random_links)}
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title={`自定义域名: ${row.n_cdm_links}`}>
+                    {this.$global.utils.countFormat.short(row.n_cdm_links)}
+                  </div>
+                  <Divider type="vertical" />
+                  <div class="flex1" title={`开放API创建的链接数量: ${row.n_api_links}`}>
+                    {this.$global.utils.countFormat.short(row.n_api_links)}
                   </div>
                 </div>
               )
@@ -104,108 +168,39 @@ export default {
           },
           {
             title: '短链访问次数',
-            minWidth: 120,
+            align: 'center',
+            minWidth: 140,
             key: 'n_links n_links_in_ws',
             render: (h, { row }) => {
               return (
-                <div class="itv-flex--fs">
-                  <span class="ml8 cp" title="链接今日访问次数">
+                <div class="itv-flex--fs" style="text-align: center;">
+                  <div class="flex1" title="今日">
                     {row.pv_today}
-                  </span>
-                  <span class="ml8">/</span>
-                  <span class="ml8 cp" title={`链接访问次数：${row.pv}`}>
+                  </div>
+                  <span>/</span>
+                  <div class="flex1" title={`累计：${row.pv}`}>
                     {this.$global.utils.countFormat.short(row.pv)}
-                  </span>
-                </div>
-              )
-            }
-          },
-          {
-            title: '协作空间',
-            minWidth: 130,
-            // key: 'open_workspace',
-            // <itv-icon
-            //   onClick={() => {
-            //     this.$bus.modal.type = 'ws_creator'
-            //     this.$bus.modal.show = true
-            //     this.$bus.modal.obj = row
-            //     this.$bus.modal.success_cb = this.doGetData
-            //   }}
-            // />
-            render: (h, { row }) => {
-              return (
-                <div class="itv-flex--fs">
-                  <itv-icon
-                    class="cp"
-                    title={row.open_workspace ? '可以创建协作空间' : '不可以创建协作空间'}
-                    type={row.open_workspace ? 'i-stop' : 'i-start'}
-                    size="20"
-                    style={`color: ${row.open_workspace ? C_GREEN : C_GREY}`}
-                  />
-                  <div class="itv-flex--v ml8" style={`color: ${row.open_workspace ? '' : '#afafaf'}`}>
-                    <p class="ml8 cp" title={`已创建 ${row.n_created_workspaces} 个协作空间`}>
-                      <span style="color: #afafaf;">创建：</span>
-                      {row.n_created_workspaces}
-                    </p>
-                    <p class="ml8 cp" title={`已加入 ${row.n_joined_workspaces} 个协作空间`}>
-                      <span style="color: #afafaf;">加入：</span>
-                      {row.n_joined_workspaces}
-                    </p>
                   </div>
                 </div>
               )
             }
           },
           {
-            title: 'API权限',
-            minWidth: 120,
-            render: (h, { row }) => {
-              return (
-                <div class="itv-flex--fs">
-                  <itv-icon
-                    class="cp mr12"
-                    title={row.open_api ? '有API权限' : '没有API权限'}
-                    type={row.open_api ? 'i-stop' : 'i-start'}
-                    size="20"
-                    style={`color: ${row.open_api ? C_GREEN : C_GREY}`}
-                    onClick={() => {
-                      this.$bus.modal.type = 'open_api_domain'
-                      this.$bus.modal.show = true
-                      this.$bus.modal.obj = row
-                      this.$bus.modal.success_cb = this.doGetData
-                    }}
-                  />
-                  <span title="每日调用API创建链接数上限">{row.api_max_links_daily}</span>
-                </div>
-              )
-            }
+            title: '创建空间',
+            align: 'center',
+            minWidth: 80,
+            key: 'n_created_workspaces'
           },
           {
-            title: '是否可登录',
-            minWidth: 120,
-            render: (h, { row }) => {
-              return (
-                <div class="itv-flex--fs">
-                  <itv-icon
-                    class="cp"
-                    title={row.enabled ? '可登录' : '不可登录'}
-                    type={row.enabled ? 'i-stop' : 'i-start'}
-                    size="20"
-                    style={`color: ${row.enabled ? C_GREEN : C_GREY}`}
-                    onClick={() => {
-                      this.$bus.modal.type = 'enabled'
-                      this.$bus.modal.show = true
-                      this.$bus.modal.obj = row
-                      this.$bus.modal.success_cb = this.doGetData
-                    }}
-                  />
-                </div>
-              )
-            }
+            title: '加入空间',
+            align: 'center',
+            minWidth: 80,
+            key: 'n_joined_workspaces'
           },
           {
             title: '插件',
             minWidth: 190,
+            align: 'center',
             // key: 'n_clicks',
             render: (h, { row }) => {
               let res = pluginListUser.map((item) => {
@@ -215,101 +210,69 @@ export default {
               return <div>{res}</div>
             }
           },
-          // {
-          //   title: 'PC最近登录时间',
-          //   width: 200,
-          //   // key: 'pc_last_login_time',
-          //   render: (h, { row }) => {
-          //     return (
-          //       <div class="mt4 mb4">
-          //         <div title="PC端最近登录时间" class="mb4">
-          //           <span class="mr8" title="是否网页登录">
-          //             <itv-icon type="i-pc" style={{ color: row.pc_last_login_time ? C_ORANGE : C_GREY }} size="24" />
-          //           </span>
-          //           <span class={row.pc_last_login_time ? '' : 'itv-text--grey4'}>{row.pc_last_login_time ? this.$PDo.Date.format(row.pc_last_login_time) : '未登录'}</span>
-          //         </div>
-          //         <div title="小程序最近登录时间">
-          //           <span class="mr8" title="是否小程序登录" v-if="">
-          //             <itv-icon type="i-wx" style={{ color: row.mp_last_login_time ? C_BLUE : C_GREY }} size="24" />
-          //           </span>
-          //           <span class={row.mp_last_login_time ? '' : 'itv-text--grey4'}>{row.mp_last_login_time ? this.$PDo.Date.format(row.mp_last_login_time) : '未登录'}</span>
-          //         </div>
-          //       </div>
-          //     )
-          //   }
-          // },
           {
-            title: 'PC最近登录时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
+            title: '激活时间',
+            // key: 'active_date',
+            minWidth: 120,
             render: (h, { row }) => {
-              if (!row.pc_last_login_time) {
-                return <span class="itv-text--grey3">-</span>
+              if (!row.active_date) {
+                return <span class="itv-text--grey4">未激活</span>
               }
-              return <div>{this.$PDo.Date.format(row.pc_last_login_time)}</div>
-            }
-          },
-          {
-            title: '小程序最近登录时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
-            render: (h, { row }) => {
-              if (!row.mp_last_login_time) {
-                return <span class="itv-text--grey3">-</span>
-              }
-              return <div>{this.$PDo.Date.format(row.mp_last_login_time)}</div>
+              return <div>{this.$PDo.Date.format(row.active_date, 'y/m/d')}</div>
             }
           },
           {
             title: '注册时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
-            key: 'create_time',
-            render: (h, { row }) => {
-              const arr = this.$PDo.Date.format(row.create_time).split(' ')
-
-              return (
-                <span>
-                  {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
-                  {arr[1]}
-                </span>
-              )
-            }
-          },
-          {
-            title: '激活时间',
-            minWidth: this.$bus.view_width <= 1300 ? 120 : 150,
-            // key: 'active_date',
-            render: (h, { row }) => {
-              if (!row.active) {
-                return <span class="itv-text--grey3">-</span>
-              }
-              const arr = this.$PDo.Date.format(row.active_date).split(' ')
-
-              return (
-                <span>
-                  {arr[0]}
-                  {arr[1] && this.$bus.view_width <= 1300 ? <br /> : ' '}
-                  {arr[1]}
-                </span>
-              )
-            }
-          },
-          {
-            title: '其他',
-            width: 150,
-            key: 'subscribe',
-            // align: 'center',
+            minWidth: 180,
             render: (h, { row }) => {
               return (
-                <div>
+                <div class="itv-flex--fs">
                   <span class="mr8" title="是否关注服务号">
                     <itv-icon type="i-attention" style={`color: ${row.subscribe ? C_GREEN : C_GREY}`} size="24" />
                   </span>
+                  <div>{this.$PDo.Date.format(row.create_time)}</div>
+                </div>
+              )
+            }
+          },
+          {
+            title: 'PC最近登录时间',
+            minWidth: 180,
+            render: (h, { row }) => {
+              let res
+
+              if (!row.pc_last_login_time) {
+                res = <span class="itv-text--grey4">未登录</span>
+              } else {
+                res = <div>{this.$PDo.Date.format(row.pc_last_login_time)}</div>
+              }
+              return (
+                <div class="itv-flex--fs">
                   <span class="mr8" title="是否网页登录">
                     <itv-icon type="i-pc" style={`color: ${row.pc_last_login_time ? C_ORANGE : C_GREY}`} size="24" />
                   </span>
+                  {res}
+                </div>
+              )
+            }
+          },
+          {
+            title: '小程序最近登录时间',
+            minWidth: 180,
+            render: (h, { row }) => {
+              let res
+
+              if (!row.mp_last_login_time) {
+                res = <span class="itv-text--grey4">未登录</span>
+              } else {
+                res = <div>{this.$PDo.Date.format(row.mp_last_login_time)}</div>
+              }
+              return (
+                <div class="itv-flex--fs">
                   <span class="mr8" title="是否小程序登录">
                     <itv-icon type="i-wx" style={`color: ${row.mp_last_login_time ? C_BLUE : C_GREY}`} size="24" />
                   </span>
+                  {res}
                 </div>
               )
             }
@@ -319,16 +282,17 @@ export default {
             minWidth: 120,
             // key: 'source'
             render: (h, { row }) => {
-              return <span class={row.source ? '' : 'itv-text--grey3'}>{row.source || '-'}</span>
+              return <span class={row.source ? '' : 'itv-text--grey4'}>{row.source || '-'}</span>
             }
           },
           {
             title: '邮箱',
-            minWidth: 120,
-            // key: 'email',
-            render: (h, { row }) => {
-              return <span class={row.email ? '' : 'itv-text--grey3'}>{row.email || '-'}</span>
-            }
+            minWidth: 150,
+            tooltip: true,
+            key: 'email'
+            // render: (h, { row }) => {
+            //   return <span class={row.email ? '' : 'itv-text--grey4'}>{row.email || '-'}</span>
+            // }
           },
           {
             title: '地域',
@@ -346,26 +310,56 @@ export default {
           },
           {
             title: '操作',
-            width: 160,
+            width: 90,
             fixed: 'right',
             render: (h, { row }) => {
               return (
                 <div class="itv-flex--fs">
-                  <span title="查看短链">
-                    <itv-icon type="i-detail" size="20" class="itv-btn__icon mr8" onClick={this.toUserDetail.bind(null, row)} />
-                  </span>
-                  <span title="查看协作空间">
-                    <itv-icon type="i-member" size="20" class="itv-btn__icon mr8" onClick={this.toUserSpaceList.bind(null, row)} />
-                  </span>
-                  <span title="登录该用户">
-                    <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" onClick={this.toUserLogin.bind(null, row)} />
-                  </span>
-                  <span title={row.subscribe ? '给用户打标签' : '无权限，该用户未关注公众号'}>
-                    <itv-icon type="i-tag" size="20" class="itv-btn__icon mr8" style={`color: ${row.subscribe ? C_BLUE : C_GREY}`} onClick={this.handleUserTags.bind(null, row)} />
-                  </span>
-                  <div class={'itv-text--btn4'} title="恢复游客链接" onClick={this.handleGuestLinks.bind(null, row)}>
-                    游
-                  </div>
+                  <Dropdown transfer transfer-class-name="user-list-dropdown">
+                    <Button>操作</Button>
+                    <DropdownMenu slot="list">
+                      <div onClick={this.toUserLink.bind(null, row)}>
+                        <DropdownItem>
+                          <itv-icon type="i-detail" size="20" class="itv-btn__icon mr8" />
+                          查看短链
+                        </DropdownItem>
+                      </div>
+                      <div onClick={this.toUserSpaceList.bind(null, row)}>
+                        <DropdownItem>
+                          <itv-icon type="i-member" size="20" class="itv-btn__icon mr8" />
+                          查看协作空间
+                        </DropdownItem>
+                      </div>
+                      <div onClick={this.handleLoginUser.bind(null, row)}>
+                        <DropdownItem>
+                          <itv-icon type="i-eye" size="20" class="itv-btn__icon mr8" />
+                          登录该用户
+                        </DropdownItem>
+                      </div>
+                      <div onClick={this.handleUserTags.bind(null, row)}>
+                        <DropdownItem disabled={!row.subscribe} title={row.subscribe ? '给用户打标签' : '无权限，该用户未关注公众号'}>
+                          <itv-icon type="i-tag" size="20" class="itv-btn__icon mr8" style={`color: ${row.subscribe ? C_BLUE : C_GREY}`} />
+                          给用户打标签
+                        </DropdownItem>
+                      </div>
+                      <div onClick={this.handleGuestLinks.bind(null, row)}>
+                        <DropdownItem>
+                          <span class={'itv-text--btn4 mr8'} title="恢复游客链接" onClick={this.handleGuestLinks.bind(null, row)}>
+                            游
+                          </span>
+                          恢复游客链接
+                        </DropdownItem>
+                      </div>
+                      <div onClick={this.handleUserLogin.bind(null, row)}>
+                        <DropdownItem>
+                          <div class="itv-flex--fs">
+                            <itv-icon type={row.enabled ? 'i-check' : 'i-delete2'} class="itv-btn__icon mr8" size="20" style={`color: ${row.enabled ? C_BLUE : C_ORANGE}`} />
+                            {row.enabled ? '禁止' : '允许'}登录
+                          </div>
+                        </DropdownItem>
+                      </div>
+                    </DropdownMenu>
+                  </Dropdown>
                 </div>
               )
             }
@@ -394,43 +388,6 @@ export default {
     openUserDetail(row) {
       this.$bus.drawer_user.show = true
       this.$bus.drawer_user.id = row.id
-    },
-    // 去用户详情
-    toUserDetail(row) {
-      this.$router.push({
-        name: 'ShortLinkListUser',
-        params: { user_id: row.id },
-        query: { name: row.nickname }
-      })
-    },
-    // 去用户创建的协作空间列表
-    toUserSpaceList(row) {
-      this.$router.push({
-        name: 'SpaceListUser',
-        params: { user_id: row.id },
-        query: { name: row.nickname }
-      })
-    },
-    // 登录该用户
-    toUserLogin(row) {
-      this.$bus.modal.type = 'login_user'
-      this.$bus.modal.show = true
-      this.$bus.modal.obj = row
-    },
-    // 给用户打标签
-    handleUserTags(row) {
-      if (row.subscribe) {
-        this.$bus.modal.type = 'user_tags'
-        this.$bus.modal.show = true
-        this.$bus.modal.obj = row
-      }
-    },
-    // 恢复游客链接
-    handleGuestLinks(row) {
-      console.log('handleGuestLinks', row)
-      this.$bus.modal.type = 'guset_link'
-      this.$bus.modal.show = true
-      this.$bus.modal.obj = row
     },
 
     doGetData(page = {}) {
@@ -477,5 +434,10 @@ export default {
 }
 .ivu-select-dropdown {
   max-height: 300px;
+}
+.user-list-dropdown {
+  .ivu-dropdown-item {
+    line-height: 20px;
+  }
 }
 </style>

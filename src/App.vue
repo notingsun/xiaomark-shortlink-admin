@@ -5,17 +5,20 @@
     <sure-modal />
     <!-- 对话框 -->
     <sure-modal2 />
+    <!-- 套餐 -->
+    <plan-modal />
   </div>
 </template>
 
 <script>
 import SureModal from './views/common/sure-modal'
+import PlanModal from './views/common/plan-modal'
 // TODO
 import SureModal2 from './views/qr/components/sure-modal2'
 
 export default {
   name: 'app',
-  components: { SureModal, SureModal2 },
+  components: { SureModal, SureModal2, PlanModal },
   created() {
     if (process.env.NODE_ENV === 'development') {
       document.title = document.title + '（本地测试）'
@@ -48,3 +51,10 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+body {
+  height: 100vh;
+  overflow-y: hidden;
+}
+</style>
