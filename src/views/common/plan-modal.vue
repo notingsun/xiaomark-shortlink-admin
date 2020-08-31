@@ -328,7 +328,7 @@ export default {
           expire_date: moment(this.form_package2.expire_date).format('YYYY-MM-DD'),
           api_package: this.form_package2.api_package
         })
-        if (this.form_package2.setPackage2Data) {
+        if (this.form_package2.setPackage2Data === '1') {
           await this.$api.User.putUserApiPackageData(this.modal.obj.id, {
             max_links_daily: this.form_package2.max_links_daily - 0,
             max_whitelists: this.form_package2.max_whitelists - 0,
