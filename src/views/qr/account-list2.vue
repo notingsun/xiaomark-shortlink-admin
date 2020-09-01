@@ -1,4 +1,4 @@
-/* 短链列表 */
+/* 短链列表 TODO 删除 */
 <template>
   <div class="account-list itv-flex-v--fs">
     <div class="header mb16 itv-flex--sb">

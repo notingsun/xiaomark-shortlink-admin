@@ -217,21 +217,21 @@ export default {
           title: '公众号列表',
           route: { name: 'AccountList' }
         },
-        {
-          name: '1042',
-          title: '公众号列表(老)',
-          route: { name: 'AccountList2' }
-        },
+        // {
+        //   name: '1042',
+        //   title: '公众号列表(老)',
+        //   route: { name: 'AccountList2' }
+        // },
         {
           name: '107',
           title: '订单列表',
           route: { name: 'OrderList' }
-        },
-        {
-          name: '1072',
-          title: '订单列表(老)',
-          route: { name: 'OrderList2' }
         }
+        // {
+        //   name: '1072',
+        //   title: '订单列表(老)',
+        //   route: { name: 'OrderList2' }
+        // }
       ]
     }
   },
