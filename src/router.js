@@ -188,12 +188,12 @@ const qr = [
     name: 'OrderList',
     component: () => import('@/views/qr/order-list.vue')
   },
-  {
-    path: '/order-list2',
-    meta: { menuIndex: '1072', title: '订单列表(老)' },
-    name: 'OrderList2',
-    component: () => import('@/views/qr/order-list2.vue')
-  },
+  // {
+  //   path: '/order-list2',
+  //   meta: { menuIndex: '1072', title: '订单列表(老)' },
+  //   name: 'OrderList2',
+  //   component: () => import('@/views/qr/order-list2.vue')
+  // },
   {
     path: '/qr-list',
     meta: { menuIndex: '103', title: '二维码列表' },
@@ -205,14 +205,13 @@ const qr = [
     meta: { menuIndex: '104', title: '公众号列表' },
     name: 'AccountList',
     component: () => import('@/views/qr/account-list.vue')
-  },
-  {
-    path: '/account-list2',
-    meta: { menuIndex: '1042', title: '公众号列表（老）' },
-    name: 'AccountList2',
-    // TODO
-    component: () => import('@/views/qr/account-list2.vue')
   }
+  // {
+  //   path: '/account-list2',
+  //   meta: { menuIndex: '1042', title: '公众号列表（老）' },
+  //   name: 'AccountList2',
+  //   component: () => import('@/views/qr/account-list2.vue')
+  // }
 ]
 
 // 入口
